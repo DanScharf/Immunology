@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Interactive study guide for Basic Immunology Lecture 1">
+<title>Immunology Lecture 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky stain-strip nav, one study chapter per view, wide content column with side panels for interactive pieces. Palette borrowed from an H&E / Giemsa blood smear. */
+:root{
+  --bg:#f5f4fa; --surface:#ffffff; --sunk:#ebe8f4; --line:#d9d4ea;
+  --ink:#231d3d; --muted:#615a7d;
+  --hema:#4f3fae; --hema-soft:#e4e0f7;   /* hematoxylin: nuclei, adaptive */
+  --eosin:#c43b72; --eosin-soft:#f9e1ea; /* eosin: cytoplasm, innate */
+  --good:#1f7a55; --good-soft:#dcf1e6; --bad:#b4372f; --bad-soft:#f8e0dd;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14121d; --surface:#1d1a2a; --sunk:#262236; --line:#383250;
+  --ink:#ece9f7; --muted:#a59fc0;
+  --hema:#a99cff; --hema-soft:#2e2752; --eosin:#f27aa6; --eosin-soft:#3d1f2d;
+  --good:#5fd09a; --good-soft:#173628; --bad:#ff8a80; --bad-soft:#3d1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14121d; --surface:#1d1a2a; --sunk:#262236; --line:#383250;
+  --ink:#ece9f7; --muted:#a59fc0;
+  --hema:#a99cff; --hema-soft:#2e2752; --eosin:#f27aa6; --eosin-soft:#3d1f2d;
+  --good:#5fd09a; --good-soft:#173628; --bad:#ff8a80; --bad-soft:#3d1d1b; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0;max-width:68ch}
+.mono{font-family:var(--f-mono);font-size:.85em}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:1.1rem;color:var(--muted)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--hema);outline-offset:2px;border-radius:6px}
+
+/* header + nav */
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{display:flex;align-items:center;gap:16px;padding-block:10px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:1.05rem;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand i{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--hema) 0 35%,var(--eosin) 36%);display:inline-block}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;text-decoration:none;color:var(--muted);padding:7px 12px;border-radius:999px;font-size:.92rem;font-weight:700;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink);background:var(--sunk)}
+nav.tabs a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.prog{height:3px;background:var(--sunk)}
+.prog span{display:block;height:100%;background:linear-gradient(90deg,var(--eosin),var(--hema));transition:width .3s}
+
+main{padding-block:36px 80px}
+section.view{display:flex;flex-direction:column;gap:40px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.callout{border-left:4px solid var(--hema);background:var(--hema-soft);padding:14px 16px;border-radius:0 10px 10px 0}
+.callout.pink{border-color:var(--eosin);background:var(--eosin-soft)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.inn{background:var(--eosin-soft);color:var(--eosin)}
+.pill.ada{background:var(--hema-soft);color:var(--hema)}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+ul.clean li::marker{color:var(--eosin)}
+.next{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none;color:var(--ink);display:inline-flex;gap:8px;align-items:center}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--hema)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:1fr}}
+.smear{aspect-ratio:1;max-width:100%;border-radius:50%;background:radial-gradient(circle,var(--eosin-soft),var(--bg) 72%);display:grid;place-items:center}
+.smear svg{width:92%;height:auto}
+.howto{display:flex;flex-wrap:wrap;gap:8px}
+
+/* requirement explorer */
+.req{display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:16px}
+@media (max-width:700px){.req{grid-template-columns:1fr}}
+.reqlist{display:flex;flex-direction:column;gap:4px}
+@media (max-width:700px){.reqlist{flex-direction:row;flex-wrap:wrap}}
+.reqlist button{text-align:left;border:1px solid transparent;background:none;padding:8px 12px;border-radius:10px;display:flex;gap:10px;align-items:baseline}
+.reqlist button .n{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.reqlist button[aria-pressed="true"]{background:var(--surface);border-color:var(--line);box-shadow:inset 3px 0 0 var(--eosin)}
+.reqpanel h3{font-size:1.5rem}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+@media (max-width:640px){.vs{grid-template-columns:1fr}.vs .mid{display:none}}
+.vs .mid{display:grid;place-items:center;font-family:var(--f-display);font-weight:800;color:var(--muted)}
+
+/* innate vs adaptive */
+.armswitch{display:flex;gap:6px;flex-wrap:wrap}
+.armswitch button{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-weight:700}
+.armswitch button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmprow{display:grid;grid-template-columns:120px 1fr 1fr;gap:10px;align-items:stretch}
+@media (max-width:600px){.cmprow{grid-template-columns:1fr 1fr}.cmprow .k{grid-column:1/-1}}
+.cmprow .k{font-family:var(--f-mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);align-self:center}
+.cmprow .c{padding:10px 12px;border-radius:10px;transition:opacity .2s,transform .2s}
+.cmprow .i{background:var(--eosin-soft)}
+.cmprow .a{background:var(--hema-soft)}
+.cmp[data-focus="innate"] .a,.cmp[data-focus="adaptive"] .i{opacity:.3}
+.cmprow.head .c{font-family:var(--f-display);font-weight:700;background:none;padding-block:0}
+.cmprow.head .i{color:var(--eosin)} .cmprow.head .a{color:var(--hema)}
+
+/* cell explorer */
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;font-size:.88rem}
+.filters button[aria-pressed="true"]{background:var(--hema);color:var(--bg);border-color:var(--hema)}
+.cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.cellbtn{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity .2s,border-color .2s,transform .15s}
+.cellbtn svg{width:72px;height:72px}
+.cellbtn span{font-weight:700;font-size:.88rem;text-align:center;line-height:1.2}
+.cellbtn.dim{opacity:.22}
+.cellbtn[aria-pressed="true"]{border-color:var(--eosin);box-shadow:0 0 0 2px var(--eosin)}
+.cellbtn:hover{transform:translateY(-2px)}
+.celldetail{display:grid;grid-template-columns:150px 1fr;gap:18px}
+@media (max-width:600px){.celldetail{grid-template-columns:1fr}}
+.celldetail svg{width:150px;height:150px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
+.facts dt{font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
+.facts dd{margin:0}
+
+/* tabs inside */
+.seg{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:12px;flex-wrap:wrap;width:fit-content;max-width:100%}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:9px;font-weight:700;font-size:.9rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* extravasation */
+.extra svg{width:100%;height:auto;display:block}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.steps button{border:1px solid var(--line);background:var(--surface);padding:8px 12px;border-radius:10px;font-weight:700;font-size:.9rem}
+.steps button[aria-pressed="true"]{border-color:var(--eosin);color:var(--eosin)}
+#wbc{transition:transform .9s cubic-bezier(.5,0,.3,1)}
+@media (prefers-reduced-motion:reduce){#wbc,.cmprow .c,.cellbtn,.flip-inner{transition:none!important}}
+
+/* timeline */
+.tl input[type=range]{width:100%;accent-color:var(--eosin)}
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:700px){.layers{grid-template-columns:1fr}}
+.layer{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface);transition:opacity .25s,border-color .25s}
+.layer.off{opacity:.35}
+.layer.now{border-color:var(--eosin);box-shadow:0 0 0 1px var(--eosin)}
+.layer h4{font-size:1rem}
+.clock{font-family:var(--f-display);font-weight:800;font-size:2rem;font-variant-numeric:tabular-nums}
+
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+
+/* flow */
+.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.flow .node{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}
+.flow .arrow{align-self:center;color:var(--muted);font-family:var(--f-mono)}
+@media (max-width:640px){.flow{flex-direction:column}.flow .arrow{transform:rotate(90deg);align-self:center}}
+
+/* reveal */
+details.reveal{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+details.reveal summary{cursor:pointer;font-weight:700}
+details.reveal[open] summary{margin-bottom:8px}
+
+/* quiz */
+.qcard{max-width:760px}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qopts button{text-align:left;border:1px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:10px}
+.qopts button:hover:not(:disabled){border-color:var(--hema)}
+.qopts button.right{background:var(--good-soft);border-color:var(--good);color:var(--ink)}
+.qopts button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.qopts button:disabled{cursor:default}
+.qmeta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.score{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.expl{border-radius:10px;padding:12px 14px;background:var(--sunk)}
+
+/* flashcards */
+.flip{perspective:1200px;max-width:620px;width:100%;height:260px;cursor:pointer;border:0;background:none;padding:0}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:22px;text-align:center;overflow:auto}
+.face.back{transform:rotateY(180deg);background:var(--hema-soft)}
+.face .term{font-family:var(--f-display);font-weight:800;font-size:1.7rem}
+.fcnav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.gloss div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.93rem}
+.gloss b{font-family:var(--f-display)}
+#glossq{width:100%;max-width:360px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="cyto" cx="45%" cy="40%"><stop offset="0" stop-color="var(--eosin-soft)"/><stop offset="1" stop-color="var(--eosin)" stop-opacity=".35"/></radialGradient>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap bar">
+    <div class="brand"><i></i>Basic Immunology · L1</div>
+    <nav class="tabs" id="tabs" aria-label="Chapters"></nav>
+  </div>
+  <div class="prog"><span id="progbar" style="width:0"></span></div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<script>
+/* ---------- cell drawings (Giemsa-style) ---------- */
+const nucleus = 'fill="var(--hema)" fill-opacity=".85"';
+const CELLSVG = {
+  neutrophil:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/>${[[34,42],[50,36],[64,48],[52,62]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="10" ${nucleus}/>`).join('')}<path d="M34 42 L50 36 L64 48 L52 62" stroke="var(--hema)" stroke-width="3" fill="none"/></svg>`,
+  monocyte:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/><path d="M28 40 C30 22 70 22 72 42 C74 60 58 70 50 56 C44 68 26 60 28 40Z" ${nucleus}/></svg>`,
+  macrophage:`<svg viewBox="0 0 100 100"><path d="M14 52 C10 28 36 10 56 14 C80 18 92 40 86 60 C80 84 52 92 32 84 C18 78 16 66 14 52Z" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/><ellipse cx="52" cy="48" rx="15" ry="12" ${nucleus}/><circle cx="30" cy="62" r="6" fill="var(--muted)" fill-opacity=".5"/><circle cx="70" cy="66" r="5" fill="var(--muted)" fill-opacity=".5"/></svg>`,
+  dc:`<svg viewBox="0 0 100 100"><path d="M50 22 L58 4 L62 26 L84 14 L72 36 L96 44 L72 54 L90 74 L64 66 L60 92 L50 70 L36 94 L36 66 L10 78 L28 56 L4 46 L28 38 L14 16 L38 28 Z" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5" stroke-linejoin="round"/><circle cx="50" cy="48" r="13" ${nucleus}/></svg>`,
+  eosinophil:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="var(--eosin)" fill-opacity=".25" stroke="var(--eosin)" stroke-opacity=".5"/>${Array.from({length:26},(_,i)=>{const a=i*2.4,r=12+((i*7)%22);return `<circle cx="${50+r*Math.cos(a)}" cy="${50+r*Math.sin(a)}" r="3.2" fill="var(--eosin)"/>`}).join('')}<circle cx="38" cy="46" r="11" ${nucleus}/><circle cx="62" cy="46" r="11" ${nucleus}/><path d="M38 46 L62 46" stroke="var(--hema)" stroke-width="3"/></svg>`,
+  basophil:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/><path d="M34 38 C40 30 60 30 66 40 C70 52 60 62 50 58 C40 64 30 52 34 38Z" ${nucleus}/>${Array.from({length:22},(_,i)=>{const a=i*2.7,r=8+((i*5)%26);return `<circle cx="${50+r*Math.cos(a)}" cy="${50+r*Math.sin(a)}" r="3.6" fill="var(--hema)"/>`}).join('')}</svg>`,
+  mast:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="44" ry="34" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/>${Array.from({length:36},(_,i)=>{const a=i*2.4,r=6+((i*7)%28);return `<circle cx="${50+r*1.25*Math.cos(a)}" cy="${50+r*.9*Math.sin(a)}" r="3" fill="var(--hema)" fill-opacity=".8"/>`}).join('')}<circle cx="50" cy="50" r="11" ${nucleus}/></svg>`,
+  nk:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="36" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/><circle cx="46" cy="48" r="24" ${nucleus}/><circle cx="76" cy="40" r="3.5" fill="var(--eosin)"/><circle cx="78" cy="54" r="3.5" fill="var(--eosin)"/><circle cx="72" cy="66" r="3.5" fill="var(--eosin)"/></svg>`,
+  ilc:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="url(#cyto)" stroke="var(--eosin)" stroke-opacity=".5"/><circle cx="50" cy="50" r="25" ${nucleus}/><text x="50" y="56" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="15" font-weight="600" fill="var(--bg)">1·2·3</text></svg>`,
+  tcell:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="var(--hema-soft)" stroke="var(--hema)" stroke-opacity=".5"/><circle cx="50" cy="50" r="23" ${nucleus}/></svg>`
+};
+
+/* ---------- data ---------- */
+const CELLS = [
+ {id:'neutrophil',name:'Neutrophil',svg:'neutrophil',tags:['myeloid','granulocyte','phagocyte','circulating'],
+  one:'The first responder. Arrives within hours and kills bacteria and fungi.',
+  facts:{'Lineage':'Myeloid · granulocyte · polymorphonuclear (lobed nucleus)','Numbers':'50–70% of all leukocytes, the most abundant. ~10¹¹ made per day, lives only 1–2 days','Where':'Circulates in blood; recruited to tissue by IL-8','Kills by':'1. Phagocytosis\n2. Respiratory burst: NADPH oxidase turns O₂ into superoxide and H₂O₂, then myeloperoxidase (MPO) makes hypochlorite (bleach)\n3. Degranulation: elastase, lysozyme, hole-punching defensins, iron-binding lactoferrin\n4. NETs: throws out its own chromatin coated with granule proteins to trap microbes too many or too big to eat','Cytokines':'Responds to IL-8; makes IL-1β and TNF','Targets / disease':'Bacteria, fungi · abscess (pus), tissue damage'}},
+ {id:'monocyte',name:'Monocyte',svg:'monocyte',tags:['myeloid','phagocyte','circulating'],
+  one:'A mobile precursor pool in the blood that becomes macrophages or DCs once in tissue.',
+  facts:{'Lineage':'Myeloid (kidney-shaped nucleus)','Where':'Circulates. Does not sample antigen in blood; it uses blood to get to tissues','What happens':'Enters inflamed tissue on demand (extravasation) and differentiates into a macrophage (or monocyte-derived DC)','Key point':'Circulation is a distribution system, not where antigen is found'}},
+ {id:'macrophage',name:'Macrophage',svg:'macrophage',tags:['myeloid','phagocyte','apc','resident'],
+  one:'The big eater in tissues. Phagocytoses microbes and presents antigen on MHC II.',
+  facts:{'Lineage':'Myeloid','Where':'Tissue resident: alveolar macrophages (lung), Kupffer cells (liver), dermal macrophages (skin); red pulp of spleen','Jobs':'Phagocytosis · professional antigen presenting cell (MHC II) · cytokines (e.g. TNF, IL-6) · clears old red blood cells and recycles iron (spleen)','Part of':'First layer (0–4 h): resident macrophages are pre-positioned'}},
+ {id:'dc',name:'Dendritic cell',svg:'dc',tags:['myeloid','phagocyte','apc','resident'],
+  one:'The messenger. Samples antigen in tissue, then travels to the lymph node to show it to T cells.',
+  facts:{'Lineage':'Myeloid','Where':'Just below epithelial surfaces (skin, lung, gut, interstitium). Precursors (pre-DCs) come from bone marrow via blood','Senses':'PRRs (pattern recognition receptors) detect microbial or damage signals','Uptake':'Phagocytosis, receptor-mediated endocytosis','Then':'Processes antigen → MHC II (classical) or MHC I (cross-presentation). Upregulates CCR7 and migrates along lymphatics to the draining lymph node → presents to naïve T cells','Why it matters':'The bridge between innate and adaptive immunity'}},
+ {id:'eosinophil',name:'Eosinophil',svg:'eosinophil',tags:['myeloid','granulocyte','circulating'],
+  one:'Fights worms (helminths) with toxic granule proteins; also drives asthma.',
+  facts:{'Lineage':'Myeloid · granulocyte (pink granules, bilobed nucleus)','Granules':'Major basic protein, eosinophil peroxidase (toxic to worms and our own tissue)','Made on activation':'Leukotrienes, PAF, lipoxins','Cytokines':'Responds to IL-5; makes IL-4 and TGF-β','Targets / disease':'Antibody-coated helminth larvae · asthma, eosinophilic oesophagitis'}},
+ {id:'basophil',name:'Basophil',svg:'basophil',tags:['myeloid','granulocyte','circulating'],
+  one:'Rare circulating granulocyte that releases histamine; early source of IL-4.',
+  facts:{'Lineage':'Myeloid · granulocyte (dark purple granules)','Granules':'Histamine, chondroitin sulfate','Made on activation':'Leukotriene C4','Cytokines':'IL-4, IL-13 (early source)','Targets / disease':'Helminths · allergy, chronic urticaria'}},
+ {id:'mast',name:'Mast cell',svg:'mast',tags:['myeloid','granulocyte','resident'],
+  one:'Tissue-resident sentinel at skin and mucosa. Histamine release = allergy and anaphylaxis.',
+  facts:{'Lineage':'Myeloid, granule-filled (counted with granulocytes in the lecture)','Where':'Resident at interfaces: skin and mucosa','Granules (preformed)':'Histamine (dilates vessels), heparin, tryptase, chymase, TNF','Made on activation':'Prostaglandin D2, leukotrienes, platelet-activating factor (PAF)','Cytokines':'IL-4, IL-13, IL-5, TNF','Targets / disease':'Parasites, venoms, wound sensing · allergy, anaphylaxis'}},
+ {id:'nk',name:'NK cell',svg:'nk',tags:['lymphoid','circulating','killer'],
+  one:'Innate lymphocyte that kills virus-infected and tumour cells without prior sensitization.',
+  facts:{'Lineage':'Lymphoid, but innate (no antigen-specific receptor)','Where':'Circulating','Kills by':'Perforin (punches holes) + granzyme (triggers death)','How it decides':'"Missing self": kills cells that have lost the surface molecules (MHC I) every healthy cell carries. Details in lecture 2','Part of':'Second layer (4–96 h), induced innate response'}},
+ {id:'ilc',name:'ILC 1 / 2 / 3',svg:'ilc',tags:['lymphoid','resident'],
+  one:'Innate lymphoid cells: innate mirror images of helper T cell subsets. Described 2008–2010.',
+  facts:{'Lineage':'Lymphoid, no antigen-specific TCR','Where':'Tissue resident, especially mucosal barriers','ILC1 ≈ Th1':'Intracellular pathogens · makes IFN-γ','ILC2 ≈ Th2':'Helminths and allergy · makes IL-5, IL-13','ILC3 ≈ Th17':'Extracellular bacteria and fungi, at mucosa · makes IL-17, IL-22'}}
+];
+
+const REQS = [
+ {k:'Patrol',m:'Movement and sensing. Cells carry surface receptors that bind ligands (other molecules); binding triggers signal transduction inside the cell.',ex:'Neutrophils and monocytes circulating in blood; lymphocytes recirculating through lymph nodes.'},
+ {k:'Recognition',m:'Antigen: any molecule that immune cells can sense.\nPeptide: a fragment of a protein.\nEpitope: the smallest physical part of the antigen that the receptor actually touches.',ex:'One protein (antigen) has many epitopes; each B cell or T cell sees one epitope.'},
+ {k:'Identification',m:'IFF, identification friend or foe. Cells display what is inside them on MHC molecules.\nMHC I: on all nucleated cells.\nMHC II: only on specialized antigen presenting cells (DCs, macrophages, B cells).',ex:'A virus-infected epithelial cell shows viral peptides on MHC I.'},
+ {k:'Decision: kill or spare',m:'Based on identification, the system decides whether a target is dangerous (non-self, infected, transformed) or should be left alone (self).',ex:'NK cells spare cells with normal MHC I and kill cells that lost it.'},
+ {k:'Elimination',m:'Production of enzymes, toxins, antibodies, complement and other proteins that destroy the threat.',ex:'Neutrophil bleach (hypochlorite); NK perforin + granzyme; antibodies.'},
+ {k:'Amplification & regulation',m:'Cytokines, chemokines and growth factors turn the response up or down.',ex:'IL-8 recruits neutrophils; TNF and IL-6 drive inflammation.'},
+ {k:'Versatility & communication',m:'Same molecules (cytokines, chemokines) let cells talk, coordinate and tailor the response type to the pathogen.',ex:'IL-5 for worms vs IFN-γ for intracellular pathogens.'},
+ {k:'Recall',m:'Memory: long-lived B and T cells remember a previous encounter.',ex:'Second exposure: faster, bigger response (the basis of vaccines).'},
+ {k:'Resolution',m:'Suppression, inhibition, switching off once the threat is gone.',ex:'Regulatory T cells (Tregs), MDSCs (myeloid-derived suppressor cells).'},
+ {k:'Healing',m:'Support and repair: scaffold, extracellular matrix (ECM), growth factors.',ex:'Macrophages producing growth factors after a wound is cleared.'}
+];
+
+const QUIZ = [
+ {q:'Which molecule is expressed by ALL leukocytes (innate and adaptive) and is called the leukocyte common antigen?',o:['CD45','CD14','MHC II','CCR7'],a:0,e:'CD45 (LCA) is on every white blood cell. It is a protein tyrosine phosphatase that regulates signaling for activation and cytokine responses.'},
+ {q:'MHC class I is found on…',o:['Only dendritic cells','All nucleated cells','Only B and T cells','Only red blood cells'],a:1,e:'MHC I is on all nucleated cells. MHC II is restricted to specialized antigen presenting cells.'},
+ {q:'What is an epitope?',o:['Any molecule that immune cells can sense','A fragment of a protein','The smallest physical unit of the antigen that interacts with the receptor','A cytokine that attracts cells'],a:2,e:'Antigen = molecule that can be sensed. Peptide = protein fragment. Epitope = the smallest part actually bound.'},
+ {q:'Which is the most abundant leukocyte in blood?',o:['Lymphocyte','Monocyte','Eosinophil','Neutrophil'],a:3,e:'Neutrophils make up 50–70% of leukocytes, live 1–2 days and ~10¹¹ are made daily.'},
+ {q:'In the respiratory burst, which enzyme converts reactive oxygen into hypochlorite (bleach)?',o:['NADPH oxidase','Myeloperoxidase','Lysozyme','Elastase'],a:1,e:'NADPH oxidase makes superoxide and H₂O₂; myeloperoxidase (MPO) then makes hypochlorite.'},
+ {q:'Neutrophil extracellular traps (NETs) are made of…',o:['Antibodies and complement','The neutrophil\'s own chromatin coated with granule proteins','Collagen fibres','Mucus and lysozyme'],a:1,e:'When microbes are too many or too big to swallow, the neutrophil throws out its chromatin as a net.'},
+ {q:'Which pair are professional antigen presenting cells of the myeloid lineage?',o:['Neutrophils and eosinophils','Dendritic cells and macrophages','NK cells and ILCs','Basophils and mast cells'],a:1,e:'DCs and monocytes/macrophages present antigen on MHC II. B cells are also APCs, but they are not myeloid.'},
+ {q:'Which cell is the main source of large amounts of type I interferon (antiviral alarm)?',o:['cDC1','Langerhans cell','Plasmacytoid DC','Monocyte-derived DC'],a:2,e:'pDCs (CD123, BDCA-2, low MHC II) produce huge amounts of type I IFN; also involved in lupus.'},
+ {q:'Langerhans cells are identified by…',o:['XCR1','Langerin (CD207) and Birbeck granules','CD123','CD14'],a:1,e:'Langerhans cells are epidermal sentinels that migrate to skin-draining lymph nodes.'},
+ {q:'ILC2 cells resemble which T helper subset and make which cytokines?',o:['Th1 – IFN-γ','Th2 – IL-5 and IL-13','Th17 – IL-17 and IL-22','Treg – TGF-β'],a:1,e:'ILC1≈Th1 (IFN-γ), ILC2≈Th2 (IL-5, IL-13; worms and allergy), ILC3≈Th17 (IL-17, IL-22; mucosa).'},
+ {q:'NK cells kill target cells mainly with…',o:['Histamine','Perforin and granzyme','Hypochlorite','Antibodies'],a:1,e:'Perforin makes pores and granzymes induce cell death. NK cells need no prior sensitization.'},
+ {q:'Eosinophils respond mainly to which cytokine and target what?',o:['IL-8; bacteria','IL-5; helminths','IFN-γ; viruses','IL-17; fungi'],a:1,e:'Eosinophils respond to IL-5 and attack antibody-coated helminth larvae; also drive asthma.'},
+ {q:'Which is NOT an innate surface barrier mentioned in the lecture?',o:['Lysozyme in tears and saliva','Stomach acid','The microbiome','Antibodies in serum'],a:3,e:'Antibodies are adaptive (humoral). Barriers: skin, mucosa, sweat/tears (dermcidin, salt), lysozyme, antimicrobial peptides, stomach pH, urine flow, microbiome.'},
+ {q:'The complement system is…',o:['~30 liver-made proteins that act in a cascade','A type of chemokine','A receptor on T cells','A granule protein of neutrophils'],a:0,e:'~30 proteins made in the liver, circulating in blood, activated by pathogens or antibodies.'},
+ {q:'Which iron-related proteins sequester iron away from microbes?',o:['CRP and mannose-binding lectin','Lactoferrin, transferrin and hepcidin','Histamine and heparin','Perforin and granzyme'],a:1,e:'CRP and MBL coat microbes and trigger complement; lactoferrin, transferrin and hepcidin withhold iron.'},
+ {q:'What is the correct order of extravasation?',o:['Adhesion → rolling → transmigration','Transmigration → adhesion → rolling','Rolling → adhesion → transmigration','Rolling → transmigration → adhesion'],a:2,e:'Cells roll along the endothelium, adhere firmly, then squeeze across it into tissue.'},
+ {q:'After capturing antigen, tissue DCs upregulate which receptor to migrate to the lymph node?',o:['CD45','CCR7','XCR1','CD14'],a:1,e:'CCR7 guides DCs along lymphatics to the draining lymph node, where they meet naïve T cells.'},
+ {q:'Which are the primary lymphoid organs?',o:['Lymph nodes and spleen','Bone marrow and thymus','Tonsils and appendix','Liver and spleen'],a:1,e:'Primary = where cells mature (BM, thymus). Secondary = where responses start (LN, spleen).'},
+ {q:'The red pulp of the spleen is mainly responsible for…',o:['T–B cell interactions','Clearing old red blood cells and recycling iron','T cell maturation','Producing lymph'],a:1,e:'Red pulp: macrophages + RBCs, filtering old/damaged RBCs and recycling iron. White pulp: T and B zones.'},
+ {q:'Why do lymph nodes swell during an infection?',o:['Fluid leaks from blood vessels','The antigen-matching lymphocyte stops recirculating and divides there for several days','Neutrophils pile up as pus','The lymph stops flowing'],a:1,e:'The cognate cell stops, proliferates for days and leaves as effector cells. The whole lymphocyte population samples every node every day or two.'},
+ {q:'Roughly how many receptors does the innate system use, and how many specificities can the adaptive system make?',o:['~100 vs ~10¹²','~10⁶ vs ~10⁶','~10 vs ~1000','~10¹² vs ~100'],a:0,e:'Innate: about a hundred germline-encoded receptors. Adaptive: ~10¹² possible receptors, one per lymphocyte.'},
+ {q:'Why does the first adaptive response take 4–7 days?',o:['Lymphocytes are made only once a week','Only a few cells match the antigen; they must be found and then divide many times','Antibodies are made in the liver','The innate system blocks it'],a:1,e:'Diversity has a price, time. The innate arm holds the line meanwhile.'},
+ {q:'Which statement about memory is correct?',o:['Innate immunity has strong antigen-specific memory','Second exposure gives a lag of 1–3 days and a faster, larger response','Memory cells are short-lived','Memory makes the response slower but more precise'],a:1,e:'First exposure: 4–7 day lag, modest. Second: 1–3 day lag, faster, larger, better adapted.'},
+ {q:'"Missing self" refers to…',o:['B cells that lack antibodies','NK cells killing cells that lost the surface molecules healthy cells carry','T cells deleted in the thymus','Microbes hiding their PAMPs'],a:1,e:'An innate self/non-self strategy built into the receptor logic (lecture 2).'},
+ {q:'Within which time window do the induced innate responses (cytokines, recruitment of neutrophils, NK cells) operate?',o:['0–4 hours','4–96 hours','> 96 hours','Only after vaccination'],a:1,e:'0–4 h: barriers and preformed effectors. 4–96 h: induced innate. > 96 h: adaptive.'},
+ {q:'Type 1 diabetes and multiple sclerosis are examples of…',o:['Immunodeficiency','Hypersensitivity','Autoimmunity','Graft rejection'],a:2,e:'Autoimmunity = self-tolerance breaks. Also lupus and rheumatoid arthritis.'},
+ {q:'Why do vaccines need adjuvants?',o:['To kill the pathogen','To look like an infection to the innate sensing cells, otherwise the vaccine is ignored','To replace memory cells','To block MHC'],a:1,e:'The adaptive arm only responds when the innate arm signals danger.'},
+ {q:'Which is TRUE of innate pattern recognition receptors?',o:['Generated randomly in each cell','They recognize patterns essential to the microbe, so it cannot easily mutate them away','Each cell has a different receptor','They must be censored for self-reactivity in the thymus'],a:1,e:'Germline-encoded, fixed for life, same on every cell of a type, so all respond immediately.'}
+];
+
+const GLOSS = [
+ ['Antigen','Any molecule that can be sensed by immune cells.'],
+ ['Peptide','A fragment of a protein.'],
+ ['Epitope','The smallest physical unit of an antigen that interacts with a receptor.'],
+ ['Ligand','A molecule bound by a receptor; binding triggers signal transduction.'],
+ ['IFF','Identification friend or foe: deciding self vs non-self, kill or spare.'],
+ ['MHC I','Presents peptides on all nucleated cells (to CD8 T cells / checked by NK cells).'],
+ ['MHC II','Presents peptides on specialized APCs (DCs, macrophages, B cells) to helper T cells.'],
+ ['CD45 (LCA)','Leukocyte common antigen, a tyrosine phosphatase on all leukocytes.'],
+ ['Leukocyte','Any white blood cell.'],
+ ['Phagocytosis','Ingestion or engulfment of a cell or particle (macrophages, DCs, neutrophils).'],
+ ['Granulocyte','Cell with cytoplasmic granules; polymorphonuclear (neutrophil, eosinophil, basophil; mast cell similar).'],
+ ['APC','Antigen presenting cell. Professional APCs: DCs, macrophages, B cells.'],
+ ['Respiratory burst','NADPH oxidase → superoxide, H₂O₂; MPO → hypochlorite.'],
+ ['NETs','Neutrophil extracellular traps: chromatin + granule proteins that trap microbes.'],
+ ['Cytokine','Signaling protein that modulates cell behaviour (interleukins, interferons).'],
+ ['Chemokine','Cytokine subset that attracts cells along a chemical gradient.'],
+ ['Complement','~30 liver-made blood proteins acting in a cascade.'],
+ ['CRP','C-reactive protein, an acute-phase protein that coats microbes and triggers complement.'],
+ ['PRR','Pattern recognition receptor: germline-encoded innate sensor of microbial/damage patterns.'],
+ ['CCR7','Chemokine receptor DCs upregulate to migrate to lymph nodes.'],
+ ['Extravasation','Leaving blood for tissue: rolling, adhesion, transmigration.'],
+ ['Cross-presentation','Presenting an engulfed antigen on MHC I instead of MHC II.'],
+ ['Treg','Regulatory T cell; suppresses responses (resolution, tolerance).'],
+ ['MDSC','Myeloid-derived suppressor cell; suppresses immune responses.'],
+ ['Missing self','NK cells kill cells that lost normal surface molecules (MHC I).'],
+ ['Primary lymphoid organ','Where immune cells mature: bone marrow, thymus.'],
+ ['Secondary lymphoid organ','Where responses start: lymph nodes, spleen.'],
+ ['White pulp','T and B cell zones of the spleen; screens blood for antigen.'],
+ ['Red pulp','Spleen region of macrophages + RBCs; clears old RBCs, recycles iron.'],
+ ['Lymph','Interstitial fluid collected into lymph capillaries and returned to blood.'],
+ ['Cognate cell','The lymphocyte whose receptor matches a given antigen.'],
+ ['Adjuvant','Vaccine component that makes it look like an infection to innate cells.'],
+ ['Herd immunity','Protection of those who cannot respond, because most others are immune.'],
+ ['Dermcidin','Antimicrobial peptide in sweat.'],
+ ['Lysozyme','Enzyme in tears and saliva that destroys bacterial cell walls.']
+];
+
+/* ---------- views ---------- */
+const VIEWS = [
+ {id:'start',label:'Start'},
+ {id:'requirements',label:'1 · What the system must do'},
+ {id:'two-arms',label:'2 · Innate vs adaptive'},
+ {id:'innate',label:'3 · Innate toolkit'},
+ {id:'organization',label:'4 · Where it happens'},
+ {id:'strategies',label:'5 · Six strategies'},
+ {id:'quiz',label:'Quiz'},
+ {id:'cards',label:'Flashcards'}
+];
+let visited = new Set();
+try{ visited = new Set(JSON.parse(localStorage.getItem('imm1-visited')||'[]')) }catch(e){}
+
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const nl = s=>esc(s).replace(/\n/g,'<br>');
+
+function nextBar(i){
+  const p=VIEWS[i-1], n=VIEWS[i+1];
+  return `<div class="next">${p?`<a class="btn" href="#${p.id}">← ${p.label}</a>`:'<span></span>'}${n?`<a class="btn primary" href="#${n.id}">${n.label} →</a>`:''}</div>`;
+}
+
+const R = {};
+
+R.start = ()=>`
+<section class="view">
+  <div class="hero">
+    <div class="stack">
+      <span class="eyebrow">Basic Immunology 027604130 · Lecture 1 · 3.11.2026</span>
+      <h1>Introduction to the immune system</h1>
+      <p class="lead">Everything from the lecture slides, rebuilt so it makes sense in order. Read the five chapters, play with the interactive parts, then test yourself. Exam format: 50 multiple-choice questions, 2 hours, pass mark 55.</p>
+      <div class="howto"><a class="btn primary" href="#requirements">Start chapter 1 →</a><a class="btn" href="#quiz">Jump to quiz</a></div>
+    </div>
+    <div class="smear" aria-hidden="true"><svg viewBox="0 0 300 300">
+      <g transform="translate(40,40) scale(.9)">${CELLSVG.neutrophil.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(160,30) scale(.8)">${CELLSVG.eosinophil.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(150,150) scale(1)">${CELLSVG.dc.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(40,160) scale(.85)">${CELLSVG.monocyte.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(110,100) scale(.55)">${CELLSVG.tcell.replace(/<\/?svg[^>]*>/g,'')}</g>
+    </svg></div>
+  </div>
+
+  <div class="callout pink stack">
+    <h3>The whole lecture in five sentences</h3>
+    <p>1. The immune system has a job list: patrol, recognize, decide friend or foe, eliminate, communicate, remember, switch off, and heal.</p>
+    <p>2. It does this with two arms: <b>innate</b> (fast, generic, no memory) and <b>adaptive</b> (slow at first, extremely specific, has memory).</p>
+    <p>3. Innate immunity = barriers + cells (neutrophils, macrophages, DCs, granulocytes, NK cells, ILCs) + proteins (cytokines, chemokines, complement).</p>
+    <p>4. These cells either circulate or sit in tissue, and they meet adaptive cells in lymph nodes and spleen, connected by blood and lymph.</p>
+    <p>5. Defence is layered in time (0–4 h, 4–96 h, &gt;96 h); the innate arm detects, the adaptive arm directs, both execute. Vaccines exploit memory; disease comes from too little, too much, or misdirected responses.</p>
+  </div>
+
+  <div class="stack">
+    <h2>Course map</h2>
+    <p class="lead">Coordinator Prof. Doron Melamed · lecturers Prof. Debby Yablonski, Dr Ari Glasner · Tuesdays 11:30–14:30. Books: Janeway's Immunobiology; Abbas, Cellular and Molecular Immunology.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Wk</th><th>Date</th><th>Lecturer</th><th>Topic</th></tr></thead>
+      <tbody>${[
+        [1,'03.11','Glasner','Intro; innate vs adaptive strategies  ← you are here'],[2,'10.11','Glasner','Innate immunity: composition and mechanisms'],[3,'17.11','Glasner','Innate mechanisms (cont.), immune cell development'],[4,'24.11','Melamed','Antibodies: structure, function, genetics of diversity'],[5,'01.12','Melamed','Recombination, antigen–antibody reaction'],[6,'08.12','Melamed','B cell development, activation, memory, tolerance'],[7,'15.12','Melamed','Germinal centre, affinity maturation'],[8,'22.12','Yablonski','MHC and antigen presentation'],[9,'29.12','Yablonski','TCR and T cell development'],[10,'05.01','Yablonski','T cell activation, memory, T–B interaction, signaling'],[11,'12.01','Yablonski','Vaccines and assessing immune function'],[12,'19.01','Glasner','T cell subsets, cytokines, Tregs'],[13,'26.01','Glasner','Tregs and tumour immunology']
+      ].map(r=>`<tr${r[0]===1?' style="background:var(--eosin-soft)"':''}><td class="mono">${r[0]}</td><td class="mono">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody>
+    </table></div>
+  </div>
+  ${nextBar(0)}
+</section>`;
+
+R.requirements = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Chapter 1 · slides 4–7</span><h2>What the immune system has to be able to do</h2>
+  <p class="lead">The lecture opened with a job description. Each requirement on the left is solved by a specific mechanism. Click through them in order: it is roughly the life story of an immune response.</p></div>
+  <div class="req">
+    <div class="reqlist" id="reqlist" role="group" aria-label="Requirements">${REQS.map((r,i)=>`<button aria-pressed="${i===0}" data-i="${i}"><span class="n">${String(i+1).padStart(2,'0')}</span>${r.k}</button>`).join('')}</div>
+    <div class="card reqpanel stack" id="reqpanel" aria-live="polite"></div>
+  </div>
+
+  <div class="stack">
+    <h2>The other side: what a pathogen needs</h2>
+    <p class="lead">Every pathogen must get through the same checklist. Each step is a place where the immune system can stop it.</p>
+    <div class="vs">
+      <div class="card stack"><span class="pill inn">Pathogen needs</span><ul class="clean"><li>Access</li><li>Entry</li><li>Reproduction</li><li>Survival</li><li>Infection</li><li>Evasion and camouflage</li></ul></div>
+      <div class="mid">vs</div>
+      <div class="card stack"><span class="pill ada">Immune counter</span><ul class="clean"><li>Barriers (skin, mucosa) block access</li><li>Antimicrobial peptides, acid, lysozyme stop entry</li><li>Phagocytes, complement limit replication</li><li>Iron sequestration starves survival</li><li>NK cells / T cells kill infected cells</li><li>Adaptive precision + memory beats camouflage</li></ul></div>
+    </div>
+  </div>
+  ${nextBar(1)}
+</section>`;
+
+R['two-arms'] = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Chapter 2 · slides 8–9</span><h2>Two arms: innate and adaptive</h2>
+  <p class="lead">This comparison is the backbone of the whole course. Tap an arm to focus on it.</p></div>
+  <div class="armswitch" role="group" aria-label="Focus"><button aria-pressed="true" data-f="both">Both</button><button aria-pressed="false" data-f="innate">Innate only</button><button aria-pressed="false" data-f="adaptive">Adaptive only</button></div>
+  <div class="cmp" id="cmp" data-focus="both">
+    <div class="cmprow head"><div class="k"></div><div class="c i">Innate</div><div class="c a">Adaptive / specific / acquired</div></div>
+    ${[['Timing','Early phase: seconds to hours','Late phase: days (4–7 on first exposure)'],
+       ['Specificity','General protection against classes of microbes','Specific to one antigen (epitope)'],
+       ['Diversity','Limited: ~100 germline receptors','Very large: ~10¹² receptors'],
+       ['Receptors','Same on every cell of a type, fixed for life','Different on every lymphocyte, made randomly during development'],
+       ['Memory','None (±)','Yes: improves with each exposure'],
+       ['Self vs non-self','Built into the receptors','Must be learned (censor self-reactive cells)'],
+       ['Main players','Barriers, phagocytes, granulocytes, NK, ILCs, complement','T cells, B cells, antibodies']
+      ].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
+  </div>
+  <div class="callout"><b>Analogy.</b> Innate immunity is the building's security guard: always on duty, recognises "anyone wearing a balaclava" in seconds, but treats every intruder the same. Adaptive immunity is a detective agency: takes days to open a case, but identifies the exact individual and keeps their file forever.</div>
+  ${nextBar(2)}
+</section>`;
+
+R.innate = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Chapter 3 · slides 10–24</span><h2>The innate toolkit</h2>
+  <p class="lead">Innate immunity has three components. Click each one.</p></div>
+  <div class="seg" id="innseg" role="group" aria-label="Component"><button aria-pressed="true" data-t="barriers">Surface · barriers</button><button aria-pressed="false" data-t="cells">Cellular · innate cells</button><button aria-pressed="false" data-t="proteins">Humoral · proteins</button></div>
+  <div id="innbody"></div>
+  ${nextBar(3)}
+</section>`;
+
+const INN = {
+ barriers:()=>`<div class="grid g3">
+   <div class="card stack"><h3>Skin and mucosa</h3><p>Physical wall. First thing a pathogen must cross.</p></div>
+   <div class="card stack"><h3>Sweat and tears</h3><p>Acidic, contain the antimicrobial peptide <b>dermcidin</b>. Salt left on the skin inhibits bacterial growth.</p></div>
+   <div class="card stack"><h3>Lysozyme</h3><p>Enzyme in tears and saliva that destroys bacterial cell walls.</p></div>
+   <div class="card stack"><h3>Antimicrobial peptides</h3><p>Disrupt the lipid bilayer of microbial membranes.</p></div>
+   <div class="card stack"><h3>Stomach acid and urine</h3><p>Low pH kills; urine flow mechanically washes microbes out.</p></div>
+   <div class="card stack"><h3>Microbiome</h3><p>Symbiotic organisms occupy the space and resources pathogens need.</p></div>
+ </div>`,
+ cells:()=>`<div class="stack">
+   <div class="callout"><b>Start here:</b> all white blood cells are <b>leukocytes</b>, and every one of them (innate and adaptive) expresses <span class="mono">CD45</span>, the leukocyte common antigen, a protein tyrosine phosphatase that regulates activation and cytokine signaling.</div>
+   <p>Highlight a group, then click a cell for its profile.</p>
+   <div class="filters" id="filters" role="group" aria-label="Highlight">${[['all','All'],['myeloid','Myeloid'],['lymphoid','Innate lymphoid'],['phagocyte','Phagocytes'],['granulocyte','Granulocytes'],['apc','Professional APCs'],['circulating','Circulating'],['resident','Tissue resident']].map((f,i)=>`<button aria-pressed="${i===0}" data-f="${f[0]}">${f[1]}</button>`).join('')}</div>
+   <div class="cells" id="cells">${CELLS.map((c,i)=>`<button class="cellbtn" data-i="${i}" aria-pressed="${i===0}">${CELLSVG[c.svg]}<span>${c.name}</span></button>`).join('')}</div>
+   <div class="card" id="celldetail" aria-live="polite"></div>
+   <div class="callout pink" id="filternote" hidden></div>
+   <details class="reveal"><summary>Dendritic cell subsets (slide 17)</summary>
+     <div class="tablewrap"><table><thead><tr><th>Subset</th><th>Markers</th><th>Main output</th><th>Job</th></tr></thead><tbody>
+     <tr><td>cDC1</td><td class="mono">XCR1, CD141 (h), CD8α (mouse spleen)</td><td>IL-12</td><td>Present virus and tumour antigens to T cells</td></tr>
+     <tr><td>cDC2</td><td class="mono">CD1c (h), CD11b, SIRPα</td><td>IL-6, IL-23, IL-12</td><td>Present bacterial, fungal, parasite antigens</td></tr>
+     <tr><td>Plasmacytoid DC</td><td class="mono">CD123, BDCA-2, low MHC II</td><td>Huge amounts of type I IFN</td><td>Antiviral alarm; systemic IFN (also lupus)</td></tr>
+     <tr><td>Monocyte-derived DC</td><td class="mono">CD14, CD1a</td><td>TNF, iNOS</td><td>Appear at inflamed sites, boost local T cells</td></tr>
+     <tr><td>Langerhans cells</td><td class="mono">Langerin (CD207), Birbeck granules</td><td>–</td><td>Epidermal sentinels → skin-draining nodes</td></tr>
+     </tbody></table></div></details>
+   <details class="reveal"><summary>What is in the granules (slide 20)</summary>
+     <div class="tablewrap"><table><thead><tr><th>Cell</th><th>Stored, ready</th><th>Made on activation</th><th>Cytokines</th><th>Targets / pathology</th></tr></thead><tbody>
+     <tr><td>Mast cell</td><td>Histamine, heparin, tryptase, chymase, TNF</td><td>PGD2, leukotrienes, PAF</td><td>IL-4, IL-13, IL-5, TNF</td><td>Parasites, venoms, wounds; allergy, anaphylaxis</td></tr>
+     <tr><td>Basophil</td><td>Histamine, chondroitin sulfate</td><td>Leukotriene C4</td><td>IL-4, IL-13 (early)</td><td>Helminths; allergy, chronic urticaria</td></tr>
+     <tr><td>Eosinophil</td><td>Major basic protein, eosinophil peroxidase</td><td>Leukotrienes, PAF, lipoxins</td><td>Respond IL-5; make IL-4, TGF-β</td><td>Helminth larvae; asthma, eosinophilic oesophagitis</td></tr>
+     <tr><td>Neutrophil</td><td>MPO, elastase, lysozyme, defensins, lactoferrin</td><td>ROS, leukotriene B4, NETs</td><td>Respond IL-8; make IL-1β, TNF</td><td>Bacteria, fungi; abscess, tissue damage</td></tr>
+     </tbody></table></div></details>
+ </div>`,
+ proteins:()=>`<div class="grid g2">
+   <div class="card stack"><span class="pill inn">communication</span><h3>Cytokines</h3><p>Interleukins (IL-) and interferons (IFN). Signaling proteins that change how cells behave: activation, recruitment, communication.</p></div>
+   <div class="card stack"><span class="pill inn">navigation</span><h3>Chemokines</h3><p>A subset of cytokines that create a chemical gradient. Immune cells follow it to the site of infection or inflammation (e.g. IL-8 → neutrophils).</p></div>
+   <div class="card stack"><span class="pill inn">elimination</span><h3>Complement</h3><p>~30 proteins made in the liver, circulating in blood, working as a cascade. Activated by the pathogen itself or by antibodies (details next week).</p></div>
+   <div class="card stack"><span class="pill inn">tagging · starving</span><h3>Acute-phase and iron-binding proteins</h3><p><b>CRP</b> and <b>mannose-binding lectin</b> coat microbes and trigger complement. <b>Lactoferrin, transferrin, hepcidin</b> lock iron away so microbes cannot grow.</p></div>
+ </div>`
+};
+
+R.organization = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Chapter 4 · slides 26–42</span><h2>Where it all happens</h2>
+  <p class="lead">Three levels of organization: <b>cells</b> (circulating vs resident), <b>compartments</b> (lymphoid organs), and the <b>system</b> that connects them (blood and lymph).</p></div>
+
+  <div class="grid g2">
+    <div class="card stack"><span class="pill">circulating</span><h3>Patrol the blood</h3><ul class="clean"><li><b>Neutrophils</b>: most abundant, immediate response</li><li><b>Monocytes</b>: precursors of macrophages and DCs</li><li><b>Eosinophils</b>: parasites, allergy</li><li><b>Basophils</b>: histamine, allergy, inflammation</li><li><b>NK cells</b>: kill infected/tumour cells</li><li>Immature DCs pass through only on their way from bone marrow to tissue</li></ul></div>
+    <div class="card stack"><span class="pill">resident</span><h3>Guard a tissue</h3><ul class="clean"><li><b>Macrophages</b>: alveolar (lung), Kupffer (liver), dermal (skin)</li><li><b>DCs</b>: Langerhans (skin, mucosa), interstitial DCs</li><li><b>Mast cells</b>: skin and mucosa interfaces</li><li><b>ILCs</b>: mucosal barriers, helper-T-like, no TCR</li></ul></div>
+  </div>
+  <div class="callout"><b>Key idea (slide 31):</b> innate APCs do not sample antigen in the blood. Blood is a delivery system that brings cells to tissues and spleen, where antigen is actually met.</div>
+
+  <div class="card stack extra">
+    <h3>How a circulating cell gets into tissue: extravasation</h3>
+    <div class="steps" id="exsteps" role="group" aria-label="Step">${['1 · Flowing','2 · Rolling','3 · Adhesion','4 · Transmigration'].map((s,i)=>`<button aria-pressed="${i===0}" data-s="${i}">${s}</button>`).join('')}</div>
+    <svg viewBox="0 0 640 230" role="img" aria-label="Leukocyte leaving a blood vessel">
+      <rect x="0" y="20" width="640" height="100" fill="var(--eosin-soft)"/>
+      <text x="12" y="40" fill="var(--muted)" font-family="JetBrains Mono,monospace" font-size="12">BLOOD VESSEL → flow</text>
+      ${Array.from({length:16},(_,i)=>`<rect x="${i*40+1}" y="120" width="38" height="16" rx="5" fill="var(--hema-soft)" stroke="var(--hema)" stroke-opacity=".4"/>`).join('')}
+      <text x="12" y="152" fill="var(--muted)" font-family="JetBrains Mono,monospace" font-size="12">endothelium</text>
+      <text x="12" y="215" fill="var(--muted)" font-family="JetBrains Mono,monospace" font-size="12">TISSUE (infection here)</text>
+      <g fill="var(--bad)" opacity=".7"><circle cx="520" cy="190" r="4"/><circle cx="534" cy="200" r="4"/><circle cx="546" cy="186" r="4"/><circle cx="560" cy="206" r="4"/></g>
+      <g id="wbc" transform="translate(70,60)"><circle r="18" fill="url(#cyto)" stroke="var(--eosin)"/><circle cx="-5" cy="-3" r="5" fill="var(--hema)"/><circle cx="5" cy="-4" r="5" fill="var(--hema)"/><circle cx="1" cy="6" r="5" fill="var(--hema)"/></g>
+    </svg>
+    <p id="extext" aria-live="polite"></p>
+    <p style="color:var(--muted)">Resident cells (e.g. DCs) go the other way: they leave the tissue through <b>lymphatic vessels</b> to reach a lymph node when they need to present antigen.</p>
+  </div>
+
+  <div class="stack">
+    <h3>A tissue DC's journey (slide 30)</h3>
+    <div class="flow">
+      <div class="node"><span class="eyebrow">sits</span><p>Below the epithelium in skin, lung, gut</p></div><div class="arrow">→</div>
+      <div class="node"><span class="eyebrow">senses</span><p>PRRs detect microbial or damage signals</p></div><div class="arrow">→</div>
+      <div class="node"><span class="eyebrow">eats</span><p>Phagocytosis, receptor-mediated endocytosis</p></div><div class="arrow">→</div>
+      <div class="node"><span class="eyebrow">processes</span><p>Peptides on MHC II (or MHC I by cross-presentation)</p></div><div class="arrow">→</div>
+      <div class="node"><span class="eyebrow">migrates</span><p>CCR7 up → lymphatics → lymph node → naïve T cells</p></div>
+    </div>
+  </div>
+
+  <div class="stack">
+    <h3>Lymphoid organs</h3>
+    <p>Places where immune cells are found in large numbers and proliferate, differentiate and become activated.</p>
+    <div class="seg" id="orgseg" role="group" aria-label="Organ"><button aria-pressed="true" data-o="bm">Bone marrow</button><button aria-pressed="false" data-o="thymus">Thymus</button><button aria-pressed="false" data-o="ln">Lymph node</button><button aria-pressed="false" data-o="spleen">Spleen</button><button aria-pressed="false" data-o="lymph">Lymphatic system</button></div>
+    <div class="card stack" id="orgbody" aria-live="polite"></div>
+  </div>
+
+  <div class="card stack">
+    <h3>Lymphocyte recirculation: how a rare cell finds its antigen</h3>
+    <div class="flow">
+      <div class="node"><p>Lymphocyte enters node from blood via specialized venules (rolling + adhesion)</p></div><div class="arrow">→</div>
+      <div class="node"><p>Spends ~1 day scanning the node</p></div><div class="arrow">→</div>
+      <div class="node"><p>No match: leaves in lymph, back to blood, next node</p></div>
+    </div>
+    <p>The whole lymphocyte population samples every lymph node every day or two. Antigen (free or carried by an APC) is held in the node. When the <b>cognate</b> (matching) cell finds it, it stops recirculating, divides for several days and leaves as effector cells. <b>That expansion is why lymph nodes swell during infection.</b></p>
+  </div>
+  ${nextBar(4)}
+</section>`;
+
+const ORG = {
+ bm:`<span class="pill">primary</span><h3>Bone marrow</h3><p>Where <b>all</b> immune cells are generated. Primary lymphoid organs are where cells <b>mature</b>.</p>`,
+ thymus:`<span class="pill">primary</span><h3>Thymus</h3><p>Lymphoid progenitors from the bone marrow travel here to mature into <b>T cells</b> and undergo <b>self-tolerance education</b> (removing T cells that react strongly to self).</p>`,
+ ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul>`,
+ spleen:`<span class="pill">secondary</span><h3>Spleen</h3><p>Filters the <b>blood</b> (LNs filter lymph). Starts responses to blood-borne pathogens, recycles iron, stores immune cells.</p><div class="grid g2"><div class="callout"><b>White pulp</b>: T and B cell zones. Screens blood for antigens; DCs, T and B cells interact. Splenic APCs arrive as precursors via blood and present antigen trapped by marginal-zone macrophages.</div><div class="callout pink"><b>Red pulp</b>: macrophages + red blood cells. Removes old, damaged or abnormal RBCs and recycles iron from them.</div></div>`,
+ lymph:`<span class="pill">the system</span><h3>Lymphatic system</h3><p>A network of organs, nodes, ducts and vessels that moves lymph from tissues back to the bloodstream. <b>Lymph</b> forms when interstitial fluid is collected by lymph capillaries.</p><ul class="clean"><li>Returns excess interstitial fluid to blood</li><li>Absorbs fats and fat-soluble vitamins from the gut into circulation</li><li>Carries DCs and antigen from tissues to lymph nodes</li></ul>`
+};
+const EX = [
+ 'The leukocyte is carried along in the bloodstream at full speed.',
+ 'Rolling: near inflamed tissue, the cell is caught weakly by the endothelium and rolls along it, slowing down.',
+ 'Adhesion: chemokine signals activate it and it sticks firmly to the endothelium.',
+ 'Transmigration: it squeezes between endothelial cells into the tissue and follows the chemokine gradient to the infection.'
+];
+const EXPOS = ['translate(70,60)','translate(260,99)','translate(400,101)','translate(520,170)'];
+
+R.strategies = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Chapter 5 · slides 44–57</span><h2>Six strategies of the immune system</h2>
+  <p class="lead">The last part of the lecture explained <i>why</i> there are two arms. Each strategy below is a trade-off.</p></div>
+
+  <div class="card stack tl">
+    <span class="eyebrow">Strategy 1</span><h3>Timing: a layered defence</h3>
+    <p>Drag the slider to move through time after infection.</p>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="clock" id="clock">0 h</span><span id="clocknote" style="color:var(--muted)"></span></div>
+    <label for="tslider" class="eyebrow">Hours since infection</label>
+    <input type="range" id="tslider" min="0" max="100" value="0">
+    <div class="layers" id="layers">
+      <div class="layer"><span class="eyebrow">0 – 4 h</span><h4>Barriers and preformed effectors</h4><ul class="clean"><li>Skin, mucus, pH</li><li>Antimicrobial peptides, enzymes</li><li>Complement</li><li>Resident macrophages, mast cells</li></ul></div>
+      <div class="layer"><span class="eyebrow">4 – 96 h</span><h4>Induced innate response</h4><ul class="clean"><li>Microbial patterns read by fixed receptors</li><li>Cytokines, chemokines, interferons</li><li>Recruit neutrophils, monocytes</li><li>Inflammation · NK cells</li></ul></div>
+      <div class="layer"><span class="eyebrow">&gt; 96 h</span><h4>Adaptive response</h4><ul class="clean"><li>Antigen carried to lymph node</li><li>The few matching lymphocytes multiply</li><li>T cells, antibodies</li><li>Memory</li></ul></div>
+    </div>
+    <p>Each layer buys time for the next. <b>Most infections are stopped by the first two layers</b> before the adaptive response is needed.</p>
+  </div>
+
+  <div class="grid g2">
+    <div class="card stack"><span class="eyebrow">Strategy 2</span><h3>Recognition: patterns vs precision</h3>
+      <p><span class="pill inn">innate</span> ~100 germline receptors, fixed for life (KIRs on NK cells are the exception). They recognise patterns shared by whole classes of microbes and <b>essential</b> to them, so microbes cannot easily mutate them away. Every cell of a type has the same set, so all respond at once.</p>
+      <p><span class="pill ada">adaptive</span> One unique receptor per lymphocyte, made during development (~10¹² possible). Fine precision: T cells see peptide on MHC; B cells see any epitope. Can recognise anything, including self, so the repertoire must be censored.</p></div>
+    <div class="card stack"><span class="eyebrow">Strategy 3</span><h3>Diversity has a price: time</h3>
+      <p>For any microbe, only a tiny fraction of lymphocytes carry a matching receptor. Those few must first be found by the antigen, then divide many times.</p>
+      <p><b>Result:</b> adaptive effector cells appear only 4–7 days after first exposure. Meanwhile the innate response holds the line and tells the adaptive arm <i>what kind</i> of response to make.</p></div>
+  </div>
+
+  <div class="card stack chart">
+    <span class="eyebrow">Strategy 4</span><h3>Memory</h3>
+    <svg viewBox="0 0 640 260" role="img" aria-label="Schematic of primary and secondary adaptive responses">
+      <line x1="60" y1="210" x2="620" y2="210" stroke="var(--line)"/><line x1="60" y1="20" x2="60" y2="210" stroke="var(--line)"/>
+      ${[0,7,14,21,28,35,42,49,56].map(d=>`<text x="${60+d*10}" y="228" text-anchor="middle">${d}</text>`).join('')}
+      <text x="340" y="250" text-anchor="middle">days</text>
+      <text x="20" y="115" text-anchor="middle" transform="rotate(-90 20 115)">response size (schematic)</text>
+      <line x1="60" y1="20" x2="60" y2="210" stroke="var(--eosin)" stroke-dasharray="3 4"/>
+      <line x1="340" y1="20" x2="340" y2="210" stroke="var(--eosin)" stroke-dasharray="3 4"/>
+      <text x="66" y="32" style="fill:var(--eosin)">1st exposure</text><text x="346" y="32" style="fill:var(--eosin)">2nd exposure (same antigen)</text>
+      <path d="M60 208 L110 207 C130 200 150 150 175 150 C200 150 215 190 260 200 L340 200" fill="none" stroke="var(--hema)" stroke-width="3"/>
+      <path d="M340 200 L360 198 C375 150 395 45 425 45 C460 45 500 120 620 160" fill="none" stroke="var(--hema)" stroke-width="3"/>
+      <rect x="62" y="186" width="50" height="16" fill="var(--sunk)"/><text x="87" y="198" text-anchor="middle">lag 4–7 d</text>
+      <rect x="342" y="186" width="44" height="16" fill="var(--sunk)"/><text x="364" y="198" text-anchor="middle">1–3 d</text>
+      <text x="175" y="140" text-anchor="middle">modest</text><text x="425" y="36" text-anchor="middle">faster, larger, better adapted</text>
+    </svg>
+    <p>After the first response, most expanded cells die; a small long-lived population stays as <b>memory cells</b>. On second exposure more cells already match and they activate more easily, sometimes giving lifelong immunity. <b>Innate immunity has no antigen-specific memory</b>: the second infection meets the same receptors as the first.</p>
+  </div>
+
+  <div class="grid g2">
+    <div class="card stack"><span class="eyebrow">Strategy 5</span><h3>Self vs non-self</h3>
+      <p><span class="pill inn">innate: built in</span></p><ul class="clean"><li>Receptors bind structures we don't have (bacterial cell wall, viral dsRNA)</li><li>Compartment as filter: nucleic-acid sensors sit where our own DNA/RNA should never be</li><li>Missing self: NK cells kill cells lacking normal surface molecules</li><li>Host surfaces carry regulators that microbes lack</li></ul>
+      <p><span class="pill ada">adaptive: learned</span></p><ul class="clean"><li>Random receptors will inevitably include self-reactive ones</li><li>Strong self-binders are removed during development</li><li>Escapees are suppressed (e.g. Tregs, lecture 12)</li><li>Failure = autoimmunity</li></ul></div>
+    <div class="card stack"><span class="eyebrow">Strategy 6</span><h3>Cooperation: the hand-off</h3>
+      <p><b>The innate arm detects, the adaptive arm directs, both execute.</b></p>
+      <div class="flow" style="flex-direction:column">
+        <div class="node"><b>Infection or damage</b></div><div class="arrow" style="transform:none">↓ danger detected</div>
+        <div class="node"><b>Dendritic cell</b> senses microbe, takes antigen to lymph node</div><div class="arrow" style="transform:none">↓ antigen presented</div>
+        <div class="node"><b>T cells</b> read it, then help or kill</div><div class="arrow" style="transform:none">↓ help</div>
+        <div class="node"><b>B cells</b> make antibodies</div>
+      </div>
+      <p>The adaptive arm reuses innate effectors: antibodies trigger complement and phagocytes.</p></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card stack"><h3>Vaccination: the strategy put to work</h3><ul class="clean"><li>A first exposure without the disease, so the real pathogen meets a second-exposure response</li><li>Only possible because the adaptive arm has specificity and memory</li><li>Also needs the innate arm: a vaccine must look like an infection (adjuvants) or it is ignored</li><li>Smallpox eradicated 1980; polio nearly. Herd immunity protects those who cannot respond</li></ul></div>
+    <div class="card stack"><h3>When the system fails</h3>
+      <div class="facts" style="grid-template-columns:auto 1fr">
+        <dt>Too little</dt><dd><b>Immunodeficiency</b>: inherited (missing cells/proteins) or acquired (HIV, chemo, immunosuppressants)</dd>
+        <dt>Against self</dt><dd><b>Autoimmunity</b>: type 1 diabetes, MS, lupus, rheumatoid arthritis</dd>
+        <dt>Too much</dt><dd><b>Hypersensitivity</b>: allergy, contact dermatitis, chronic inflammation</dd>
+        <dt>Unwanted</dt><dd><b>Rejection / GVHD</b>: a normal response against a transplant we want to keep</dd>
+        <dt>Escape</dt><dd><b>Cancer</b>: transformed self that escaped surveillance (lecture 13)</dd>
+      </div></div>
+  </div>
+  ${nextBar(5)}
+</section>`;
+
+R.quiz = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Practice · exam style</span><h2>Quiz</h2>
+  <p class="lead">${QUIZ.length} multiple-choice questions on this lecture, in random order. Each answer shows an explanation.</p></div>
+  <div class="card stack qcard" id="qcard"></div>
+  ${nextBar(6)}
+</section>`;
+
+R.cards = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">Practice · terms</span><h2>Flashcards</h2><p class="lead">Tap the card to flip. Use the arrow keys or buttons to move.</p></div>
+  <button class="flip" id="flip" aria-label="Flip card"><div class="flip-inner"><div class="face"><span class="eyebrow" id="fcn"></span><span class="term" id="fct"></span><span style="color:var(--muted)">tap to reveal</span></div><div class="face back"><p id="fcd" style="font-size:1.15rem"></p></div></div></button>
+  <div class="fcnav"><button class="btn" id="fcprev">← Prev</button><button class="btn" id="fcshuf">Shuffle</button><button class="btn primary" id="fcnext">Next →</button></div>
+  <div class="stack"><h3>Glossary</h3><label for="glossq" class="eyebrow">Search terms</label><input id="glossq" type="search" placeholder="e.g. MHC, NETs, CCR7"><div class="gloss" id="gloss"></div></div>
+  ${nextBar(7)}
+</section>`;
+
+/* ---------- behaviour per view ---------- */
+const INIT = {
+ requirements(){
+  const show=i=>{const r=REQS[i];$('#reqpanel').innerHTML=`<span class="eyebrow">Requirement ${i+1} of ${REQS.length}</span><h3>${r.k}</h3><p>${nl(r.m)}</p><div class="callout pink"><b>Example:</b> ${esc(r.ex)}</div><div><button class="btn" id="reqnext">${i<REQS.length-1?'Next requirement →':'Back to first'}</button></div>`;
+    document.querySelectorAll('#reqlist button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));
+    $('#reqnext').onclick=()=>show((i+1)%REQS.length);};
+  $('#reqlist').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i)};
+  show(0);
+ },
+ 'two-arms'(){
+  document.querySelectorAll('.armswitch button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.armswitch button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#cmp').dataset.focus=b.dataset.f;});
+ },
+ innate(){
+  const render=t=>{$('#innbody').innerHTML=INN[t]();document.querySelectorAll('#innseg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));if(t==='cells')cellInit();};
+  $('#innseg').onclick=e=>{const b=e.target.closest('button');if(b)render(b.dataset.t)};
+  render('barriers');
+ },
+ organization(){
+  const so=o=>{$('#orgbody').innerHTML=ORG[o];document.querySelectorAll('#orgseg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.o===o))};
+  $('#orgseg').onclick=e=>{const b=e.target.closest('button');if(b)so(b.dataset.o)};so('bm');
+  const ss=s=>{$('#wbc').setAttribute('transform',EXPOS[s]);$('#extext').textContent=EX[s];document.querySelectorAll('#exsteps button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s==s))};
+  $('#exsteps').onclick=e=>{const b=e.target.closest('button');if(b)ss(+b.dataset.s)};ss(0);
+ },
+ strategies(){
+  const sl=$('#tslider'), L=[...document.querySelectorAll('.layer')];
+  const upd=()=>{const v=+sl.value;const h=v<=30?v*4/30:v<=70?4+(v-30)*92/40:96+(v-70)*(240-96)/30;
+    const hrs=Math.round(h*10)/10;$('#clock').textContent=hrs<48?`${hrs} h`:`${Math.round(h)} h ≈ day ${(h/24).toFixed(1)}`;
+    const cur=h<4?0:h<96?1:2;L.forEach((l,i)=>{l.classList.toggle('off',i>cur);l.classList.toggle('now',i===cur)});
+    $('#clocknote').textContent=['Only what is already in place can act.','Innate cells have sensed the microbe and are recruiting help. Layer 1 keeps working.','The adaptive arm has expanded matching lymphocytes. All layers active.'][cur];};
+  sl.oninput=upd;upd();
+ },
+ quiz(){ quizStart(); },
+ cards(){ fcInit(); }
+};
+
+function cellInit(){
+  const show=i=>{const c=CELLS[i];$('#celldetail').innerHTML=`<div class="celldetail">${CELLSVG[c.svg]}<div class="stack"><div style="display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div><h3 style="font-size:1.5rem">${c.name}</h3><p class="lead">${c.one}</p><dl class="facts">${Object.entries(c.facts).map(([k,v])=>`<dt>${k}</dt><dd>${nl(v)}</dd>`).join('')}</dl></div></div>`;
+    document.querySelectorAll('.cellbtn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));};
+  $('#cells').onclick=e=>{const b=e.target.closest('.cellbtn');if(b)show(+b.dataset.i)};
+  const NOTES={phagocyte:'Phagocytes eat: monocytes/macrophages, DCs and neutrophils.',granulocyte:'Granulocytes have cytoplasmic granules and a polymorphonuclear (lobed) nucleus: neutrophils, eosinophils, basophils; mast cells are granule-filled too.',apc:'Professional APCs present antigen on MHC II to T cells. B cells are APCs too, but not myeloid.',lymphoid:'NK cells and ILCs are lymphoid but innate: no antigen-specific receptor.',myeloid:'Myeloid innate cells: DCs, monocytes/macrophages, and the granulocytes.',circulating:'These patrol the bloodstream and are recruited into tissue.',resident:'These live in a tissue for local surveillance.'};
+  $('#filters').onclick=e=>{const b=e.target.closest('button');if(!b)return;const f=b.dataset.f;
+    document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    document.querySelectorAll('.cellbtn').forEach(cb=>cb.classList.toggle('dim',f!=='all'&&!CELLS[cb.dataset.i].tags.includes(f)));
+    const n=$('#filternote');n.hidden=!NOTES[f];n.textContent=NOTES[f]||'';};
+  show(0);
+}
+
+let QS=[],qi=0,qscore=0;
+function quizStart(){QS=QUIZ.map((q,i)=>i).sort(()=>Math.random()-.5);qi=0;qscore=0;quizShow();}
+function quizShow(){
+  const box=$('#qcard');
+  if(qi>=QS.length){let best=0;try{best=Math.max(+localStorage.getItem('imm1-best')||0,qscore);localStorage.setItem('imm1-best',best)}catch(e){}
+    const pct=Math.round(qscore/QS.length*100);
+    box.innerHTML=`<span class="eyebrow">Done</span><h3 style="font-size:2rem">${qscore} / ${QS.length} · ${pct}%</h3><p>${pct>=55?'Above the 55 pass mark.':'Below the 55 pass mark. Re-read the chapters you missed and try again.'}${best?` Best so far: ${best}/${QS.length}.`:''}</p><div><button class="btn primary" id="qagain">Try again</button></div>`;
+    $('#qagain').onclick=quizStart;return;}
+  const q=QUIZ[QS[qi]];const order=q.o.map((_,i)=>i).sort(()=>Math.random()-.5);
+  box.innerHTML=`<div class="qmeta"><span class="eyebrow">Question ${qi+1} of ${QS.length}</span><span class="score">Score ${qscore}</span></div><h3>${esc(q.q)}</h3><div class="qopts">${order.map(i=>`<button data-i="${i}">${esc(q.o[i])}</button>`).join('')}</div><div id="qex"></div>`;
+  box.querySelector('.qopts').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const pick=+b.dataset.i,ok=pick===q.a;if(ok)qscore++;
+    box.querySelectorAll('.qopts button').forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add('right');else if(x===b)x.classList.add('wrong')});
+    $('#qex').innerHTML=`<div class="expl stack"><b style="color:var(--${ok?'good':'bad'})">${ok?'Correct.':'Not quite.'}</b><p>${esc(q.e)}</p><div><button class="btn primary" id="qnext">${qi<QS.length-1?'Next question →':'See score'}</button></div></div>`;
+    box.querySelector('.score').textContent=`Score ${qscore}`;$('#qnext').onclick=()=>{qi++;quizShow()};$('#qnext').focus();};
+}
+
+let FC=GLOSS.map((_,i)=>i),fi=0;
+function fcInit(){
+  const draw=()=>{const g=GLOSS[FC[fi]];$('#fcn').textContent=`${fi+1} / ${FC.length}`;$('#fct').textContent=g[0];$('#fcd').textContent=g[1];$('#flip').classList.remove('on')};
+  $('#flip').onclick=()=>$('#flip').classList.toggle('on');
+  $('#fcnext').onclick=()=>{fi=(fi+1)%FC.length;draw()};$('#fcprev').onclick=()=>{fi=(fi-1+FC.length)%FC.length;draw()};
+  $('#fcshuf').onclick=()=>{FC.sort(()=>Math.random()-.5);fi=0;draw()};
+  const gl=()=>{const q=$('#glossq').value.toLowerCase();$('#gloss').innerHTML=GLOSS.filter(g=>(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<div><b>${esc(g[0])}</b><br>${esc(g[1])}</div>`).join('')||'<p>No matching terms.</p>'};
+  $('#glossq').oninput=gl;gl();draw();
+}
+document.addEventListener('keydown',e=>{if(!$('#flip')||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')$('#fcnext').click();if(e.key==='ArrowLeft')$('#fcprev').click();});
+
+/* ---------- router ---------- */
+$('#tabs').innerHTML=VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
+function route(){
+  const id=(location.hash||'#start').slice(1);const v=VIEWS.find(x=>x.id===id)||VIEWS[0];
+  $('#main').innerHTML=R[v.id]();INIT[v.id]&&INIT[v.id]();
+  document.querySelectorAll('#tabs a').forEach(a=>{const on=a.dataset.v===v.id;a.toggleAttribute('aria-current',on);if(on){a.setAttribute('aria-current','page');a.scrollIntoView({block:'nearest',inline:'center'})}});
+  visited.add(v.id);try{localStorage.setItem('imm1-visited',JSON.stringify([...visited]))}catch(e){}
+  $('#progbar').style.width=Math.round(visited.size/VIEWS.length*100)+'%';
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);route();
+</script>
+
+</body>
+</html>
