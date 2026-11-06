@@ -51,7 +51,25 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* header + nav */
 header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
-.bar{display:flex;align-items:center;gap:16px;padding-block:10px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.brand{font-size:1.25rem!important}
+.hactions{display:flex;gap:6px;align-items:center}
+.hbtn{display:inline-flex;align-items:center;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-weight:700;font-size:.9rem;cursor:pointer;list-style:none;white-space:nowrap}
+.hbtn::-webkit-details-marker{display:none}
+.hbtn:hover{border-color:var(--hema)}
+.lmenu{position:relative}
+.lmenu-pop{position:absolute;right:0;top:calc(100% + 6px);width:min(340px,calc(100vw - 32px));max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,10,50,.18);padding:6px;display:flex;flex-direction:column;gap:2px}
+.lmenu-pop a,.lmenu-pop .dis{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:.92rem;line-height:1.3}
+.lmenu-pop a:hover{background:var(--sunk)}
+.lmenu-pop .dis{color:var(--muted);opacity:.7}
+.lmenu-pop .mono{flex:none;width:2.2em;color:var(--muted)}
+.lmenu-pop .home{border-bottom:1px solid var(--line);border-radius:8px 8px 0 0;font-weight:700}
+.sub{border-top:1px solid var(--line);background:var(--bg)}
+.subbar{display:flex;align-items:center;gap:16px;padding-block:8px;flex-wrap:wrap}
+.subtitle{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.subname{font-family:var(--f-display);font-weight:700;font-size:.98rem}
+.subbar>nav.tabs{max-width:100%}
+@media (max-width:760px){.subbar{flex-direction:column;align-items:stretch;gap:6px;flex-wrap:nowrap}.subbar>nav.tabs{width:100%;flex:none}.brand{font-size:1.05rem!important}}
 .brand{font-family:var(--f-display);font-weight:800;font-size:1.05rem;white-space:nowrap;display:flex;align-items:center;gap:8px}
 .brand i{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--hema) 0 35%,var(--eosin) 36%);display:inline-block}
 nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
@@ -178,6 +196,17 @@ details.reveal{background:var(--surface);border:1px solid var(--line);border-rad
 details.reveal summary{cursor:pointer;font-weight:700}
 details.reveal[open] summary{margin-bottom:8px}
 
+/* lesson picker */
+.lessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.lesson{display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);text-decoration:none;color:var(--ink);min-width:0}
+a.lesson:hover{border-color:var(--eosin);transform:translateY(-2px)}
+a.lesson{transition:transform .15s,border-color .15s;box-shadow:inset 0 3px 0 var(--eosin)}
+.lesson.soon{background:var(--sunk);color:var(--muted)}
+.lesson .lt{font-family:var(--f-display);font-weight:700;font-size:1.08rem;line-height:1.25}
+.lesson .lm{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.lesson .lm .eyebrow{white-space:nowrap}
+.pill.live{background:var(--good-soft);color:var(--good)}
+.brand{text-decoration:none;color:var(--ink)}
 /* quiz */
 .qcard{max-width:760px}
 .qopts{display:flex;flex-direction:column;gap:8px}
@@ -214,10 +243,19 @@ details.reveal[open] summary{margin-bottom:8px}
 
 <header class="top">
   <div class="wrap bar">
-    <div class="brand"><i></i>Basic Immunology · L1</div>
-    <nav class="tabs" id="tabs" aria-label="Chapters"></nav>
+    <a class="brand" href="#home"><i></i>Basic Immunology</a>
+    <div class="hactions">
+      <a class="hbtn" href="#home">Home</a>
+      <details class="lmenu" id="lmenu"><summary class="hbtn">Lessons ▾</summary><div class="lmenu-pop" id="lmenupop"></div></details>
+    </div>
   </div>
-  <div class="prog"><span id="progbar" style="width:0"></span></div>
+  <div class="sub" id="sub">
+    <div class="wrap subbar">
+      <div class="subtitle"><span class="eyebrow" id="subnum">Lesson 1 · 03.11</span><span class="subname" id="subname">Introduction to the immune system</span></div>
+      <nav class="tabs" id="tabs" aria-label="Chapters"></nav>
+    </div>
+  </div>
+  <div class="prog" id="prog"><span id="progbar" style="width:0"></span></div>
 </header>
 
 <main class="wrap" id="main"></main>
@@ -351,9 +389,26 @@ const GLOSS = [
  ['Lysozyme','Enzyme in tears and saliva that destroys bacterial cell walls.']
 ];
 
+/* ---------- lessons ---------- */
+const LESSONS = [
+ [1,'03.11','Introduction to the immune system. Strategies of innate vs adaptive','start'],
+ [2,'10.11','Innate immunity: composition and functional mechanisms'],
+ [3,'17.11','Innate functional mechanisms (continued), immune cell generation and development'],
+ [4,'24.11','Antibodies: structure and function, genetics of diversity'],
+ [5,'01.12','Recombination, antigen–antibody reaction'],
+ [6,'08.12','B cell development, activation and memory, immune tolerance'],
+ [7,'15.12','Germinal center activity and affinity maturation'],
+ [8,'22.12','MHC and antigen presentation to T cells'],
+ [9,'29.12','The T cell receptor and T cell development'],
+ [10,'05.01','T cell activation and memory, T–B interactions, T cell signaling'],
+ [11,'12.01','Vaccines and assessment of immune function'],
+ [12,'19.01','T cell subsets, cytokines and Tregs'],
+ [13,'26.01','Tregs and tumor immunology']
+];
+
 /* ---------- views ---------- */
 const VIEWS = [
- {id:'start',label:'Start'},
+ {id:'start',label:'Overview'},
  {id:'requirements',label:'1 · What the system must do'},
  {id:'two-arms',label:'2 · Innate vs adaptive'},
  {id:'innate',label:'3 · Innate toolkit'},
@@ -371,10 +426,21 @@ const nl = s=>esc(s).replace(/\n/g,'<br>');
 
 function nextBar(i){
   const p=VIEWS[i-1], n=VIEWS[i+1];
-  return `<div class="next">${p?`<a class="btn" href="#${p.id}">← ${p.label}</a>`:'<span></span>'}${n?`<a class="btn primary" href="#${n.id}">${n.label} →</a>`:''}</div>`;
+  return `<div class="next">${p?`<a class="btn" href="#${p.id}">← ${p.label}</a>`:'<a class="btn" href="#home">← All lessons</a>'}${n?`<a class="btn primary" href="#${n.id}">${n.label} →</a>`:''}</div>`;
 }
 
 const R = {};
+
+R.home = ()=>`
+<section class="view">
+  <div class="stack">
+    <span class="eyebrow">Basic Immunology 027604130 · winter 2026–27</span>
+    <h1>Choose a lesson</h1>
+    <p class="lead">Each lesson is an interactive study guide with explanations, diagrams, a quiz and flashcards. Lessons go live as they are added.</p>
+  </div>
+  <div class="lessons">${LESSONS.map(l=>{const open=!!l[3];const inner=`<div class="lm"><span class="eyebrow">Lesson ${l[0]} · ${l[1]}</span><span class="pill ${open?'live':''}">${open?'Available':'Coming soon'}</span></div><span class="lt">${l[2]}</span>`;
+    return open?`<a class="lesson" href="#${l[3]}">${inner}</a>`:`<div class="lesson soon" aria-disabled="true">${inner}</div>`}).join('')}</div>
+</section>`;
 
 R.start = ()=>`
 <section class="view">
@@ -403,16 +469,6 @@ R.start = ()=>`
     <p>5. Defence is layered in time (0–4 h, 4–96 h, &gt;96 h); the innate arm detects, the adaptive arm directs, both execute. Vaccines exploit memory; disease comes from too little, too much, or misdirected responses.</p>
   </div>
 
-  <div class="stack">
-    <h2>Course map</h2>
-    <p class="lead">Coordinator Prof. Doron Melamed · lecturers Prof. Debby Yablonski, Dr Ari Glasner · Tuesdays 11:30–14:30. Books: Janeway's Immunobiology; Abbas, Cellular and Molecular Immunology.</p>
-    <div class="tablewrap"><table>
-      <thead><tr><th>Wk</th><th>Date</th><th>Lecturer</th><th>Topic</th></tr></thead>
-      <tbody>${[
-        [1,'03.11','Glasner','Intro; innate vs adaptive strategies  ← you are here'],[2,'10.11','Glasner','Innate immunity: composition and mechanisms'],[3,'17.11','Glasner','Innate mechanisms (cont.), immune cell development'],[4,'24.11','Melamed','Antibodies: structure, function, genetics of diversity'],[5,'01.12','Melamed','Recombination, antigen–antibody reaction'],[6,'08.12','Melamed','B cell development, activation, memory, tolerance'],[7,'15.12','Melamed','Germinal centre, affinity maturation'],[8,'22.12','Yablonski','MHC and antigen presentation'],[9,'29.12','Yablonski','TCR and T cell development'],[10,'05.01','Yablonski','T cell activation, memory, T–B interaction, signaling'],[11,'12.01','Yablonski','Vaccines and assessing immune function'],[12,'19.01','Glasner','T cell subsets, cytokines, Tregs'],[13,'26.01','Glasner','Tregs and tumour immunology']
-      ].map(r=>`<tr${r[0]===1?' style="background:var(--eosin-soft)"':''}><td class="mono">${r[0]}</td><td class="mono">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody>
-    </table></div>
-  </div>
   ${nextBar(0)}
 </section>`;
 
@@ -746,9 +802,15 @@ function fcInit(){
 document.addEventListener('keydown',e=>{if(!$('#flip')||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')$('#fcnext').click();if(e.key==='ArrowLeft')$('#fcprev').click();});
 
 /* ---------- router ---------- */
+$('#lmenupop').innerHTML='<a class="home" href="#home">All lessons</a>'+LESSONS.map(l=>l[3]?`<a href="#${l[3]}"><span class="mono">${l[0]}</span>${l[2]}</a>`:`<div class="dis"><span class="mono">${l[0]}</span><span>${l[2]} · soon</span></div>`).join('');
+document.addEventListener('click',e=>{const m=$('#lmenu');if(m.open&&!m.contains(e.target))m.open=false;});
 $('#tabs').innerHTML=VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
 function route(){
-  const id=(location.hash||'#start').slice(1);const v=VIEWS.find(x=>x.id===id)||VIEWS[0];
+  const id=(location.hash||'#home').slice(1);
+  const inLesson=VIEWS.some(x=>x.id===id);
+  $('#sub').hidden=!inLesson; $('#prog').hidden=!inLesson; $('#lmenu').open=false;
+  if(!inLesson){$('#main').innerHTML=R.home();window.scrollTo(0,0);return;}
+  const v=VIEWS.find(x=>x.id===id);
   $('#main').innerHTML=R[v.id]();INIT[v.id]&&INIT[v.id]();
   document.querySelectorAll('#tabs a').forEach(a=>{const on=a.dataset.v===v.id;a.toggleAttribute('aria-current',on);if(on){a.setAttribute('aria-current','page');a.scrollIntoView({block:'nearest',inline:'center'})}});
   visited.add(v.id);try{localStorage.setItem('imm1-visited',JSON.stringify([...visited]))}catch(e){}
