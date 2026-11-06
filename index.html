@@ -207,6 +207,25 @@ a.lesson{transition:transform .15s,border-color .15s;box-shadow:inset 0 3px 0 va
 .lesson .lm .eyebrow{white-space:nowrap}
 .pill.live{background:var(--good-soft);color:var(--good)}
 .brand{text-decoration:none;color:var(--ink)}
+/* figures */
+.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0;overflow-x:auto}
+.fig svg{width:100%;height:auto;display:block}
+.fig svg.wide{min-width:520px}
+.fig figcaption{font-size:.9rem;color:var(--muted);max-width:68ch}
+.fig text,svg.mini text{font-family:var(--f-body);font-size:13px;fill:var(--ink)}
+.fig text.m,svg.mini text.m{fill:var(--muted);font-size:12px}
+.fig text.b,svg.mini text.b{font-weight:700}
+.fig text.h,svg.mini text.h{font-family:var(--f-display);font-weight:700;font-size:16px}
+.fig text.mono,svg.mini text.mono{font-family:var(--f-mono);font-size:11px}
+svg.mini{width:100%;max-width:260px;height:auto;display:block}
+#innbody{display:flex;flex-direction:column;gap:14px}
+.orggrid{display:grid;grid-template-columns:minmax(220px,280px) 1fr;gap:14px;align-items:start}
+@media (max-width:700px){.orggrid{grid-template-columns:1fr}.orggrid .fig.body svg{max-width:260px;margin:0 auto}}
+.organ{cursor:pointer;transition:opacity .2s}
+.fig.body svg>g:first-of-type,.fig.body svg>rect,.fig.body svg>circle{pointer-events:none}
+.organ:hover{opacity:.75}
+.organ.on{filter:drop-shadow(0 0 5px var(--eosin))}
+.celldetail .fig{grid-column:1/-1}
 /* quiz */
 .qcard{max-width:760px}
 .qopts{display:flex;flex-direction:column;gap:8px}
@@ -238,6 +257,8 @@ a.lesson{transition:transform .15s,border-color .15s;box-shadow:inset 0 3px 0 va
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <radialGradient id="cyto" cx="45%" cy="40%"><stop offset="0" stop-color="var(--eosin-soft)"/><stop offset="1" stop-color="var(--eosin)" stop-opacity=".35"/></radialGradient>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker>
+    <linearGradient id="chemgrad" x1="0" x2="1"><stop offset="0" stop-color="var(--eosin)" stop-opacity=".08"/><stop offset="1" stop-color="var(--eosin)" stop-opacity=".9"/></linearGradient>
   </defs>
 </svg>
 
@@ -276,9 +297,191 @@ const CELLSVG = {
   tcell:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="var(--hema-soft)" stroke="var(--hema)" stroke-opacity=".5"/><circle cx="50" cy="50" r="23" ${nucleus}/></svg>`
 };
 
+/* ---------- diagrams ---------- */
+const t=(x,y,s,c='',a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}"${c?` class="${c}"`:''}>${s}</text>`;
+const icon=(n,x,y,s=44)=>CELLSVG[n].replace('<svg viewBox="0 0 100 100">',`<svg x="${x-s/2}" y="${y-s/2}" width="${s}" height="${s}" viewBox="0 0 100 100">`);
+const bact=(x,y,r=0,o=1)=>`<rect x="${x-11}" y="${y-5}" width="22" height="10" rx="5" fill="var(--good)" opacity="${o}" transform="rotate(${r} ${x} ${y})"/>`;
+const arrow=(x1,y1,x2,y2,c='var(--muted)')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="2" marker-end="url(#arw)"/>`;
+const mhc1=(x,y,c)=>`<rect x="${x-3}" y="${y-16}" width="6" height="16" fill="var(--eosin)"/><path d="M${x-12} ${y-16}h24v-14h-6v8h-12v-8h-6z" fill="var(--eosin)"/><circle cx="${x-3}" cy="${y-25}" r="3.5" fill="${c}"/><circle cx="${x+3}" cy="${y-25}" r="3.5" fill="${c}"/>`;
+const mhc2=(x,y,c)=>`<rect x="${x-7}" y="${y-16}" width="4" height="16" fill="var(--hema)"/><rect x="${x+3}" y="${y-16}" width="4" height="16" fill="var(--hema)"/><path d="M${x-12} ${y-16}h24v-14h-6v8h-12v-8h-6z" fill="var(--hema)"/><circle cx="${x-3}" cy="${y-25}" r="3.5" fill="${c}"/><circle cx="${x+3}" cy="${y-25}" r="3.5" fill="${c}"/>`;
+const rshape=(k,x,y,c)=>({
+  tri:`<path d="M${x} ${y-6}l6 11h-12z" fill="${c}"/>`,
+  sq:`<rect x="${x-5}" y="${y-5}" width="10" height="10" fill="${c}"/>`,
+  circ:`<circle cx="${x}" cy="${y}" r="5.5" fill="${c}"/>`,
+  dia:`<path d="M${x} ${y-7}l6 7l-6 7l-6-7z" fill="${c}"/>`,
+  bar:`<rect x="${x-2.5}" y="${y-7}" width="5" height="14" fill="${c}"/>`,
+  hex:`<path d="M${x-6} ${y}l3-5h6l3 5l-3 5h-6z" fill="${c}"/>`
+}[k]);
+const rcell=(x,y,r,fill,stroke,kinds,c,sw=1)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`+
+  [-125,-90,-55].map((a,i)=>{const R=a*Math.PI/180;return rshape(kinds[i%kinds.length],x+(r+6)*Math.cos(R),y+(r+6)*Math.sin(R),c)}).join('');
+const callout=(px,py,lx,ly,side,h,sub)=>{const a=side==='l'?'end':'start',ex=side==='l'?lx+6:lx-6;
+  return `<line x1="${px}" y1="${py}" x2="${ex}" y2="${ly-4}" stroke="var(--muted)" stroke-width="1"/><circle cx="${px}" cy="${py}" r="3.5" fill="var(--ink)"/>${t(lx,ly-4,h,'b',a)}${t(lx,ly+12,sub,'m',a)}`};
+
+const FIG = {
+ epitope:()=>`<svg class="wide" viewBox="0 0 640 250" role="img" aria-label="Antigen with epitopes, a receptor binding one epitope, and a peptide on MHC">
+  <path d="M60 125C55 65 140 40 195 60C250 80 262 150 222 182C182 212 70 205 60 125Z" fill="var(--hema-soft)" stroke="var(--hema)"/>
+  <circle cx="196" cy="60" r="11" fill="var(--eosin)"/><rect x="243" y="118" width="20" height="20" rx="3" fill="var(--good)"/><path d="M80 178l12-22l12 22z" fill="var(--hema)"/>
+  ${t(160,125,'Antigen','h')}${t(160,143,'e.g. a bacterial protein','m')}${t(160,236,'each coloured bump is an epitope','m')}
+  <line x1="300" y1="20" x2="300" y2="236" stroke="var(--line)"/>
+  <ellipse cx="368" cy="58" rx="24" ry="15" fill="var(--hema-soft)" stroke="var(--hema)"/><ellipse cx="432" cy="58" rx="24" ry="15" fill="var(--hema-soft)" stroke="var(--hema)"/>
+  <circle cx="370" cy="78" r="9" fill="var(--eosin)"/><circle cx="430" cy="78" r="9" fill="var(--eosin)"/>
+  <path d="M400 190L400 140L373 94M400 140L427 94" stroke="var(--hema)" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M340 198Q400 184 460 198" stroke="var(--muted)" stroke-width="3" fill="none"/>
+  ${t(400,220,'B cell receptor / antibody','b')}${t(400,238,'fits ONE epitope (the pink one)','m')}
+  <line x1="500" y1="20" x2="500" y2="236" stroke="var(--line)"/>
+  <rect x="562" y="158" width="16" height="36" fill="var(--eosin-soft)" stroke="var(--eosin)"/>
+  <path d="M530 160L530 112L546 112L546 136L594 136L594 112L610 112L610 160Z" fill="var(--eosin-soft)" stroke="var(--eosin)"/>
+  ${[552,561,570,579,588].map(x=>`<circle cx="${x}" cy="129" r="5" fill="var(--good)"/>`).join('')}
+  <path d="M520 198H620" stroke="var(--muted)" stroke-width="3"/>
+  ${t(570,104,'peptide','m')}${t(570,150,'MHC','m')}${t(570,220,'T cell receptor reads','b')}${t(570,238,'a peptide held by MHC','m')}
+ </svg>`,
+
+ mhc:()=>`<svg class="wide" viewBox="0 0 640 260" role="img" aria-label="MHC I on an infected body cell and MHC II on an antigen presenting cell">
+  ${t(160,26,'MHC I','h')}${t(160,46,'on ALL nucleated cells','m')}
+  <rect x="40" y="96" width="240" height="110" rx="28" fill="var(--sunk)" stroke="var(--line)"/>
+  <ellipse cx="160" cy="156" rx="38" ry="24" fill="var(--hema)" opacity=".8"/>
+  ${[[90,176],[232,136],[214,186],[100,128]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="var(--bad)"/>`).join('')}
+  ${t(70,150,'virus','m','start')}
+  ${[80,130,190,240].map(x=>mhc1(x,96,'var(--bad)')).join('')}
+  ${t(160,228,'shows pieces of proteins made INSIDE','m')}${t(160,246,'so an infected cell can be spotted and killed','m')}
+  <line x1="320" y1="20" x2="320" y2="246" stroke="var(--line)"/>
+  ${t(480,26,'MHC II','h')}${t(480,46,'only on professional APCs: DC, macrophage, B cell','m')}
+  <rect x="360" y="96" width="240" height="110" rx="28" fill="var(--sunk)" stroke="var(--line)"/>
+  <ellipse cx="510" cy="156" rx="38" ry="24" fill="var(--hema)" opacity=".8"/>
+  <circle cx="420" cy="160" r="20" fill="var(--bg)" stroke="var(--muted)"/>${bact(420,160,-20)}
+  ${t(420,196,'eaten bacterium','m')}
+  ${[400,450,510,560].map(x=>mhc2(x,96,'var(--good)')).join('')}
+  ${t(480,228,'shows pieces of what the cell ATE from outside','m')}${t(480,246,'to helper T cells in the lymph node','m')}
+ </svg>`,
+
+ diversity:()=>`<svg class="wide" viewBox="0 0 640 260" role="img" aria-label="Innate cells share the same receptors; each adaptive lymphocyte has a unique receptor and only the matching one multiplies">
+  ${t(150,26,'Innate','h')}${t(150,44,'same receptors on every cell','m')}
+  ${[55,120,185,250].map(x=>rcell(x,120,22,'var(--eosin-soft)','var(--eosin)',['tri','sq','circ'],'var(--eosin)')).join('')}
+  ${t(150,176,'any cell that meets a microbe','m')}${t(150,193,'responds within minutes to hours','m')}
+  <line x1="300" y1="16" x2="300" y2="248" stroke="var(--line)"/>
+  ${t(465,26,'Adaptive','h')}${t(465,44,'every lymphocyte has its own receptor','m')}
+  ${['tri','sq','circ','dia','bar','hex'].map((k,i)=>rcell(345+i*48,120,18,'var(--hema-soft)',i===3?'var(--eosin)':'var(--hema)',[k],'var(--hema)',i===3?3:1)).join('')}
+  <path d="M489 58l8 9l-8 9l-8-9z" fill="var(--eosin)"/>${t(503,72,'antigen','b','start')}
+  ${arrow(489,145,489,172)}
+  ${[449,469,489,509,529].map(x=>`<circle cx="${x}" cy="194" r="9" fill="var(--hema-soft)" stroke="var(--eosin)" stroke-width="2"/>${rshape('dia',x,178,'var(--hema)')}`).join('')}
+  ${t(489,228,'only the matching cell multiplies','m')}${t(489,245,'this takes 4–7 days the first time','m')}
+ </svg>`,
+
+ barriers:()=>`<svg class="wide" viewBox="0 0 640 380" role="img" aria-label="Body surface barriers">
+  <g stroke="var(--eosin-soft)" stroke-linecap="round"><line x1="284" y1="112" x2="244" y2="220" stroke-width="22"/><line x1="356" y1="112" x2="396" y2="220" stroke-width="22"/><line x1="302" y1="236" x2="294" y2="356" stroke-width="26"/><line x1="338" y1="236" x2="346" y2="356" stroke-width="26"/></g>
+  <rect x="278" y="96" width="84" height="152" rx="26" fill="var(--eosin-soft)"/><rect x="310" y="84" width="20" height="16" fill="var(--eosin-soft)"/>
+  <circle cx="320" cy="58" r="32" fill="var(--eosin-soft)"/>
+  <circle cx="308" cy="53" r="3" fill="var(--ink)"/><circle cx="332" cy="53" r="3" fill="var(--ink)"/><path d="M311 72q9 7 18 0" stroke="var(--ink)" fill="none" stroke-width="2"/>
+  <line x1="320" y1="92" x2="320" y2="132" stroke="var(--hema)" stroke-width="5" opacity=".4"/>
+  <ellipse cx="333" cy="160" rx="17" ry="12" fill="var(--eosin)" opacity=".55"/>
+  <path d="M296 196q8-10 16 0t16 0t16 0M296 212q8-10 16 0t16 0t16 0" stroke="var(--hema)" stroke-width="3" fill="none" opacity=".55"/>
+  <circle cx="320" cy="234" r="7" fill="var(--hema)" opacity=".6"/>
+  ${callout(308,53,200,36,'l','Tears','lysozyme breaks bacterial walls')}
+  ${callout(320,112,200,112,'l','Mucosa','mucus, antimicrobial peptides')}
+  ${callout(251,192,200,192,'l','Skin and sweat','wall + acid, dermcidin, salt')}
+  ${callout(320,234,200,282,'l','Urine','flushes microbes out')}
+  ${callout(322,74,440,62,'r','Saliva','lysozyme')}
+  ${callout(338,160,440,150,'r','Stomach','acid pH kills microbes')}
+  ${callout(330,206,440,232,'r','Gut','microbiome occupies the space')}
+ </svg>`,
+
+ lineage:()=>`<svg class="wide" viewBox="0 0 640 340" role="img" aria-label="Family tree of immune cells">
+  <circle cx="24" cy="20" r="6" fill="var(--eosin)"/>${t(36,25,'innate','m','start')}<circle cx="24" cy="42" r="6" fill="var(--hema)"/>${t(36,47,'adaptive (later lectures)','m','start')}
+  <g stroke="var(--muted)" fill="none" stroke-width="1.5">
+   <path d="M320 58V88M190 101V88H510V101"/>
+   <path d="M190 129V160M50 178V160H330V178M120 160V178M190 160V178M260 160V178"/>
+   <path d="M510 129V160M420 178V160H600V178M480 160V178M540 160V178"/>
+   <path d="M330 244V262M290 268V262H380V268"/>
+  </g>
+  <circle cx="320" cy="40" r="18" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>${t(346,45,'Blood stem cell (in bone marrow)','b','start')}
+  <circle cx="190" cy="115" r="14" fill="var(--eosin-soft)" stroke="var(--eosin)"/>${t(168,120,'Myeloid progenitor','b','end')}
+  <circle cx="510" cy="115" r="14" fill="var(--hema-soft)" stroke="var(--hema)"/>${t(488,120,'Lymphoid progenitor','b','end')}
+  ${[['neutrophil',50,'Neutrophil'],['eosinophil',120,'Eosinophil'],['basophil',190,'Basophil'],['mast',260,'Mast cell'],['monocyte',330,'Monocyte'],['nk',420,'NK cell'],['ilc',480,'ILCs']].map(([n,x,l])=>icon(n,x,200,40)+t(x,236,l,'m')).join('')}
+  ${icon('tcell',540,200,40)}${t(540,236,'T cell','b')}${icon('tcell',600,200,40)}${t(600,236,'B cell','b')}
+  ${icon('macrophage',290,290,44)}${t(290,328,'Macrophage','m')}${icon('dc',380,290,44)}${t(380,328,'Dendritic cell','m')}
+ </svg>`,
+
+ arsenal:()=>{const cell=(cx,cy,extra='',dash='')=>`<circle cx="${cx}" cy="${cy}" r="46" fill="url(#cyto)" stroke="var(--eosin)" ${dash}/>`+[[-24,-14],[-30,4],[-20,20]].map(([dx,dy])=>`<circle cx="${cx+dx}" cy="${cy+dy}" r="7" fill="var(--hema)" opacity=".85"/>`).join('')+extra;
+  const vac=(cx,cy)=>`<circle cx="${cx+14}" cy="${cy}" r="17" fill="var(--bg)" stroke="var(--muted)"/>${bact(cx+14,cy,-25)}`;
+  return `<svg class="wide" viewBox="0 0 640 214" role="img" aria-label="Four ways neutrophils kill">
+  ${cell(80,84,vac(80,84))}
+  ${cell(240,84,vac(240,84)+[[-12,-8],[10,-12],[14,10],[-10,12],[0,-15]].map(([dx,dy])=>`<circle cx="${254+dx}" cy="${84+dy}" r="2.5" fill="var(--eosin)"/>`).join(''))}${t(240,152,'O₂ → H₂O₂ → HOCl (bleach)','mono')}
+  ${cell(400,84,[[18,-20],[26,-2],[14,18],[30,14]].map(([dx,dy])=>`<circle cx="${400+dx}" cy="${84+dy}" r="3.5" fill="var(--eosin)"/>`).join('')+`<circle cx="452" cy="58" r="3.5" fill="var(--eosin)"/><circle cx="460" cy="70" r="3.5" fill="var(--eosin)"/>`+bact(468,46,30))}
+  ${cell(560,84,'','stroke-dasharray="5 6" opacity=".7"')}
+  <g stroke="var(--hema)" stroke-width="1.6" fill="none" opacity=".75"><path d="M560 84q20-30 54-38M560 84q30 0 70 14M560 84q-6 30-30 56M560 84q-30-10-48-46M560 84q14 26 42 46"/></g>
+  ${bact(612,46,20)}${bact(624,100,-10)}${bact(528,140,60)}
+  ${[['1 · Phagocytosis','swallows the microbe'],['2 · Respiratory burst','makes bleach inside'],['3 · Degranulation','releases granule weapons'],['4 · NETs','throws out a DNA net']].map(([a,b],i)=>t(80+160*i,186,a,'b')+t(80+160*i,204,b,'m')).join('')}
+ </svg>`},
+
+ pCyto:()=>`<svg class="mini" viewBox="0 0 240 100" role="img" aria-label="One cell sends cytokines to another"><circle cx="40" cy="52" r="26" fill="var(--eosin-soft)" stroke="var(--eosin)"/><circle cx="200" cy="52" r="26" fill="var(--hema-soft)" stroke="var(--hema)"/>${[78,104,130,156].map((x,i)=>`<circle cx="${x}" cy="${48+i*1.5}" r="4.5" fill="var(--eosin)"/>`).join('')}${[-30,0,30].map(a=>{const R=(180+a)*Math.PI/180;return `<circle cx="${200+28*Math.cos(R)}" cy="${52+28*Math.sin(R)}" r="4" fill="none" stroke="var(--hema)" stroke-width="2"/>`}).join('')}${t(40,94,'sender','m')}${t(200,94,'receiver','m')}</svg>`,
+ pChemo:()=>`<svg class="mini" viewBox="0 0 240 100" role="img" aria-label="Cell follows a chemokine gradient"><rect x="10" y="74" width="220" height="12" rx="6" fill="url(#chemgrad)"/>${[[40,.3],[90,.6],[140,1]].map(([x,o])=>`<circle cx="${x}" cy="44" r="16" fill="url(#cyto)" stroke="var(--eosin)" opacity="${o}"/>`).join('')}${arrow(160,44,188,44)}${bact(210,40,20)}${bact(222,54,-30)}${t(12,20,'low','m','start')}${t(228,20,'high: infection','m','end')}</svg>`,
+ pComp:()=>`<svg class="mini" viewBox="0 0 240 100" role="img" aria-label="Complement cascade punches a pore in a bacterium">${[24,70,116].map((x,i)=>`<circle cx="${x}" cy="50" r="14" fill="var(--hema-soft)" stroke="var(--hema)"/>${t(x,55,'C','b')}`).join('')}${arrow(39,50,54,50)}${arrow(85,50,100,50)}${arrow(131,50,154,50)}<rect x="160" y="18" width="70" height="64" rx="28" fill="var(--good)" opacity=".3" stroke="var(--good)"/><circle cx="162" cy="50" r="9" fill="var(--bg)" stroke="var(--eosin)" stroke-width="4"/>${t(196,96,'pore in microbe','m')}</svg>`,
+ pIron:()=>`<svg class="mini" viewBox="0 0 240 100" role="img" aria-label="Iron locked away from a bacterium">${[50,118].map(x=>`<path d="M${x} 48L${x+22} 34A26 26 0 1 0 ${x+22} 62Z" fill="var(--hema-soft)" stroke="var(--hema)"/><circle cx="${x+8}" cy="48" r="8" fill="var(--eosin)"/>${t(x+8,52,'Fe','mono')}`).join('')}<rect x="168" y="28" width="62" height="40" rx="20" fill="var(--good)" opacity=".3" stroke="var(--good)"/>${t(199,53,'?','h')}${t(84,96,'iron locked up','m')}${t(199,96,'starves','m')}</svg>`,
+
+ body:()=>`<svg viewBox="-44 0 344 420" role="img" aria-label="Lymphoid organs in the body. Tap an organ.">
+  <g stroke="var(--line)" stroke-linecap="round"><line x1="112" y1="98" x2="72" y2="232" stroke-width="20"/><line x1="188" y1="98" x2="228" y2="232" stroke-width="20"/><line x1="132" y1="250" x2="124" y2="402" stroke-width="24"/><line x1="168" y1="250" x2="176" y2="402" stroke-width="24"/></g>
+  <rect x="104" y="80" width="92" height="174" rx="26" fill="var(--line)"/><circle cx="150" cy="46" r="28" fill="var(--line)"/>
+  <g class="organ" data-o="lymph"><path d="M124 392L132 252L146 176L142 106M176 392L168 252L154 176L142 106M78 222L112 116L142 106M222 222L188 116L142 106" stroke="var(--hema)" stroke-width="2.5" fill="none" opacity=".55"/></g>
+  <g class="organ" data-o="bm"><line x1="131" y1="268" x2="126" y2="378" stroke="var(--surface)" stroke-width="9" stroke-linecap="round"/><line x1="169" y1="268" x2="174" y2="378" stroke="var(--surface)" stroke-width="9" stroke-linecap="round"/><line x1="131" y1="268" x2="126" y2="378" stroke="var(--eosin)" stroke-width="3" stroke-linecap="round"/><line x1="169" y1="268" x2="174" y2="378" stroke="var(--eosin)" stroke-width="3" stroke-linecap="round"/></g>
+  <g class="organ" data-o="thymus"><ellipse cx="143" cy="118" rx="9" ry="14" fill="var(--eosin)"/><ellipse cx="157" cy="118" rx="9" ry="14" fill="var(--eosin)"/></g>
+  <g class="organ" data-o="spleen"><ellipse cx="180" cy="172" rx="11" ry="18" transform="rotate(20 180 172)" fill="var(--bad)" opacity=".8"/></g>
+  <g class="organ" data-o="ln">${[[136,84],[164,84],[116,112],[184,112],[132,244],[168,244],[150,206]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="13" fill="transparent"/><circle cx="${x}" cy="${y}" r="5.5" fill="var(--hema)"/>`).join('')}</g>
+  <g stroke="var(--muted)" stroke-width="1"><line x1="80" y1="84" x2="130" y2="84"/><line x1="80" y1="128" x2="134" y2="120"/><line x1="220" y1="160" x2="190" y2="168"/><line x1="80" y1="340" x2="126" y2="340"/><line x1="220" y1="300" x2="171" y2="300"/></g>
+  ${t(76,88,'Lymph nodes','b','end')}${t(76,132,'Thymus','b','end')}${t(224,164,'Spleen','b','start')}${t(76,344,'Bone marrow','b','end')}${t(224,296,'Lymph','b','start')}${t(224,312,'vessels','b','start')}
+ </svg>`,
+
+ ln:()=>`<svg class="wide" viewBox="0 0 440 250" role="img" aria-label="Lymph node cross-section">
+  <path d="M60 125C60 45 180 25 260 45C330 65 340 105 300 125C340 145 330 185 260 205C180 225 60 205 60 125Z" fill="var(--sunk)" stroke="var(--muted)"/>
+  <ellipse cx="195" cy="125" rx="65" ry="45" fill="var(--hema-soft)" stroke="var(--hema)"/>
+  ${[[98,84],[152,57],[98,170],[156,194]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="17" fill="var(--eosin-soft)" stroke="var(--eosin)"/>`).join('')}
+  ${t(195,122,'T cell zone','b')}${t(195,139,'DCs meet T cells','m')}
+  ${arrow(14,64,66,86)}${arrow(8,128,52,126)}${arrow(14,196,68,172)}
+  <line x1="302" y1="118" x2="400" y2="96" stroke="var(--bad)" stroke-width="3"/><line x1="302" y1="124" x2="400" y2="110" stroke="var(--hema)" stroke-width="3"/>
+  ${arrow(302,132,400,146)}
+  ${t(150,22,'B cell follicles (pink)','m')}<line x1="150" y1="28" x2="152" y2="40" stroke="var(--muted)"/>
+  ${t(10,236,'afferent lymph brings antigen and DCs in','m','start')}
+  ${t(436,70,'blood vessels:','m','end')}${t(436,86,'lymphocytes enter','m','end')}
+  ${t(436,168,'efferent lymph:','m','end')}${t(436,184,'cells leave','m','end')}
+ </svg>`,
+
+ spleen:()=>`<svg class="wide" viewBox="0 0 440 240" role="img" aria-label="Spleen with white pulp islands inside red pulp">
+  <path d="M40 120C40 60 140 35 250 50C340 62 390 100 380 140C370 185 300 205 200 200C110 196 40 180 40 120Z" fill="var(--eosin)" opacity=".28" stroke="var(--eosin)"/>
+  ${[[95,105],[180,150],[300,95],[330,165],[250,180],[140,180],[120,140]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="5" ry="3.5" fill="var(--bad)" opacity=".7"/>`).join('')}
+  ${[[130,95,22],[205,85,20],[270,130,24],[175,138,18]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--hema-soft)" stroke="var(--hema)"/><circle cx="${x}" cy="${y}" r="3" fill="var(--bad)"/>`).join('')}
+  <line x1="205" y1="64" x2="250" y2="26" stroke="var(--muted)"/>${t(256,24,'white pulp: T and B cells','b','start')}${t(256,40,'screens the blood','m','start')}
+  <line x1="320" y1="180" x2="340" y2="214" stroke="var(--muted)"/>${t(436,226,'red pulp: macrophages remove old red cells','b','end')}
+ </svg>`,
+
+ recirc:()=>`<svg class="wide" viewBox="0 0 640 225" role="img" aria-label="Lymphocyte recirculation loop">
+  <rect x="20" y="72" width="130" height="66" rx="14" fill="var(--eosin-soft)" stroke="var(--eosin)"/>${t(85,102,'Blood','h')}${t(85,121,'lymphocytes travel','m')}
+  ${arrow(152,105,236,105)}${t(194,94,'enter','m')}
+  <ellipse cx="320" cy="105" rx="80" ry="50" fill="var(--hema-soft)" stroke="var(--hema)"/>${t(288,102,'Lymph node','b')}${t(292,120,'~1 day here','m')}
+  ${[[364,96],[377,96],[370,108],[383,108],[357,108]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="var(--eosin)"/>`).join('')}
+  ${t(320,36,'match → stops, divides for days → node swells','m')}<line x1="352" y1="42" x2="368" y2="88" stroke="var(--muted)"/>
+  ${arrow(402,105,488,105)}${t(445,94,'no match','m')}
+  <rect x="490" y="72" width="130" height="66" rx="14" fill="var(--sunk)" stroke="var(--muted)"/>${t(555,102,'Lymph','h')}${t(555,121,'→ thoracic duct','m')}
+  <path d="M555 140C555 200 85 200 85 142" stroke="var(--muted)" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+  ${t(320,216,'back to the blood, then on to the next node','m')}
+ </svg>`,
+
+ coop:()=>`<svg class="wide" viewBox="0 0 640 256" role="img" aria-label="Dendritic cell carries antigen to the lymph node, activates T cells, which help B cells">
+  <rect x="0" y="0" width="200" height="256" rx="14" fill="var(--eosin-soft)"/>${t(100,24,'Tissue','h')}
+  ${bact(40,70,20)}${bact(70,52,-30)}${bact(150,60,10)}${bact(40,214,45)}
+  ${icon('dc',104,118,62)}${t(104,166,'DC senses danger,','m')}${t(104,182,'takes antigen','m')}
+  <ellipse cx="430" cy="118" rx="200" ry="96" fill="var(--hema-soft)"/>${t(430,40,'Lymph node','h')}
+  <path d="M140 108C200 80 260 90 312 108" stroke="var(--muted)" stroke-width="2" fill="none" marker-end="url(#arw)"/>${t(226,80,'① via lymph','m')}
+  ${icon('dc',335,118,48)}${icon('tcell',430,118,40)}${icon('tcell',525,118,40)}
+  ${t(430,152,'T cell','b')}${t(525,152,'B cell','b')}
+  ${arrow(360,118,406,118)}${t(383,104,'② presents','m')}${arrow(452,118,501,118)}${t(476,104,'③ helps','m')}
+  ${[[568,82],[590,100],[575,150]].map(([x,y])=>`<path d="M${x} ${y+10}V${y}l-6-7M${x} ${y}l6-7" stroke="var(--hema)" stroke-width="2.5" fill="none" stroke-linecap="round"/>`).join('')}
+  <path d="M520 180C470 236 250 236 168 196" stroke="var(--muted)" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+  ${t(380,250,'④ antibodies and effector T cells return to the tissue','m')}
+ </svg>`
+};
+
 /* ---------- data ---------- */
 const CELLS = [
- {id:'neutrophil',name:'Neutrophil',svg:'neutrophil',tags:['myeloid','granulocyte','phagocyte','circulating'],
+ {id:'neutrophil',name:'Neutrophil',svg:'neutrophil',fig:'arsenal',tags:['myeloid','granulocyte','phagocyte','circulating'],
   one:'The first responder. Arrives within hours and kills bacteria and fungi.',
   facts:{'Lineage':'Myeloid · granulocyte · polymorphonuclear (lobed nucleus)','Numbers':'50–70% of all leukocytes, the most abundant. ~10¹¹ made per day, lives only 1–2 days','Where':'Circulates in blood; recruited to tissue by IL-8','Kills by':'1. Phagocytosis\n2. Respiratory burst: NADPH oxidase turns O₂ into superoxide and H₂O₂, then myeloperoxidase (MPO) makes hypochlorite (bleach)\n3. Degranulation: elastase, lysozyme, hole-punching defensins, iron-binding lactoferrin\n4. NETs: throws out its own chromatin coated with granule proteins to trap microbes too many or too big to eat','Cytokines':'Responds to IL-8; makes IL-1β and TNF','Targets / disease':'Bacteria, fungi · abscess (pus), tissue damage'}},
  {id:'monocyte',name:'Monocyte',svg:'monocyte',tags:['myeloid','phagocyte','circulating'],
@@ -309,8 +512,8 @@ const CELLS = [
 
 const REQS = [
  {k:'Patrol',m:'Movement and sensing. Cells carry surface receptors that bind ligands (other molecules); binding triggers signal transduction inside the cell.',ex:'Neutrophils and monocytes circulating in blood; lymphocytes recirculating through lymph nodes.'},
- {k:'Recognition',m:'Antigen: any molecule that immune cells can sense.\nPeptide: a fragment of a protein.\nEpitope: the smallest physical part of the antigen that the receptor actually touches.',ex:'One protein (antigen) has many epitopes; each B cell or T cell sees one epitope.'},
- {k:'Identification',m:'IFF, identification friend or foe. Cells display what is inside them on MHC molecules.\nMHC I: on all nucleated cells.\nMHC II: only on specialized antigen presenting cells (DCs, macrophages, B cells).',ex:'A virus-infected epithelial cell shows viral peptides on MHC I.'},
+ {k:'Recognition',fig:'epitope',m:'Antigen: any molecule that immune cells can sense.\nPeptide: a fragment of a protein.\nEpitope: the smallest physical part of the antigen that the receptor actually touches.',ex:'One protein (antigen) has many epitopes; each B cell or T cell sees one epitope.'},
+ {k:'Identification',fig:'mhc',m:'IFF, identification friend or foe. Cells display what is inside them on MHC molecules.\nMHC I: on all nucleated cells.\nMHC II: only on specialized antigen presenting cells (DCs, macrophages, B cells).',ex:'A virus-infected epithelial cell shows viral peptides on MHC I.'},
  {k:'Decision: kill or spare',m:'Based on identification, the system decides whether a target is dangerous (non-self, infected, transformed) or should be left alone (self).',ex:'NK cells spare cells with normal MHC I and kill cells that lost it.'},
  {k:'Elimination',m:'Production of enzymes, toxins, antibodies, complement and other proteins that destroy the threat.',ex:'Neutrophil bleach (hypochlorite); NK perforin + granzyme; antibodies.'},
  {k:'Amplification & regulation',m:'Cytokines, chemokines and growth factors turn the response up or down.',ex:'IL-8 recruits neutrophils; TNF and IL-6 drive inflammation.'},
@@ -509,6 +712,7 @@ R['two-arms'] = ()=>`
        ['Main players','Barriers, phagocytes, granulocytes, NK, ILCs, complement','T cells, B cells, antibodies']
       ].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
   </div>
+  <figure class="fig">${FIG.diversity()}<figcaption>Innate receptors (left) are copied onto every cell, so the response is instant. Adaptive receptors (right) are all different, so the one matching cell has to be found and multiplied first.</figcaption></figure>
   <div class="callout"><b>Analogy.</b> Innate immunity is the building's security guard: always on duty, recognises "anyone wearing a balaclava" in seconds, but treats every intruder the same. Adaptive immunity is a detective agency: takes days to open a case, but identifies the exact individual and keeps their file forever.</div>
   ${nextBar(2)}
 </section>`;
@@ -523,7 +727,7 @@ R.innate = ()=>`
 </section>`;
 
 const INN = {
- barriers:()=>`<div class="grid g3">
+ barriers:()=>`<figure class="fig">${FIG.barriers()}<figcaption>Surface barriers: the first thing a pathogen has to get through.</figcaption></figure><div class="grid g3">
    <div class="card stack"><h3>Skin and mucosa</h3><p>Physical wall. First thing a pathogen must cross.</p></div>
    <div class="card stack"><h3>Sweat and tears</h3><p>Acidic, contain the antimicrobial peptide <b>dermcidin</b>. Salt left on the skin inhibits bacterial growth.</p></div>
    <div class="card stack"><h3>Lysozyme</h3><p>Enzyme in tears and saliva that destroys bacterial cell walls.</p></div>
@@ -533,6 +737,7 @@ const INN = {
  </div>`,
  cells:()=>`<div class="stack">
    <div class="callout"><b>Start here:</b> all white blood cells are <b>leukocytes</b>, and every one of them (innate and adaptive) expresses <span class="mono">CD45</span>, the leukocyte common antigen, a protein tyrosine phosphatase that regulates activation and cytokine signaling.</div>
+   <figure class="fig">${FIG.lineage()}<figcaption>Every immune cell comes from a blood stem cell in the bone marrow. The myeloid branch gives the phagocytes and granulocytes; the lymphoid branch gives NK cells, ILCs and the adaptive T and B cells.</figcaption></figure>
    <p>Highlight a group, then click a cell for its profile.</p>
    <div class="filters" id="filters" role="group" aria-label="Highlight">${[['all','All'],['myeloid','Myeloid'],['lymphoid','Innate lymphoid'],['phagocyte','Phagocytes'],['granulocyte','Granulocytes'],['apc','Professional APCs'],['circulating','Circulating'],['resident','Tissue resident']].map((f,i)=>`<button aria-pressed="${i===0}" data-f="${f[0]}">${f[1]}</button>`).join('')}</div>
    <div class="cells" id="cells">${CELLS.map((c,i)=>`<button class="cellbtn" data-i="${i}" aria-pressed="${i===0}">${CELLSVG[c.svg]}<span>${c.name}</span></button>`).join('')}</div>
@@ -554,11 +759,11 @@ const INN = {
      <tr><td>Neutrophil</td><td>MPO, elastase, lysozyme, defensins, lactoferrin</td><td>ROS, leukotriene B4, NETs</td><td>Respond IL-8; make IL-1β, TNF</td><td>Bacteria, fungi; abscess, tissue damage</td></tr>
      </tbody></table></div></details>
  </div>`,
- proteins:()=>`<div class="grid g2">
-   <div class="card stack"><span class="pill inn">communication</span><h3>Cytokines</h3><p>Interleukins (IL-) and interferons (IFN). Signaling proteins that change how cells behave: activation, recruitment, communication.</p></div>
-   <div class="card stack"><span class="pill inn">navigation</span><h3>Chemokines</h3><p>A subset of cytokines that create a chemical gradient. Immune cells follow it to the site of infection or inflammation (e.g. IL-8 → neutrophils).</p></div>
-   <div class="card stack"><span class="pill inn">elimination</span><h3>Complement</h3><p>~30 proteins made in the liver, circulating in blood, working as a cascade. Activated by the pathogen itself or by antibodies (details next week).</p></div>
-   <div class="card stack"><span class="pill inn">tagging · starving</span><h3>Acute-phase and iron-binding proteins</h3><p><b>CRP</b> and <b>mannose-binding lectin</b> coat microbes and trigger complement. <b>Lactoferrin, transferrin, hepcidin</b> lock iron away so microbes cannot grow.</p></div>
+ proteins:()=>`<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
+   <div class="card stack">${FIG.pCyto()}<span class="pill inn">communication</span><h3>Cytokines</h3><p>Interleukins (IL-) and interferons (IFN). Signaling proteins that change how cells behave: activation, recruitment, communication.</p></div>
+   <div class="card stack">${FIG.pChemo()}<span class="pill inn">navigation</span><h3>Chemokines</h3><p>A subset of cytokines that create a chemical gradient. Immune cells follow it to the site of infection or inflammation (e.g. IL-8 → neutrophils).</p></div>
+   <div class="card stack">${FIG.pComp()}<span class="pill inn">elimination</span><h3>Complement</h3><p>~30 proteins made in the liver, circulating in blood, working as a cascade. Activated by the pathogen itself or by antibodies (details next week).</p></div>
+   <div class="card stack">${FIG.pIron()}<span class="pill inn">tagging · starving</span><h3>Acute-phase and iron-binding proteins</h3><p><b>CRP</b> and <b>mannose-binding lectin</b> coat microbes and trigger complement. <b>Lactoferrin, transferrin, hepcidin</b> lock iron away so microbes cannot grow.</p></div>
  </div>`
 };
 
@@ -604,11 +809,12 @@ R.organization = ()=>`
     <h3>Lymphoid organs</h3>
     <p>Places where immune cells are found in large numbers and proliferate, differentiate and become activated.</p>
     <div class="seg" id="orgseg" role="group" aria-label="Organ"><button aria-pressed="true" data-o="bm">Bone marrow</button><button aria-pressed="false" data-o="thymus">Thymus</button><button aria-pressed="false" data-o="ln">Lymph node</button><button aria-pressed="false" data-o="spleen">Spleen</button><button aria-pressed="false" data-o="lymph">Lymphatic system</button></div>
-    <div class="card stack" id="orgbody" aria-live="polite"></div>
+    <div class="orggrid"><figure class="fig body">${FIG.body()}<figcaption>Tap an organ on the body or use the buttons above.</figcaption></figure><div class="card stack" id="orgbody" aria-live="polite"></div></div>
   </div>
 
   <div class="card stack">
     <h3>Lymphocyte recirculation: how a rare cell finds its antigen</h3>
+    <figure class="fig" style="border:0;padding:0">${FIG.recirc()}</figure>
     <div class="flow">
       <div class="node"><p>Lymphocyte enters node from blood via specialized venules (rolling + adhesion)</p></div><div class="arrow">→</div>
       <div class="node"><p>Spends ~1 day scanning the node</p></div><div class="arrow">→</div>
@@ -622,8 +828,8 @@ R.organization = ()=>`
 const ORG = {
  bm:`<span class="pill">primary</span><h3>Bone marrow</h3><p>Where <b>all</b> immune cells are generated. Primary lymphoid organs are where cells <b>mature</b>.</p>`,
  thymus:`<span class="pill">primary</span><h3>Thymus</h3><p>Lymphoid progenitors from the bone marrow travel here to mature into <b>T cells</b> and undergo <b>self-tolerance education</b> (removing T cells that react strongly to self).</p>`,
- ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul>`,
- spleen:`<span class="pill">secondary</span><h3>Spleen</h3><p>Filters the <b>blood</b> (LNs filter lymph). Starts responses to blood-borne pathogens, recycles iron, stores immune cells.</p><div class="grid g2"><div class="callout"><b>White pulp</b>: T and B cell zones. Screens blood for antigens; DCs, T and B cells interact. Splenic APCs arrive as precursors via blood and present antigen trapped by marginal-zone macrophages.</div><div class="callout pink"><b>Red pulp</b>: macrophages + red blood cells. Removes old, damaged or abnormal RBCs and recycles iron from them.</div></div>`,
+ ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul><figure class="fig">${FIG.ln()}<figcaption>Lymph flows in from the tissues, lymphocytes arrive from the blood, and the two meet in the node.</figcaption></figure>`,
+ spleen:`<span class="pill">secondary</span><h3>Spleen</h3><p>Filters the <b>blood</b> (LNs filter lymph). Starts responses to blood-borne pathogens, recycles iron, stores immune cells.</p><div class="grid g2"><div class="callout"><b>White pulp</b>: T and B cell zones. Screens blood for antigens; DCs, T and B cells interact. Splenic APCs arrive as precursors via blood and present antigen trapped by marginal-zone macrophages.</div><div class="callout pink"><b>Red pulp</b>: macrophages + red blood cells. Removes old, damaged or abnormal RBCs and recycles iron from them.</div></div><figure class="fig">${FIG.spleen()}</figure>`,
  lymph:`<span class="pill">the system</span><h3>Lymphatic system</h3><p>A network of organs, nodes, ducts and vessels that moves lymph from tissues back to the bloodstream. <b>Lymph</b> forms when interstitial fluid is collected by lymph capillaries.</p><ul class="clean"><li>Returns excess interstitial fluid to blood</li><li>Absorbs fats and fat-soluble vitamins from the gut into circulation</li><li>Carries DCs and antigen from tissues to lymph nodes</li></ul>`
 };
 const EX = [
@@ -696,6 +902,8 @@ R.strategies = ()=>`
       <p>The adaptive arm reuses innate effectors: antibodies trigger complement and phagocytes.</p></div>
   </div>
 
+  <figure class="fig">${FIG.coop()}<figcaption>Strategy 6 as a picture: the innate arm detects (DC), the adaptive arm directs (T cells) and both execute (antibodies, effector cells, phagocytes).</figcaption></figure>
+
   <div class="grid g2">
     <div class="card stack"><h3>Vaccination: the strategy put to work</h3><ul class="clean"><li>A first exposure without the disease, so the real pathogen meets a second-exposure response</li><li>Only possible because the adaptive arm has specificity and memory</li><li>Also needs the innate arm: a vaccine must look like an infection (adjuvants) or it is ignored</li><li>Smallpox eradicated 1980; polio nearly. Herd immunity protects those who cannot respond</li></ul></div>
     <div class="card stack"><h3>When the system fails</h3>
@@ -730,7 +938,7 @@ R.cards = ()=>`
 /* ---------- behaviour per view ---------- */
 const INIT = {
  requirements(){
-  const show=i=>{const r=REQS[i];$('#reqpanel').innerHTML=`<span class="eyebrow">Requirement ${i+1} of ${REQS.length}</span><h3>${r.k}</h3><p>${nl(r.m)}</p><div class="callout pink"><b>Example:</b> ${esc(r.ex)}</div><div><button class="btn" id="reqnext">${i<REQS.length-1?'Next requirement →':'Back to first'}</button></div>`;
+  const show=i=>{const r=REQS[i];$('#reqpanel').innerHTML=`<span class="eyebrow">Requirement ${i+1} of ${REQS.length}</span><h3>${r.k}</h3><p>${nl(r.m)}</p>${r.fig?`<figure class="fig">${FIG[r.fig]()}</figure>`:''}<div class="callout pink"><b>Example:</b> ${esc(r.ex)}</div><div><button class="btn" id="reqnext">${i<REQS.length-1?'Next requirement →':'Back to first'}</button></div>`;
     document.querySelectorAll('#reqlist button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));
     $('#reqnext').onclick=()=>show((i+1)%REQS.length);};
   $('#reqlist').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i)};
@@ -745,7 +953,8 @@ const INIT = {
   render('barriers');
  },
  organization(){
-  const so=o=>{$('#orgbody').innerHTML=ORG[o];document.querySelectorAll('#orgseg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.o===o))};
+  document.querySelectorAll('.organ').forEach(g=>g.onclick=()=>so(g.dataset.o));
+  const so=o=>{$('#orgbody').innerHTML=ORG[o];document.querySelectorAll('.organ').forEach(g=>g.classList.toggle('on',g.dataset.o===o));document.querySelectorAll('#orgseg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.o===o))};
   $('#orgseg').onclick=e=>{const b=e.target.closest('button');if(b)so(b.dataset.o)};so('bm');
   const ss=s=>{$('#wbc').setAttribute('transform',EXPOS[s]);$('#extext').textContent=EX[s];document.querySelectorAll('#exsteps button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s==s))};
   $('#exsteps').onclick=e=>{const b=e.target.closest('button');if(b)ss(+b.dataset.s)};ss(0);
@@ -763,7 +972,7 @@ const INIT = {
 };
 
 function cellInit(){
-  const show=i=>{const c=CELLS[i];$('#celldetail').innerHTML=`<div class="celldetail">${CELLSVG[c.svg]}<div class="stack"><div style="display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div><h3 style="font-size:1.5rem">${c.name}</h3><p class="lead">${c.one}</p><dl class="facts">${Object.entries(c.facts).map(([k,v])=>`<dt>${k}</dt><dd>${nl(v)}</dd>`).join('')}</dl></div></div>`;
+  const show=i=>{const c=CELLS[i];$('#celldetail').innerHTML=`<div class="celldetail">${CELLSVG[c.svg]}<div class="stack"><div style="display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div><h3 style="font-size:1.5rem">${c.name}</h3><p class="lead">${c.one}</p><dl class="facts">${Object.entries(c.facts).map(([k,v])=>`<dt>${k}</dt><dd>${nl(v)}</dd>`).join('')}</dl></div>${c.fig?`<figure class="fig">${FIG[c.fig]()}</figure>`:''}</div>`;
     document.querySelectorAll('.cellbtn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));};
   $('#cells').onclick=e=>{const b=e.target.closest('.cellbtn');if(b)show(+b.dataset.i)};
   const NOTES={phagocyte:'Phagocytes eat: monocytes/macrophages, DCs and neutrophils.',granulocyte:'Granulocytes have cytoplasmic granules and a polymorphonuclear (lobed) nucleus: neutrophils, eosinophils, basophils; mast cells are granule-filled too.',apc:'Professional APCs present antigen on MHC II to T cells. B cells are APCs too, but not myeloid.',lymphoid:'NK cells and ILCs are lymphoid but innate: no antigen-specific receptor.',myeloid:'Myeloid innate cells: DCs, monocytes/macrophages, and the granulocytes.',circulating:'These patrol the bloodstream and are recruited into tissue.',resident:'These live in a tissue for local surveillance.'};
