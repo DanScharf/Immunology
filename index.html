@@ -7,7 +7,7 @@
 <title>Immunology Lecture 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Rubik:wght@500;700;800&family=Heebo:wght@400;700&display=swap">
 <style>
 /* Layout: sticky stain-strip nav, one study chapter per view, wide content column with side panels for interactive pieces. Palette borrowed from an H&E / Giemsa blood smear. */
 :root{
@@ -16,9 +16,9 @@
   --hema:#4f3fae; --hema-soft:#e4e0f7;   /* hematoxylin: nuclei, adaptive */
   --eosin:#c43b72; --eosin-soft:#f9e1ea; /* eosin: cytoplasm, innate */
   --good:#1f7a55; --good-soft:#dcf1e6; --bad:#b4372f; --bad-soft:#f8e0dd;
-  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --f-display:"Bricolage Grotesque","Rubik",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Heebo",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono","Heebo",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#14121d; --surface:#1d1a2a; --sunk:#262236; --line:#383250;
@@ -58,7 +58,7 @@ header.top{background:var(--surface);border-bottom:1px solid var(--line);positio
 .hbtn::-webkit-details-marker{display:none}
 .hbtn:hover{border-color:var(--hema)}
 .lmenu{position:relative}
-.lmenu-pop{position:absolute;right:0;top:calc(100% + 6px);width:min(340px,calc(100vw - 32px));max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,10,50,.18);padding:6px;display:flex;flex-direction:column;gap:2px}
+.lmenu-pop{position:absolute;inset-inline-end:0;top:calc(100% + 6px);width:min(340px,calc(100vw - 32px));max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(20,10,50,.18);padding:6px;display:flex;flex-direction:column;gap:2px}
 .lmenu-pop a,.lmenu-pop .dis{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:.92rem;line-height:1.3}
 .lmenu-pop a:hover{background:var(--sunk)}
 .lmenu-pop .dis{color:var(--muted);opacity:.7}
@@ -87,12 +87,12 @@ section.view{display:flex;flex-direction:column;gap:40px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
-.callout{border-left:4px solid var(--hema);background:var(--hema-soft);padding:14px 16px;border-radius:0 10px 10px 0}
+.callout{border-inline-start:4px solid var(--hema);background:var(--hema-soft);padding:14px 16px;border-radius:0 10px 10px 0}
 .callout.pink{border-color:var(--eosin);background:var(--eosin-soft)}
 .pill{display:inline-block;font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
 .pill.inn{background:var(--eosin-soft);color:var(--eosin)}
 .pill.ada{background:var(--hema-soft);color:var(--hema)}
-ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px}
+ul.clean{margin:0;padding-inline-start:1.1em;display:flex;flex-direction:column;gap:6px}
 ul.clean li::marker{color:var(--eosin)}
 .next{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
 .btn{border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:10px;font-weight:700;text-decoration:none;color:var(--ink);display:inline-flex;gap:8px;align-items:center}
@@ -100,7 +100,7 @@ ul.clean li::marker{color:var(--eosin)}
 .btn:hover{border-color:var(--hema)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:620px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th,td{text-align:start;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
 tr:last-child td{border-bottom:0}
 td:first-child{font-weight:700}
@@ -117,7 +117,7 @@ td:first-child{font-weight:700}
 @media (max-width:700px){.req{grid-template-columns:1fr}}
 .reqlist{display:flex;flex-direction:column;gap:4px}
 @media (max-width:700px){.reqlist{flex-direction:row;flex-wrap:wrap}}
-.reqlist button{text-align:left;border:1px solid transparent;background:none;padding:8px 12px;border-radius:10px;display:flex;gap:10px;align-items:baseline}
+.reqlist button{text-align:start;border:1px solid transparent;background:none;padding:8px 12px;border-radius:10px;display:flex;gap:10px;align-items:baseline}
 .reqlist button .n{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .reqlist button[aria-pressed="true"]{background:var(--surface);border-color:var(--line);box-shadow:inset 3px 0 0 var(--eosin)}
 .reqpanel h3{font-size:1.5rem}
@@ -226,10 +226,26 @@ svg.mini{width:100%;max-width:260px;height:auto;display:block}
 .organ:hover{opacity:.75}
 .organ.on{filter:drop-shadow(0 0 5px var(--eosin))}
 .celldetail .fig{grid-column:1/-1}
+/* rtl */
+svg{direction:ltr}
+.extra text{font-family:var(--f-body);font-size:12px;fill:var(--muted)}
+[dir="rtl"] .callout{border-radius:10px 0 0 10px}
+[dir="rtl"] .reqlist button[aria-pressed="true"]{box-shadow:inset -3px 0 0 var(--eosin)}
+[dir="rtl"] .eyebrow,[dir="rtl"] th,[dir="rtl"] .cmprow .k{letter-spacing:0}
+[dir="rtl"] h1,[dir="rtl"] h2{letter-spacing:0}
+[dir="rtl"] .eyebrow,[dir="rtl"] .pill,[dir="rtl"] th,[dir="rtl"] .cmprow .k,[dir="rtl"] .facts dt,[dir="rtl"] .flow .arrow,[dir="rtl"] .reqlist .n,[dir="rtl"] .score{font-family:var(--f-body);letter-spacing:0}
+[dir="rtl"] .eyebrow{font-size:.8rem}
+.chart text[style*="rtl"]{font-family:var(--f-body);font-size:12px}
+.flow[style*="column"] .node{flex:none}
+.stack>.pill{align-self:flex-start}
+@media (max-width:640px){.flow .node{flex:none}}
+@media (max-width:640px){[dir="rtl"] .flow .arrow{transform:rotate(-90deg)}}
+#langbtn{font-family:var(--f-body)}
+@media (max-width:520px){#hhome{display:none}.hbtn{padding:6px 10px}.bar{gap:8px}}
 /* quiz */
 .qcard{max-width:760px}
 .qopts{display:flex;flex-direction:column;gap:8px}
-.qopts button{text-align:left;border:1px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:10px}
+.qopts button{text-align:start;border:1px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:10px}
 .qopts button:hover:not(:disabled){border-color:var(--hema)}
 .qopts button.right{background:var(--good-soft);border-color:var(--good);color:var(--ink)}
 .qopts button.wrong{background:var(--bad-soft);border-color:var(--bad)}
@@ -264,10 +280,11 @@ svg.mini{width:100%;max-width:260px;height:auto;display:block}
 
 <header class="top">
   <div class="wrap bar">
-    <a class="brand" href="#home"><i></i>Basic Immunology</a>
+    <a class="brand" href="#home"><i></i><span id="brandtxt">Basic Immunology</span></a>
     <div class="hactions">
-      <a class="hbtn" href="#home">Home</a>
-      <details class="lmenu" id="lmenu"><summary class="hbtn">Lessons ▾</summary><div class="lmenu-pop" id="lmenupop"></div></details>
+      <button class="hbtn" id="langbtn" type="button">עברית</button>
+      <a class="hbtn" href="#home" id="hhome">Home</a>
+      <details class="lmenu" id="lmenu"><summary class="hbtn" id="hless">Lessons ▾</summary><div class="lmenu-pop" id="lmenupop"></div></details>
     </div>
   </div>
   <div class="sub" id="sub">
@@ -282,6 +299,7 @@ svg.mini{width:100%;max-width:260px;height:auto;display:block}
 <main class="wrap" id="main"></main>
 
 <script>
+let LANG = 'en';
 /* ---------- cell drawings (Giemsa-style) ---------- */
 const nucleus = 'fill="var(--hema)" fill-opacity=".85"';
 const CELLSVG = {
@@ -298,7 +316,8 @@ const CELLSVG = {
 };
 
 /* ---------- diagrams ---------- */
-const t=(x,y,s,c='',a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}"${c?` class="${c}"`:''}>${s}</text>`;
+const HEB=/[\u0590-\u05FF]/;
+const t=(x,y,s,c='',a='middle')=>{let st='';if(LANG==='he'){s=TR[s]||s;if(HEB.test(s)){st=' style="direction:rtl"';a=a==='start'?'end':a==='end'?'start':a;}}return `<text x="${x}" y="${y}" text-anchor="${a}"${c?` class="${c}"`:''}${st}>${s}</text>`};
 const icon=(n,x,y,s=44)=>CELLSVG[n].replace('<svg viewBox="0 0 100 100">',`<svg x="${x-s/2}" y="${y-s/2}" width="${s}" height="${s}" viewBox="0 0 100 100">`);
 const bact=(x,y,r=0,o=1)=>`<rect x="${x-11}" y="${y-5}" width="22" height="10" rx="5" fill="var(--good)" opacity="${o}" transform="rotate(${r} ${x} ${y})"/>`;
 const arrow=(x1,y1,x2,y2,c='var(--muted)')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="2" marker-end="url(#arw)"/>`;
@@ -480,7 +499,7 @@ const FIG = {
 };
 
 /* ---------- data ---------- */
-const CELLS = [
+let CELLS = [
  {id:'neutrophil',name:'Neutrophil',svg:'neutrophil',fig:'arsenal',tags:['myeloid','granulocyte','phagocyte','circulating'],
   one:'The first responder. Arrives within hours and kills bacteria and fungi.',
   facts:{'Lineage':'Myeloid · granulocyte · polymorphonuclear (lobed nucleus)','Numbers':'50–70% of all leukocytes, the most abundant. ~10¹¹ made per day, lives only 1–2 days','Where':'Circulates in blood; recruited to tissue by IL-8','Kills by':'1. Phagocytosis\n2. Respiratory burst: NADPH oxidase turns O₂ into superoxide and H₂O₂, then myeloperoxidase (MPO) makes hypochlorite (bleach)\n3. Degranulation: elastase, lysozyme, hole-punching defensins, iron-binding lactoferrin\n4. NETs: throws out its own chromatin coated with granule proteins to trap microbes too many or too big to eat','Cytokines':'Responds to IL-8; makes IL-1β and TNF','Targets / disease':'Bacteria, fungi · abscess (pus), tissue damage'}},
@@ -510,7 +529,7 @@ const CELLS = [
   facts:{'Lineage':'Lymphoid, no antigen-specific TCR','Where':'Tissue resident, especially mucosal barriers','ILC1 ≈ Th1':'Intracellular pathogens · makes IFN-γ','ILC2 ≈ Th2':'Helminths and allergy · makes IL-5, IL-13','ILC3 ≈ Th17':'Extracellular bacteria and fungi, at mucosa · makes IL-17, IL-22'}}
 ];
 
-const REQS = [
+let REQS = [
  {k:'Patrol',m:'Movement and sensing. Cells carry surface receptors that bind ligands (other molecules); binding triggers signal transduction inside the cell.',ex:'Neutrophils and monocytes circulating in blood; lymphocytes recirculating through lymph nodes.'},
  {k:'Recognition',fig:'epitope',m:'Antigen: any molecule that immune cells can sense.\nPeptide: a fragment of a protein.\nEpitope: the smallest physical part of the antigen that the receptor actually touches.',ex:'One protein (antigen) has many epitopes; each B cell or T cell sees one epitope.'},
  {k:'Identification',fig:'mhc',m:'IFF, identification friend or foe. Cells display what is inside them on MHC molecules.\nMHC I: on all nucleated cells.\nMHC II: only on specialized antigen presenting cells (DCs, macrophages, B cells).',ex:'A virus-infected epithelial cell shows viral peptides on MHC I.'},
@@ -523,7 +542,7 @@ const REQS = [
  {k:'Healing',m:'Support and repair: scaffold, extracellular matrix (ECM), growth factors.',ex:'Macrophages producing growth factors after a wound is cleared.'}
 ];
 
-const QUIZ = [
+let QUIZ = [
  {q:'Which molecule is expressed by ALL leukocytes (innate and adaptive) and is called the leukocyte common antigen?',o:['CD45','CD14','MHC II','CCR7'],a:0,e:'CD45 (LCA) is on every white blood cell. It is a protein tyrosine phosphatase that regulates signaling for activation and cytokine responses.'},
  {q:'MHC class I is found on…',o:['Only dendritic cells','All nucleated cells','Only B and T cells','Only red blood cells'],a:1,e:'MHC I is on all nucleated cells. MHC II is restricted to specialized antigen presenting cells.'},
  {q:'What is an epitope?',o:['Any molecule that immune cells can sense','A fragment of a protein','The smallest physical unit of the antigen that interacts with the receptor','A cytokine that attracts cells'],a:2,e:'Antigen = molecule that can be sensed. Peptide = protein fragment. Epitope = the smallest part actually bound.'},
@@ -554,7 +573,7 @@ const QUIZ = [
  {q:'Which is TRUE of innate pattern recognition receptors?',o:['Generated randomly in each cell','They recognize patterns essential to the microbe, so it cannot easily mutate them away','Each cell has a different receptor','They must be censored for self-reactivity in the thymus'],a:1,e:'Germline-encoded, fixed for life, same on every cell of a type, so all respond immediately.'}
 ];
 
-const GLOSS = [
+let GLOSS = [
  ['Antigen','Any molecule that can be sensed by immune cells.'],
  ['Peptide','A fragment of a protein.'],
  ['Epitope','The smallest physical unit of an antigen that interacts with a receptor.'],
@@ -593,7 +612,7 @@ const GLOSS = [
 ];
 
 /* ---------- lessons ---------- */
-const LESSONS = [
+let LESSONS = [
  [1,'03.11','Introduction to the immune system. Strategies of innate vs adaptive','start'],
  [2,'10.11','Innate immunity: composition and functional mechanisms'],
  [3,'17.11','Innate functional mechanisms (continued), immune cell generation and development'],
@@ -610,7 +629,7 @@ const LESSONS = [
 ];
 
 /* ---------- views ---------- */
-const VIEWS = [
+let VIEWS = [
  {id:'start',label:'Overview'},
  {id:'requirements',label:'1 · What the system must do'},
  {id:'two-arms',label:'2 · Innate vs adaptive'},
@@ -629,7 +648,7 @@ const nl = s=>esc(s).replace(/\n/g,'<br>');
 
 function nextBar(i){
   const p=VIEWS[i-1], n=VIEWS[i+1];
-  return `<div class="next">${p?`<a class="btn" href="#${p.id}">← ${p.label}</a>`:'<a class="btn" href="#home">← All lessons</a>'}${n?`<a class="btn primary" href="#${n.id}">${n.label} →</a>`:''}</div>`;
+  return `<div class="next">${p?`<a class="btn" href="#${p.id}">${u('prev')(p.label)}</a>`:`<a class="btn" href="#home">${u('allBack')}</a>`}${n?`<a class="btn primary" href="#${n.id}">${u('next')(n.label)}</a>`:''}</div>`;
 }
 
 const R = {};
@@ -726,7 +745,7 @@ R.innate = ()=>`
   ${nextBar(3)}
 </section>`;
 
-const INN = {
+let INN = {
  barriers:()=>`<figure class="fig">${FIG.barriers()}<figcaption>Surface barriers: the first thing a pathogen has to get through.</figcaption></figure><div class="grid g3">
    <div class="card stack"><h3>Skin and mucosa</h3><p>Physical wall. First thing a pathogen must cross.</p></div>
    <div class="card stack"><h3>Sweat and tears</h3><p>Acidic, contain the antimicrobial peptide <b>dermcidin</b>. Salt left on the skin inhibits bacterial growth.</p></div>
@@ -825,14 +844,14 @@ R.organization = ()=>`
   ${nextBar(4)}
 </section>`;
 
-const ORG = {
+let ORG = {
  bm:`<span class="pill">primary</span><h3>Bone marrow</h3><p>Where <b>all</b> immune cells are generated. Primary lymphoid organs are where cells <b>mature</b>.</p>`,
  thymus:`<span class="pill">primary</span><h3>Thymus</h3><p>Lymphoid progenitors from the bone marrow travel here to mature into <b>T cells</b> and undergo <b>self-tolerance education</b> (removing T cells that react strongly to self).</p>`,
  ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul><figure class="fig">${FIG.ln()}<figcaption>Lymph flows in from the tissues, lymphocytes arrive from the blood, and the two meet in the node.</figcaption></figure>`,
  spleen:`<span class="pill">secondary</span><h3>Spleen</h3><p>Filters the <b>blood</b> (LNs filter lymph). Starts responses to blood-borne pathogens, recycles iron, stores immune cells.</p><div class="grid g2"><div class="callout"><b>White pulp</b>: T and B cell zones. Screens blood for antigens; DCs, T and B cells interact. Splenic APCs arrive as precursors via blood and present antigen trapped by marginal-zone macrophages.</div><div class="callout pink"><b>Red pulp</b>: macrophages + red blood cells. Removes old, damaged or abnormal RBCs and recycles iron from them.</div></div><figure class="fig">${FIG.spleen()}</figure>`,
  lymph:`<span class="pill">the system</span><h3>Lymphatic system</h3><p>A network of organs, nodes, ducts and vessels that moves lymph from tissues back to the bloodstream. <b>Lymph</b> forms when interstitial fluid is collected by lymph capillaries.</p><ul class="clean"><li>Returns excess interstitial fluid to blood</li><li>Absorbs fats and fat-soluble vitamins from the gut into circulation</li><li>Carries DCs and antigen from tissues to lymph nodes</li></ul>`
 };
-const EX = [
+let EX = [
  'The leukocyte is carried along in the bloodstream at full speed.',
  'Rolling: near inflamed tissue, the cell is caught weakly by the endothelium and rolls along it, slowing down.',
  'Adhesion: chemokine signals activate it and it sticks firmly to the endothelium.',
@@ -882,7 +901,7 @@ R.strategies = ()=>`
       <path d="M340 200 L360 198 C375 150 395 45 425 45 C460 45 500 120 620 160" fill="none" stroke="var(--hema)" stroke-width="3"/>
       <rect x="62" y="186" width="50" height="16" fill="var(--sunk)"/><text x="87" y="198" text-anchor="middle">lag 4–7 d</text>
       <rect x="342" y="186" width="44" height="16" fill="var(--sunk)"/><text x="364" y="198" text-anchor="middle">1–3 d</text>
-      <text x="175" y="140" text-anchor="middle">modest</text><text x="425" y="36" text-anchor="middle">faster, larger, better adapted</text>
+      <text x="175" y="140" text-anchor="middle">modest</text><text x="620" y="192" text-anchor="end">faster, larger, better adapted</text>
     </svg>
     <p>After the first response, most expanded cells die; a small long-lived population stays as <b>memory cells</b>. On second exposure more cells already match and they activate more easily, sometimes giving lifelong immunity. <b>Innate immunity has no antigen-specific memory</b>: the second infection meets the same receptors as the first.</p>
   </div>
@@ -938,7 +957,7 @@ R.cards = ()=>`
 /* ---------- behaviour per view ---------- */
 const INIT = {
  requirements(){
-  const show=i=>{const r=REQS[i];$('#reqpanel').innerHTML=`<span class="eyebrow">Requirement ${i+1} of ${REQS.length}</span><h3>${r.k}</h3><p>${nl(r.m)}</p>${r.fig?`<figure class="fig">${FIG[r.fig]()}</figure>`:''}<div class="callout pink"><b>Example:</b> ${esc(r.ex)}</div><div><button class="btn" id="reqnext">${i<REQS.length-1?'Next requirement →':'Back to first'}</button></div>`;
+  const show=i=>{const r=REQS[i];$('#reqpanel').innerHTML=`<span class="eyebrow">${u('reqOf')(i+1,REQS.length)}</span><h3>${r.k}</h3><p>${nl(r.m)}</p>${r.fig?`<figure class="fig">${FIG[r.fig]()}</figure>`:''}<div class="callout pink"><b>${u('example')}</b> ${esc(r.ex)}</div><div><button class="btn" id="reqnext">${i<REQS.length-1?u('nextReq'):u('backFirst')}</button></div>`;
     document.querySelectorAll('#reqlist button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));
     $('#reqnext').onclick=()=>show((i+1)%REQS.length);};
   $('#reqlist').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i)};
@@ -962,9 +981,9 @@ const INIT = {
  strategies(){
   const sl=$('#tslider'), L=[...document.querySelectorAll('.layer')];
   const upd=()=>{const v=+sl.value;const h=v<=30?v*4/30:v<=70?4+(v-30)*92/40:96+(v-70)*(240-96)/30;
-    const hrs=Math.round(h*10)/10;$('#clock').textContent=hrs<48?`${hrs} h`:`${Math.round(h)} h ≈ day ${(h/24).toFixed(1)}`;
+    const hrs=Math.round(h*10)/10;$('#clock').textContent=hrs<48?u('hShort')(hrs):u('hLong')(Math.round(h),(h/24).toFixed(1));
     const cur=h<4?0:h<96?1:2;L.forEach((l,i)=>{l.classList.toggle('off',i>cur);l.classList.toggle('now',i===cur)});
-    $('#clocknote').textContent=['Only what is already in place can act.','Innate cells have sensed the microbe and are recruiting help. Layer 1 keeps working.','The adaptive arm has expanded matching lymphocytes. All layers active.'][cur];};
+    $('#clocknote').textContent=u('clock')[cur];};
   sl.oninput=upd;upd();
  },
  quiz(){ quizStart(); },
@@ -972,14 +991,14 @@ const INIT = {
 };
 
 function cellInit(){
-  const show=i=>{const c=CELLS[i];$('#celldetail').innerHTML=`<div class="celldetail">${CELLSVG[c.svg]}<div class="stack"><div style="display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</div><h3 style="font-size:1.5rem">${c.name}</h3><p class="lead">${c.one}</p><dl class="facts">${Object.entries(c.facts).map(([k,v])=>`<dt>${k}</dt><dd>${nl(v)}</dd>`).join('')}</dl></div>${c.fig?`<figure class="fig">${FIG[c.fig]()}</figure>`:''}</div>`;
+  const show=i=>{const c=CELLS[i];$('#celldetail').innerHTML=`<div class="celldetail">${CELLSVG[c.svg]}<div class="stack"><div style="display:flex;gap:6px;flex-wrap:wrap">${c.tags.map(t=>`<span class="pill">${LANG==='he'?TAG_HE[t]:t}</span>`).join('')}</div><h3 style="font-size:1.5rem">${c.name}</h3><p class="lead">${c.one}</p><dl class="facts">${Object.entries(c.facts).map(([k,v])=>`<dt>${k}</dt><dd>${nl(v)}</dd>`).join('')}</dl></div>${c.fig?`<figure class="fig">${FIG[c.fig]()}</figure>`:''}</div>`;
     document.querySelectorAll('.cellbtn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));};
   $('#cells').onclick=e=>{const b=e.target.closest('.cellbtn');if(b)show(+b.dataset.i)};
   const NOTES={phagocyte:'Phagocytes eat: monocytes/macrophages, DCs and neutrophils.',granulocyte:'Granulocytes have cytoplasmic granules and a polymorphonuclear (lobed) nucleus: neutrophils, eosinophils, basophils; mast cells are granule-filled too.',apc:'Professional APCs present antigen on MHC II to T cells. B cells are APCs too, but not myeloid.',lymphoid:'NK cells and ILCs are lymphoid but innate: no antigen-specific receptor.',myeloid:'Myeloid innate cells: DCs, monocytes/macrophages, and the granulocytes.',circulating:'These patrol the bloodstream and are recruited into tissue.',resident:'These live in a tissue for local surveillance.'};
   $('#filters').onclick=e=>{const b=e.target.closest('button');if(!b)return;const f=b.dataset.f;
     document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));
     document.querySelectorAll('.cellbtn').forEach(cb=>cb.classList.toggle('dim',f!=='all'&&!CELLS[cb.dataset.i].tags.includes(f)));
-    const n=$('#filternote');n.hidden=!NOTES[f];n.textContent=NOTES[f]||'';};
+    const NN=LANG==='he'?NOTES_HE:NOTES;const n=$('#filternote');n.hidden=!NN[f];n.textContent=NN[f]||'';};
   show(0);
 }
 
@@ -989,14 +1008,14 @@ function quizShow(){
   const box=$('#qcard');
   if(qi>=QS.length){let best=0;try{best=Math.max(+localStorage.getItem('imm1-best')||0,qscore);localStorage.setItem('imm1-best',best)}catch(e){}
     const pct=Math.round(qscore/QS.length*100);
-    box.innerHTML=`<span class="eyebrow">Done</span><h3 style="font-size:2rem">${qscore} / ${QS.length} · ${pct}%</h3><p>${pct>=55?'Above the 55 pass mark.':'Below the 55 pass mark. Re-read the chapters you missed and try again.'}${best?` Best so far: ${best}/${QS.length}.`:''}</p><div><button class="btn primary" id="qagain">Try again</button></div>`;
+    box.innerHTML=`<span class="eyebrow">${u('done')}</span><h3 style="font-size:2rem">${qscore} / ${QS.length} · ${pct}%</h3><p>${pct>=55?u('pass'):u('fail')}${best?u('best')(best,QS.length):''}</p><div><button class="btn primary" id="qagain">${u('again')}</button></div>`;
     $('#qagain').onclick=quizStart;return;}
   const q=QUIZ[QS[qi]];const order=q.o.map((_,i)=>i).sort(()=>Math.random()-.5);
-  box.innerHTML=`<div class="qmeta"><span class="eyebrow">Question ${qi+1} of ${QS.length}</span><span class="score">Score ${qscore}</span></div><h3>${esc(q.q)}</h3><div class="qopts">${order.map(i=>`<button data-i="${i}">${esc(q.o[i])}</button>`).join('')}</div><div id="qex"></div>`;
+  box.innerHTML=`<div class="qmeta"><span class="eyebrow">${u('qOf')(qi+1,QS.length)}</span><span class="score">${u('score')(qscore)}</span></div><h3>${esc(q.q)}</h3><div class="qopts">${order.map(i=>`<button data-i="${i}">${esc(q.o[i])}</button>`).join('')}</div><div id="qex"></div>`;
   box.querySelector('.qopts').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const pick=+b.dataset.i,ok=pick===q.a;if(ok)qscore++;
     box.querySelectorAll('.qopts button').forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add('right');else if(x===b)x.classList.add('wrong')});
-    $('#qex').innerHTML=`<div class="expl stack"><b style="color:var(--${ok?'good':'bad'})">${ok?'Correct.':'Not quite.'}</b><p>${esc(q.e)}</p><div><button class="btn primary" id="qnext">${qi<QS.length-1?'Next question →':'See score'}</button></div></div>`;
-    box.querySelector('.score').textContent=`Score ${qscore}`;$('#qnext').onclick=()=>{qi++;quizShow()};$('#qnext').focus();};
+    $('#qex').innerHTML=`<div class="expl stack"><b style="color:var(--${ok?'good':'bad'})">${ok?u('right'):u('wrong')}</b><p>${esc(q.e)}</p><div><button class="btn primary" id="qnext">${qi<QS.length-1?u('nextQ'):u('seeScore')}</button></div></div>`;
+    box.querySelector('.score').textContent=u('score')(qscore);$('#qnext').onclick=()=>{qi++;quizShow()};$('#qnext').focus();};
 }
 
 let FC=GLOSS.map((_,i)=>i),fi=0;
@@ -1005,27 +1024,513 @@ function fcInit(){
   $('#flip').onclick=()=>$('#flip').classList.toggle('on');
   $('#fcnext').onclick=()=>{fi=(fi+1)%FC.length;draw()};$('#fcprev').onclick=()=>{fi=(fi-1+FC.length)%FC.length;draw()};
   $('#fcshuf').onclick=()=>{FC.sort(()=>Math.random()-.5);fi=0;draw()};
-  const gl=()=>{const q=$('#glossq').value.toLowerCase();$('#gloss').innerHTML=GLOSS.filter(g=>(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<div><b>${esc(g[0])}</b><br>${esc(g[1])}</div>`).join('')||'<p>No matching terms.</p>'};
+  const gl=()=>{const q=$('#glossq').value.toLowerCase();$('#gloss').innerHTML=GLOSS.filter(g=>(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<div><b>${esc(g[0])}</b><br>${esc(g[1])}</div>`).join('')||`<p>${u('noTerms')}</p>`};
   $('#glossq').oninput=gl;gl();draw();
 }
-document.addEventListener('keydown',e=>{if(!$('#flip')||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')$('#fcnext').click();if(e.key==='ArrowLeft')$('#fcprev').click();});
+document.addEventListener('keydown',e=>{if(!$('#flip')||e.target.tagName==='INPUT')return;const nx=LANG==='he'?'ArrowLeft':'ArrowRight',pv=LANG==='he'?'ArrowRight':'ArrowLeft';if(e.key===nx)$('#fcnext').click();if(e.key===pv)$('#fcprev').click();});
 
 /* ---------- router ---------- */
-$('#lmenupop').innerHTML='<a class="home" href="#home">All lessons</a>'+LESSONS.map(l=>l[3]?`<a href="#${l[3]}"><span class="mono">${l[0]}</span>${l[2]}</a>`:`<div class="dis"><span class="mono">${l[0]}</span><span>${l[2]} · soon</span></div>`).join('');
+/* ---------- Hebrew ---------- */
+const UI = {
+ en:{brand:`Basic Immunology`,home:`Home`,lessons:`Lessons ▾`,all:`All lessons`,soon:` · soon`,lang:`עברית`,langLabel:`Switch to Hebrew`,
+  subnum:`Lesson 1 · 03.11`,subname:`Introduction to the immune system`,title:`Immunology Lecture 1`,
+  reqOf:(i,n)=>`Requirement ${i} of ${n}`,nextReq:`Next requirement →`,backFirst:`Back to first`,example:`Example:`,
+  hShort:h=>`${h} h`,hLong:(h,d)=>`${h} h ≈ day ${d}`,
+  clock:[`Only what is already in place can act.`,`Innate cells have sensed the microbe and are recruiting help. Layer 1 keeps working.`,`The adaptive arm has expanded matching lymphocytes. All layers active.`],
+  done:`Done`,pass:`Above the 55 pass mark.`,fail:`Below the 55 pass mark. Re-read the chapters you missed and try again.`,best:(b,n)=>` Best so far: ${b}/${n}.`,again:`Try again`,
+  qOf:(i,n)=>`Question ${i} of ${n}`,score:s=>`Score ${s}`,right:`Correct.`,wrong:`Not quite.`,nextQ:`Next question →`,seeScore:`See score`,noTerms:`No matching terms.`,
+  prev:l=>`← ${l}`,next:l=>`${l} →`,allBack:`← All lessons`},
+ he:{brand:`אימונולוגיה בסיסית`,home:`דף הבית`,lessons:`שיעורים ▾`,all:`כל השיעורים`,soon:` · בקרוב`,lang:`English`,langLabel:`החלפה לאנגלית`,
+  subnum:`שיעור 1 · 03.11`,subname:`מבוא למערכת החיסון`,title:`אימונולוגיה · הרצאה 1`,
+  reqOf:(i,n)=>`דרישה ${i} מתוך ${n}`,nextReq:`לדרישה הבאה ←`,backFirst:`חזרה לראשונה`,example:`דוגמה:`,
+  hShort:h=>`${h} שעות`,hLong:(h,d)=>`${h} שעות, כלומר יום ${d}`,
+  clock:[`רק מה שכבר נמצא במקום יכול לפעול.`,`התאים המולדים זיהו את המיקרואורגניזם ומגייסים עזרה. שכבה 1 ממשיכה לפעול.`,`הזרוע הנרכשת הרבתה את הלימפוציטים המתאימים. כל השכבות פועלות.`],
+  done:`סיום`,pass:`מעל ציון המעבר (55).`,fail:`מתחת לציון המעבר (55). כדאי לחזור על הפרקים שטעיתם בהם ולנסות שוב.`,best:(b,n)=>` השיא שלכם: ${b}/${n}.`,again:`לנסות שוב`,
+  qOf:(i,n)=>`שאלה ${i} מתוך ${n}`,score:s=>`ניקוד: ${s}`,right:`נכון.`,wrong:`לא בדיוק.`,nextQ:`לשאלה הבאה ←`,seeScore:`לתוצאה`,noTerms:`לא נמצאו מונחים.`,
+  prev:l=>`→ ${l}`,next:l=>`${l} ←`,allBack:`→ כל השיעורים`}
+};
+const u = k => UI[LANG][k];
+
+const TAG_HE = {myeloid:`מיאלואידי`,granulocyte:`גרנולוציט`,phagocyte:`פגוציט`,circulating:`במחזור הדם`,apc:`תא מציג אנטיגן`,resident:`שוכן רקמה`,lymphoid:`לימפואידי`,killer:`קוטל`};
+
+/* diagram labels */
+const TR = {
+ 'Antigen':`אנטיגן`,'e.g. a bacterial protein':`למשל חלבון של חיידק`,'each coloured bump is an epitope':`כל בליטה צבעונית היא אפיטופ`,
+ 'B cell receptor / antibody':`קולטן של תא B / נוגדן`,'fits ONE epitope (the pink one)':`מתאים לאפיטופ אחד בלבד (הוורוד)`,'peptide':`פפטיד`,
+ 'T cell receptor reads':`הקולטן של תא T קורא`,'a peptide held by MHC':`פפטיד שמוחזק על ידי MHC`,
+ 'on ALL nucleated cells':`על כל התאים בעלי גרעין`,'virus':`נגיף`,'shows pieces of proteins made INSIDE':`מציג קטעים של חלבונים שנוצרו בתוך התא`,
+ 'so an infected cell can be spotted and killed':`כך תא נגוע מתגלה ומושמד`,'only on professional APCs: DC, macrophage, B cell':`רק על APC מקצועיים: DC, מקרופאג׳, תא B`,
+ 'eaten bacterium':`חיידק שנבלע`,'shows pieces of what the cell ATE from outside':`מציג קטעים של מה שהתא בלע מבחוץ`,'to helper T cells in the lymph node':`לתאי T מסייעים בבלוטת הלימפה`,
+ 'Innate':`מולדת`,'same receptors on every cell':`אותם קולטנים על כל תא`,'any cell that meets a microbe':`כל תא שפוגש מיקרואורגניזם`,'responds within minutes to hours':`מגיב תוך דקות עד שעות`,
+ 'Adaptive':`נרכשת`,'every lymphocyte has its own receptor':`לכל לימפוציט קולטן משלו`,'antigen':`אנטיגן`,'only the matching cell multiplies':`רק התא המתאים מתרבה`,'this takes 4–7 days the first time':`בפעם הראשונה זה לוקח 4–7 ימים`,
+ 'Tears':`דמעות`,'lysozyme breaks bacterial walls':`ליזוזים מפרק את דופן החיידק`,'Mucosa':`רירית`,'mucus, antimicrobial peptides':`ריר, פפטידים אנטי-מיקרוביאליים`,
+ 'Skin and sweat':`עור וזיעה`,'wall + acid, dermcidin, salt':`חומה, חומציות, דרמסידין, מלח`,'Urine':`שתן`,'flushes microbes out':`שוטף מיקרואורגניזמים החוצה`,
+ 'Saliva':`רוק`,'lysozyme':`ליזוזים`,'Stomach':`קיבה`,'acid pH kills microbes':`החומציות הורגת מיקרואורגניזמים`,'Gut':`מעי`,'microbiome occupies the space':`המיקרוביום תופס את המקום`,
+ 'innate':`מולדת`,'adaptive (later lectures)':`נרכשת (בהרצאות הבאות)`,'Blood stem cell (in bone marrow)':`תא גזע של הדם (במח העצם)`,
+ 'Myeloid progenitor':`אב מיאלואידי`,'Lymphoid progenitor':`אב לימפואידי`,'Neutrophil':`נויטרופיל`,'Eosinophil':`אאוזינופיל`,'Basophil':`בזופיל`,
+ 'Mast cell':`תא פיטום`,'Monocyte':`מונוציט`,'NK cell':`תא NK`,'ILCs':`ILC`,'T cell':`תא T`,'B cell':`תא B`,'Macrophage':`מקרופאג׳`,'Dendritic cell':`תא דנדריטי`,
+ 'O₂ → H₂O₂ → HOCl (bleach)':`O₂ → H₂O₂ → HOCl (אקונומיקה)`,'1 · Phagocytosis':`1 · פגוציטוזה`,'swallows the microbe':`בולע את המיקרואורגניזם`,
+ '2 · Respiratory burst':`2 · התפרצות נשימתית`,'makes bleach inside':`מייצר אקונומיקה בפנים`,'3 · Degranulation':`3 · דה-גרנולציה`,'releases granule weapons':`משחרר את תכולת הגרגירים`,
+ '4 · NETs':`4 · NETs`,'throws out a DNA net':`זורק רשת של DNA`,
+ 'sender':`תא שולח`,'receiver':`תא מקבל`,'low':`ריכוז נמוך`,'high: infection':`ריכוז גבוה: זיהום`,'pore in microbe':`חור בדופן החיידק`,'iron locked up':`הברזל נעול`,'starves':`החיידק רעב`,
+ 'Lymph nodes':`בלוטות לימפה`,'Thymus':`תימוס`,'Spleen':`טחול`,'Bone marrow':`מח עצם`,'Lymph':`לימפה`,'vessels':`כלי לימפה`,
+ 'T cell zone':`אזור תאי T`,'DCs meet T cells':`DC פוגשים תאי T`,'B cell follicles (pink)':`זקיקי תאי B (בוורוד)`,'afferent lymph brings antigen and DCs in':`לימפה נכנסת מביאה אנטיגן ו-DC`,
+ 'blood vessels:':`כלי דם:`,'lymphocytes enter':`כאן נכנסים לימפוציטים`,'efferent lymph:':`לימפה יוצאת:`,'cells leave':`התאים עוזבים`,
+ 'white pulp: T and B cells':`עיסה לבנה: תאי T ו-B`,'screens the blood':`סורקת את הדם`,'red pulp: macrophages remove old red cells':`עיסה אדומה: מקרופאג׳ים מפנים כדוריות אדומות זקנות`,
+ 'Blood':`דם`,'lymphocytes travel':`לימפוציטים נעים`,'enter':`כניסה`,'Lymph node':`בלוטת לימפה`,'~1 day here':`כיום אחד כאן`,
+ 'match → stops, divides for days → node swells':`יש התאמה: נעצר ומתחלק ימים, והבלוטה מתנפחת`,'no match':`אין התאמה`,'→ thoracic duct':`אל הצינור החזי`,
+ 'back to the blood, then on to the next node':`חזרה לדם, ומשם לבלוטה הבאה`,
+ 'Tissue':`רקמה`,'DC senses danger,':`ה-DC מזהה סכנה`,'takes antigen':`ולוקח אנטיגן`,'① via lymph':`① דרך הלימפה`,'② presents':`② מציג`,'③ helps':`③ מסייע`,
+ '④ antibodies and effector T cells return to the tissue':`④ נוגדנים ותאי T אפקטוריים חוזרים לרקמה`
+};
+
+const LESSONS_HE = [`מבוא למערכת החיסון. אסטרטגיות של החסינות המולדת מול הנרכשת`,`חסינות מולדת: הרכב ומנגנוני פעולה`,`מנגנוני החסינות המולדת (המשך), יצירת תאי מערכת החיסון והתפתחותם`,`נוגדנים: מבנה ותפקוד, הגנטיקה של המגוון`,`רקומבינציה, תגובת אנטיגן–נוגדן`,`התפתחות תאי B, שפעול וזיכרון, סבילות חיסונית`,`פעילות המרכז הנבטי (germinal center) והבשלת אפיניות`,`MHC והצגת אנטיגן לתאי T`,`הקולטן של תאי T (TCR) והתפתחות תאי T`,`שפעול תאי T וזיכרון, אינטראקציות T–B, איתות בתאי T`,`חיסונים (vaccines) והערכת תפקוד חיסוני`,`תת-אוכלוסיות של תאי T, ציטוקינים ו-Tregs`,`Tregs ואימונולוגיה של גידולים`];
+
+const VIEWS_HE = [`סקירה`,`1 · מה המערכת צריכה לעשות`,`2 · מולדת מול נרכשת`,`3 · ארגז הכלים המולד`,`4 · איפה זה קורה`,`5 · שש אסטרטגיות`,`בוחן`,`כרטיסיות`];
+
+const CELLS_HE = [
+ {id:'neutrophil',name:`נויטרופיל`,svg:'neutrophil',fig:'arsenal',tags:['myeloid','granulocyte','phagocyte','circulating'],
+  one:`המגיב הראשון. מגיע תוך שעות והורג חיידקים ופטריות.`,
+  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט · פולימורפונוקלארי (גרעין מחולק לאונות)`,[`כמויות`]:`50–70% מכלל הלויקוציטים, התא הנפוץ ביותר. כ-10¹¹ נוצרים ביום, וכל תא חי רק 1–2 ימים`,[`איפה`]:`נע במחזור הדם; מגויס לרקמה על ידי IL-8`,
+   [`איך הורג`]:`1. פגוציטוזה\n2. התפרצות נשימתית: האנזים NADPH oxidase הופך חמצן לסופראוקסיד ול-H₂O₂, ואז מיאלופרוקסידאז (MPO) מייצר היפוכלוריט (אקונומיקה)\n3. דה-גרנולציה: אלסטאז, ליזוזים, דפנסינים שמנקבים ממברנות, לקטופרין שקושר ברזל\n4. NETs: זורק החוצה את הכרומטין שלו, מצופה בחלבוני הגרגירים, כרשת שלוכדת מיקרואורגניזמים רבים מדי או גדולים מדי לבליעה`,
+   [`ציטוקינים`]:`מגיב ל-IL-8; מייצר IL-1β ו-TNF`,[`מטרות / מחלה`]:`חיידקים, פטריות · מורסה (מוגלה), נזק לרקמה`}},
+ {id:'monocyte',name:`מונוציט`,svg:'monocyte',tags:['myeloid','phagocyte','circulating'],
+  one:`מאגר נייד של תאי מקור בדם, שהופכים למקרופאג׳ים או ל-DC כשהם נכנסים לרקמה.`,
+  facts:{[`שושלת`]:`מיאלואידי (גרעין בצורת כליה)`,[`איפה`]:`במחזור הדם. הוא לא דוגם אנטיגן בדם; הוא משתמש בדם כדי להגיע לרקמות`,[`מה קורה`]:`נכנס לרקמה מודלקת לפי הצורך (extravasation) ומתמיין למקרופאג׳ (או ל-DC שמקורו במונוציט)`,[`הנקודה החשובה`]:`מחזור הדם הוא מערכת הפצה, לא המקום שבו פוגשים אנטיגן`}},
+ {id:'macrophage',name:`מקרופאג׳`,svg:'macrophage',tags:['myeloid','phagocyte','apc','resident'],
+  one:`ה״אוכל הגדול״ ברקמות. בולע מיקרואורגניזמים ומציג אנטיגן על MHC II.`,
+  facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`שוכן ברקמות: מקרופאג׳ים של נאדיות הריאה, תאי קופפר בכבד, מקרופאג׳ים של הדרמיס בעור; העיסה האדומה בטחול`,[`תפקידים`]:`פגוציטוזה · תא מציג אנטיגן מקצועי (MHC II) · ציטוקינים (למשל TNF, IL-6) · פינוי כדוריות דם אדומות זקנות ומחזור ברזל (בטחול)`,[`שייך ל`]:`השכבה הראשונה (0–4 שעות): מקרופאג׳ים שוכני רקמה כבר נמצאים במקום`}},
+ {id:'dc',name:`תא דנדריטי`,svg:'dc',tags:['myeloid','phagocyte','apc','resident'],
+  one:`השליח. דוגם אנטיגן ברקמה, ואז נודד לבלוטת הלימפה כדי להציג אותו לתאי T.`,
+  facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`ממש מתחת לאפיתל (עור, ריאה, מעי, רקמת ביניים). תאי המקור (pre-DC) מגיעים ממח העצם דרך הדם`,[`חישה`]:`קולטני PRR מזהים אותות של מיקרואורגניזמים או של נזק`,[`קליטה`]:`פגוציטוזה, אנדוציטוזה בתיווך קולטן`,
+   [`ואז`]:`מעבד את האנטיגן ומציג על MHC II (המסלול הקלאסי) או על MHC I (הצגה צולבת, cross-presentation). מעלה ביטוי של CCR7 ונודד בכלי הלימפה לבלוטה המנקזת, שם הוא מציג לתאי T נאיביים`,[`למה זה חשוב`]:`הגשר בין החסינות המולדת לנרכשת`}},
+ {id:'eosinophil',name:`אאוזינופיל`,svg:'eosinophil',tags:['myeloid','granulocyte','circulating'],
+  one:`נלחם בתולעים (הלמינתים) בעזרת חלבוני גרגירים רעילים; מעורב גם באסתמה.`,
+  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט (גרגירים ורודים, גרעין דו-אונתי)`,[`גרגירים`]:`Major basic protein, eosinophil peroxidase (רעילים לתולעים וגם לרקמה שלנו)`,[`נוצר בשפעול`]:`לויקוטריאנים, PAF, ליפוקסינים`,[`ציטוקינים`]:`מגיב ל-IL-5; מייצר IL-4 ו-TGF-β`,[`מטרות / מחלה`]:`זחלי תולעים מצופים בנוגדנים · אסתמה, דלקת ושט אאוזינופילית`}},
+ {id:'basophil',name:`בזופיל`,svg:'basophil',tags:['myeloid','granulocyte','circulating'],
+  one:`גרנולוציט נדיר במחזור הדם שמשחרר היסטמין; מקור מוקדם ל-IL-4.`,
+  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט (גרגירים סגולים כהים)`,[`גרגירים`]:`היסטמין, כונדרויטין סולפט`,[`נוצר בשפעול`]:`לויקוטריאן C4`,[`ציטוקינים`]:`IL-4, IL-13 (מקור מוקדם)`,[`מטרות / מחלה`]:`תולעים · אלרגיה, אורטיקריה כרונית`}},
+ {id:'mast',name:`תא פיטום (mast cell)`,svg:'mast',tags:['myeloid','granulocyte','resident'],
+  one:`זקיף ששוכן ברקמה בעור וברירית. שחרור היסטמין = אלרגיה ואנפילקסיס.`,
+  facts:{[`שושלת`]:`מיאלואידי, מלא גרגירים (בהרצאה נמנה עם הגרנולוציטים)`,[`איפה`]:`שוכן בממשקים: עור ורירית`,[`גרגירים (מוכנים מראש)`]:`היסטמין (מרחיב כלי דם), הפרין, טריפטאז, כימאז, TNF`,[`נוצר בשפעול`]:`פרוסטגלנדין D2, לויקוטריאנים, PAF`,[`ציטוקינים`]:`IL-4, IL-13, IL-5, TNF`,[`מטרות / מחלה`]:`טפילים, ארסים, חישת פצעים · אלרגיה, אנפילקסיס`}},
+ {id:'nk',name:`תא NK`,svg:'nk',tags:['lymphoid','circulating','killer'],
+  one:`לימפוציט מולד שהורג תאים נגועים בנגיף ותאי גידול בלי חשיפה מוקדמת.`,
+  facts:{[`שושלת`]:`לימפואידי, אבל מולד (אין לו קולטן ספציפי לאנטיגן)`,[`איפה`]:`במחזור הדם`,[`איך הורג`]:`פרפורין (מנקב חורים) + גרנזים (מפעיל מוות של התא)`,[`איך מחליט`]:`״העצמי החסר״ (missing self): הורג תאים שאיבדו את מולקולות השטח (MHC I) שיש לכל תא בריא. פרטים בהרצאה 2`,[`שייך ל`]:`השכבה השנייה (4–96 שעות), התגובה המולדת המושרית`}},
+ {id:'ilc',name:`ILC 1 / 2 / 3`,svg:'ilc',tags:['lymphoid','resident'],
+  one:`תאים לימפואידיים מולדים: תמונת ראי מולדת של תת-סוגי תאי T המסייעים. תוארו ב-2008–2010.`,
+  facts:{[`שושלת`]:`לימפואידי, בלי TCR ספציפי`,[`איפה`]:`שוכני רקמה, במיוחד במחסומי הרירית`,[`ILC1 דומה ל-Th1`]:`פתוגנים תוך-תאיים · מייצר IFN-γ`,[`ILC2 דומה ל-Th2`]:`תולעים ואלרגיה · מייצר IL-5, IL-13`,[`ILC3 דומה ל-Th17`]:`חיידקים ופטריות חוץ-תאיים, ברירית · מייצר IL-17, IL-22`}}
+];
+
+const REQS_HE = [
+ {k:`סיור (Patrol)`,m:`תנועה וחישה. על פני התאים יש קולטנים שקושרים ליגנדים (מולקולות אחרות); הקישור מפעיל העברת אותות (signal transduction) לתוך התא.`,ex:`נויטרופילים ומונוציטים שנעים בדם; לימפוציטים שעוברים בין בלוטות הלימפה.`},
+ {k:`זיהוי מולקולרי (Recognition)`,fig:'epitope',m:`אנטיגן: כל מולקולה שתאי החיסון יכולים לחוש.\nפפטיד: קטע של חלבון.\nאפיטופ: החלק הפיזי הקטן ביותר באנטיגן שהקולטן נוגע בו בפועל.`,ex:`לחלבון אחד (אנטיגן) יש אפיטופים רבים; כל תא B או T מזהה אפיטופ אחד.`},
+ {k:`זיהוי זהות (Identification)`,fig:'mhc',m:`IFF, זיהוי חבר או אויב (identification friend or foe). תאים מציגים את מה שבתוכם על מולקולות MHC.\nMHC I: על כל התאים בעלי גרעין.\nMHC II: רק על תאים מציגי אנטיגן מקצועיים (DC, מקרופאג׳ים, תאי B).`,ex:`תא אפיתל שנגוע בנגיף מציג פפטידים של הנגיף על MHC I.`},
+ {k:`החלטה: להרוג או לחוס`,m:`על סמך הזיהוי, המערכת מחליטה אם המטרה מסוכנת (זרה, נגועה, סרטנית) או שצריך להשאיר אותה (עצמי).`,ex:`תאי NK חוסים על תאים עם MHC I תקין והורגים תאים שאיבדו אותו.`},
+ {k:`חיסול (Elimination)`,m:`ייצור אנזימים, רעלנים, נוגדנים, חלבוני משלים (complement) וחלבונים נוספים שמשמידים את האיום.`,ex:`האקונומיקה של הנויטרופיל (היפוכלוריט); פרפורין וגרנזים של NK; נוגדנים.`},
+ {k:`הגברה ובקרה`,m:`ציטוקינים, כמוקינים ופקטורי גדילה מגבירים או מחלישים את התגובה.`,ex:`IL-8 מגייס נויטרופילים; TNF ו-IL-6 מניעים דלקת.`},
+ {k:`גמישות ותקשורת`,m:`אותן מולקולות (ציטוקינים, כמוקינים) מאפשרות לתאים לדבר, לתאם ולהתאים את סוג התגובה לפתוגן.`,ex:`IL-5 נגד תולעים לעומת IFN-γ נגד פתוגנים תוך-תאיים.`},
+ {k:`זיכרון (Recall)`,m:`תאי B ותאי T ארוכי חיים זוכרים מפגש קודם.`,ex:`בחשיפה השנייה התגובה מהירה וגדולה יותר (הבסיס לחיסונים).`},
+ {k:`סיום התגובה (Resolution)`,m:`דיכוי, עיכוב וכיבוי התגובה כשהאיום נעלם.`,ex:`תאי T מווסתים (Tregs), תאי MDSC (תאים מדכאים ממקור מיאלואידי).`},
+ {k:`ריפוי (Healing)`,m:`תמיכה ותיקון: פיגום, מטריקס חוץ-תאי (ECM), פקטורי גדילה.`,ex:`מקרופאג׳ים שמייצרים פקטורי גדילה אחרי שהפצע נוקה.`}
+];
+
+const QUIZ_HE = [
+ {q:`איזו מולקולה מבוטאת על כל הלויקוציטים (מולדים ונרכשים) ונקראת האנטיגן הלויקוציטרי המשותף (LCA)?`,o:[`CD45`,`CD14`,`MHC II`,`CCR7`],a:0,e:`CD45 נמצא על כל תא דם לבן. זהו פוספטאז של טירוזין שמווסת איתות לשפעול ולתגובות ציטוקינים.`},
+ {q:`MHC מסוג I נמצא…`,o:[`רק על תאים דנדריטיים`,`על כל התאים בעלי גרעין`,`רק על תאי B ו-T`,`רק על כדוריות דם אדומות`],a:1,e:`MHC I נמצא על כל התאים בעלי גרעין. MHC II מוגבל לתאים מציגי אנטיגן מקצועיים.`},
+ {q:`מהו אפיטופ?`,o:[`כל מולקולה שתאי החיסון יכולים לחוש`,`קטע של חלבון`,`החלק הפיזי הקטן ביותר באנטיגן שמתקשר עם הקולטן`,`ציטוקין שמושך תאים`],a:2,e:`אנטיגן = מולקולה שאפשר לחוש. פפטיד = קטע של חלבון. אפיטופ = החלק הקטן ביותר שנקשר בפועל.`},
+ {q:`מהו הלויקוציט הנפוץ ביותר בדם?`,o:[`לימפוציט`,`מונוציט`,`אאוזינופיל`,`נויטרופיל`],a:3,e:`נויטרופילים הם 50–70% מהלויקוציטים, חיים 1–2 ימים, וכ-10¹¹ מהם נוצרים בכל יום.`},
+ {q:`בהתפרצות הנשימתית, איזה אנזים הופך את צורוני החמצן הפעילים להיפוכלוריט (אקונומיקה)?`,o:[`NADPH oxidase`,`מיאלופרוקסידאז (MPO)`,`ליזוזים`,`אלסטאז`],a:1,e:`NADPH oxidase מייצר סופראוקסיד ו-H₂O₂; מיאלופרוקסידאז (MPO) הופך אותם להיפוכלוריט.`},
+ {q:`ממה עשויות רשתות NETs של נויטרופילים?`,o:[`נוגדנים וחלבוני משלים`,`הכרומטין של הנויטרופיל עצמו, מצופה בחלבוני גרגירים`,`סיבי קולגן`,`ריר וליזוזים`],a:1,e:`כשיש יותר מדי מיקרואורגניזמים או שהם גדולים מדי לבליעה, הנויטרופיל זורק את הכרומטין שלו החוצה כרשת.`},
+ {q:`איזה זוג הם תאים מציגי אנטיגן מקצועיים מהשושלת המיאלואידית?`,o:[`נויטרופילים ואאוזינופילים`,`תאים דנדריטיים ומקרופאג׳ים`,`תאי NK ו-ILC`,`בזופילים ותאי פיטום`],a:1,e:`DC ומונוציטים/מקרופאג׳ים מציגים אנטיגן על MHC II. גם תאי B מציגים אנטיגן, אבל הם לא מיאלואידיים.`},
+ {q:`איזה תא הוא המקור העיקרי לכמויות גדולות של אינטרפרון מסוג I (אזעקה נגד נגיפים)?`,o:[`cDC1`,`תא לנגרהנס`,`DC פלסמציטואידי (pDC)`,`DC שמקורו במונוציט`],a:2,e:`pDC (CD123, BDCA-2, ביטוי נמוך של MHC II) מייצרים כמויות עצומות של IFN מסוג I; מעורבים גם בזאבת (lupus).`},
+ {q:`במה מזהים תאי לנגרהנס?`,o:[`XCR1`,`לנגרין (CD207) וגרגירי בירבק`,`CD123`,`CD14`],a:1,e:`תאי לנגרהנס הם זקיפים באפידרמיס שנודדים לבלוטות הלימפה שמנקזות את העור.`},
+ {q:`לאיזה תת-סוג של תאי T מסייעים דומים תאי ILC2, ואילו ציטוקינים הם מייצרים?`,o:[`Th1 – IFN-γ`,`Th2 – IL-5 ו-IL-13`,`Th17 – IL-17 ו-IL-22`,`Treg – TGF-β`],a:1,e:`ILC1 כמו Th1 (IFN-γ), ILC2 כמו Th2 (IL-5, IL-13; תולעים ואלרגיה), ILC3 כמו Th17 (IL-17, IL-22; רירית).`},
+ {q:`תאי NK הורגים תאי מטרה בעיקר באמצעות…`,o:[`היסטמין`,`פרפורין וגרנזים`,`היפוכלוריט`,`נוגדנים`],a:1,e:`פרפורין יוצר נקבוביות, וגרנזימים גורמים למוות של התא. תאי NK לא צריכים חשיפה מוקדמת.`},
+ {q:`לאיזה ציטוקין מגיבים אאוזינופילים בעיקר, ומה המטרה שלהם?`,o:[`IL-8; חיידקים`,`IL-5; תולעים (הלמינתים)`,`IFN-γ; נגיפים`,`IL-17; פטריות`],a:1,e:`אאוזינופילים מגיבים ל-IL-5 ותוקפים זחלי תולעים מצופים בנוגדנים; מעורבים גם באסתמה.`},
+ {q:`מה מהבאים אינו מחסום שטח מולד שהוזכר בהרצאה?`,o:[`ליזוזים בדמעות וברוק`,`חומצת הקיבה`,`המיקרוביום`,`נוגדנים בסרום`],a:3,e:`נוגדנים שייכים לחסינות הנרכשת (ההומורלית). המחסומים: עור, רירית, זיעה ודמעות (דרמסידין, מלח), ליזוזים, פפטידים אנטי-מיקרוביאליים, חומציות הקיבה, זרימת השתן, מיקרוביום.`},
+ {q:`מערכת המשלים (complement) היא…`,o:[`כ-30 חלבונים שמיוצרים בכבד ופועלים במפל`,`סוג של כמוקין`,`קולטן על תאי T`,`חלבון גרגירים של נויטרופילים`],a:0,e:`כ-30 חלבונים שמיוצרים בכבד, נעים בדם ומופעלים על ידי פתוגנים או נוגדנים.`},
+ {q:`אילו חלבונים קשורי ברזל מרחיקים את הברזל מהמיקרואורגניזמים?`,o:[`CRP ו-mannose-binding lectin`,`לקטופרין, טרנספרין והפסידין`,`היסטמין והפרין`,`פרפורין וגרנזים`],a:1,e:`CRP ו-MBL מצפים מיקרואורגניזמים ומפעילים את המשלים; לקטופרין, טרנספרין והפסידין מונעים מהם ברזל.`},
+ {q:`מהו הסדר הנכון של יציאת תאים מכלי הדם (extravasation)?`,o:[`היצמדות, גלגול, מעבר`,`מעבר, היצמדות, גלגול`,`גלגול, היצמדות, מעבר`,`גלגול, מעבר, היצמדות`],a:2,e:`התאים מתגלגלים לאורך האנדותל, נצמדים אליו בחוזקה, ואז נדחקים דרכו לתוך הרקמה.`},
+ {q:`אחרי קליטת אנטיגן, איזה קולטן מעלים תאים דנדריטיים ברקמה כדי לנדוד לבלוטת הלימפה?`,o:[`CD45`,`CCR7`,`XCR1`,`CD14`],a:1,e:`CCR7 מכוון את ה-DC בכלי הלימפה אל הבלוטה המנקזת, שם הם פוגשים תאי T נאיביים.`},
+ {q:`אילו הם האיברים הלימפואידיים הראשוניים?`,o:[`בלוטות לימפה וטחול`,`מח עצם ותימוס`,`שקדים ותוספתן`,`כבד וטחול`],a:1,e:`ראשוניים = שם התאים מבשילים (מח עצם, תימוס). משניים = שם מתחילות התגובות (בלוטות לימפה, טחול).`},
+ {q:`העיסה האדומה של הטחול אחראית בעיקר על…`,o:[`אינטראקציות בין תאי T ו-B`,`פינוי כדוריות דם אדומות זקנות ומחזור ברזל`,`הבשלת תאי T`,`ייצור לימפה`],a:1,e:`עיסה אדומה: מקרופאג׳ים וכדוריות אדומות, סינון כדוריות זקנות או פגומות ומחזור ברזל. עיסה לבנה: אזורי T ו-B.`},
+ {q:`למה בלוטות לימפה מתנפחות בזמן זיהום?`,o:[`נוזל דולף מכלי הדם`,`הלימפוציט שמתאים לאנטיגן מפסיק לנדוד ומתחלק שם כמה ימים`,`נויטרופילים מצטברים כמוגלה`,`הלימפה מפסיקה לזרום`],a:1,e:`התא המתאים נעצר, מתרבה במשך ימים ויוצא כתאי אפקטור. אוכלוסיית הלימפוציטים כולה דוגמת כל בלוטה פעם ביום-יומיים.`},
+ {q:`בערך כמה קולטנים משמשים את החסינות המולדת, וכמה ספציפיות שונות יכולה החסינות הנרכשת ליצור?`,o:[`כ-100 לעומת כ-10¹²`,`כ-10⁶ לעומת כ-10⁶`,`כ-10 לעומת כ-1000`,`כ-10¹² לעומת כ-100`],a:0,e:`מולדת: כמאה קולטנים מקודדים בדנ״א התורשתי. נרכשת: כ-10¹² קולטנים אפשריים, קולטן אחד לכל לימפוציט.`},
+ {q:`למה התגובה הנרכשת הראשונה לוקחת 4–7 ימים?`,o:[`לימפוציטים נוצרים רק פעם בשבוע`,`רק תאים מעטים מתאימים לאנטיגן; צריך למצוא אותם ואז הם צריכים להתחלק פעמים רבות`,`נוגדנים מיוצרים בכבד`,`החסינות המולדת חוסמת אותה`],a:1,e:`למגוון יש מחיר: זמן. בינתיים החסינות המולדת מחזיקה את הקו.`},
+ {q:`איזו טענה על זיכרון חיסוני נכונה?`,o:[`לחסינות המולדת יש זיכרון חזק וספציפי לאנטיגן`,`בחשיפה השנייה ההשהיה היא 1–3 ימים והתגובה מהירה וגדולה יותר`,`תאי זיכרון הם קצרי חיים`,`הזיכרון הופך את התגובה לאיטית יותר אבל מדויקת יותר`],a:1,e:`חשיפה ראשונה: השהיה של 4–7 ימים, תגובה מתונה. חשיפה שנייה: השהיה של 1–3 ימים, תגובה מהירה, גדולה ומותאמת יותר.`},
+ {q:`מה פירוש ״העצמי החסר״ (missing self)?`,o:[`תאי B שאין להם נוגדנים`,`תאי NK הורגים תאים שאיבדו את מולקולות השטח שיש לתאים בריאים`,`תאי T שמסולקים בתימוס`,`מיקרואורגניזמים שמסתירים את התבניות שלהם`],a:1,e:`אסטרטגיה מולדת להבחנה בין עצמי לזר, שבנויה בלוגיקה של הקולטנים (הרצאה 2).`},
+ {q:`באיזה חלון זמן פועלות התגובות המולדות המושרות (ציטוקינים, גיוס נויטרופילים, תאי NK)?`,o:[`0–4 שעות`,`4–96 שעות`,`מעל 96 שעות`,`רק אחרי חיסון`],a:1,e:`0–4 שעות: מחסומים ואפקטורים מוכנים מראש. 4–96 שעות: תגובה מולדת מושרית. מעל 96 שעות: תגובה נרכשת.`},
+ {q:`סוכרת מסוג 1 וטרשת נפוצה הן דוגמאות ל…`,o:[`כשל חיסוני`,`רגישות יתר`,`אוטואימוניות`,`דחיית שתל`],a:2,e:`אוטואימוניות = הסבילות לעצמי נשברת. גם זאבת ודלקת מפרקים שגרונתית.`},
+ {q:`למה חיסונים צריכים אדג׳ובנטים?`,o:[`כדי להרוג את הפתוגן`,`כדי שהחיסון ייראה כמו זיהום לתאים החשים של החסינות המולדת; אחרת מתעלמים ממנו`,`כדי להחליף תאי זיכרון`,`כדי לחסום MHC`],a:1,e:`הזרוע הנרכשת מגיבה רק כשהזרוע המולדת מאותתת על סכנה.`},
+ {q:`מה נכון לגבי קולטני זיהוי התבניות של החסינות המולדת?`,o:[`הם נוצרים באופן אקראי בכל תא`,`הם מזהים תבניות חיוניות למיקרואורגניזם, ולכן קשה לו לעבור מוטציה ולהתחמק`,`לכל תא יש קולטן אחר`,`צריך לסנן אותם בתימוס כדי שלא יגיבו לעצמי`],a:1,e:`הם מקודדים בדנ״א התורשתי, קבועים לכל החיים וזהים בכל התאים מאותו סוג, ולכן כולם מגיבים מיד.`}
+];
+
+const GLOSS_HE = [
+ [`אנטיגן (Antigen)`,`כל מולקולה שתאי החיסון יכולים לחוש.`],
+ [`פפטיד (Peptide)`,`קטע של חלבון.`],
+ [`אפיטופ (Epitope)`,`החלק הפיזי הקטן ביותר באנטיגן שמתקשר עם קולטן.`],
+ [`ליגנד (Ligand)`,`מולקולה שקולטן קושר; הקישור מפעיל העברת אותות.`],
+ [`IFF`,`זיהוי חבר או אויב: הבחנה בין עצמי לזר, להרוג או לחוס.`],
+ [`MHC I`,`מציג פפטידים על כל התאים בעלי גרעין (לתאי T מסוג CD8; נבדק גם על ידי תאי NK).`],
+ [`MHC II`,`מציג פפטידים על APC מקצועיים (DC, מקרופאג׳ים, תאי B) לתאי T מסייעים.`],
+ [`CD45 (LCA)`,`האנטיגן הלויקוציטרי המשותף, פוספטאז של טירוזין על כל הלויקוציטים.`],
+ [`לויקוציט (Leukocyte)`,`כל תא דם לבן.`],
+ [`פגוציטוזה (Phagocytosis)`,`בליעה של תא או חלקיק (מקרופאג׳ים, DC, נויטרופילים).`],
+ [`גרנולוציט (Granulocyte)`,`תא עם גרגירים בציטופלסמה וגרעין מחולק לאונות (נויטרופיל, אאוזינופיל, בזופיל; תא פיטום דומה).`],
+ [`APC`,`תא מציג אנטיגן. המקצועיים: DC, מקרופאג׳ים, תאי B.`],
+ [`התפרצות נשימתית (Respiratory burst)`,`NADPH oxidase מייצר סופראוקסיד ו-H₂O₂; MPO הופך אותם להיפוכלוריט.`],
+ [`NETs`,`רשתות חוץ-תאיות של נויטרופילים: כרומטין וחלבוני גרגירים שלוכדים מיקרואורגניזמים.`],
+ [`ציטוקין (Cytokine)`,`חלבון איתות שמשנה את התנהגות התא (אינטרלוקינים, אינטרפרונים).`],
+ [`כמוקין (Chemokine)`,`תת-קבוצה של ציטוקינים שמושכת תאים לאורך מפל ריכוזים.`],
+ [`משלים (Complement)`,`כ-30 חלבוני דם שמיוצרים בכבד ופועלים במפל.`],
+ [`CRP`,`C-reactive protein, חלבון של השלב החריף שמצפה מיקרואורגניזמים ומפעיל את המשלים.`],
+ [`PRR`,`קולטן לזיהוי תבניות: חיישן מולד, מקודד בדנ״א התורשתי, שמזהה תבניות של מיקרואורגניזמים או נזק.`],
+ [`CCR7`,`קולטן כמוקין ש-DC מעלים כדי לנדוד לבלוטות הלימפה.`],
+ [`יציאה מכלי הדם (Extravasation)`,`מעבר מהדם לרקמה: גלגול, היצמדות, מעבר דרך האנדותל.`],
+ [`הצגה צולבת (Cross-presentation)`,`הצגה של אנטיגן שנבלע על MHC I במקום על MHC II.`],
+ [`Treg`,`תא T מווסת; מדכא תגובות (סיום התגובה, סבילות).`],
+ [`MDSC`,`תא מדכא ממקור מיאלואידי; מדכא תגובות חיסוניות.`],
+ [`העצמי החסר (Missing self)`,`תאי NK הורגים תאים שאיבדו את מולקולות השטח הרגילות (MHC I).`],
+ [`איבר לימפואידי ראשוני`,`המקום שבו תאי החיסון מבשילים: מח העצם, התימוס.`],
+ [`איבר לימפואידי משני`,`המקום שבו התגובות מתחילות: בלוטות לימפה, טחול.`],
+ [`עיסה לבנה (White pulp)`,`אזורי תאי T ו-B בטחול; סורקים את הדם לאיתור אנטיגן.`],
+ [`עיסה אדומה (Red pulp)`,`אזור בטחול של מקרופאג׳ים וכדוריות אדומות; מפנה כדוריות זקנות וממחזר ברזל.`],
+ [`לימפה (Lymph)`,`נוזל בין-תאי שנאסף לנימי הלימפה וחוזר לדם.`],
+ [`תא תואם (Cognate cell)`,`הלימפוציט שהקולטן שלו מתאים לאנטיגן מסוים.`],
+ [`אדג׳ובנט (Adjuvant)`,`רכיב בחיסון שגורם לו להיראות כמו זיהום בעיני התאים המולדים.`],
+ [`חסינות עדר (Herd immunity)`,`הגנה על מי שלא יכול להגיב, כי רוב האחרים מחוסנים.`],
+ [`דרמסידין (Dermcidin)`,`פפטיד אנטי-מיקרוביאלי בזיעה.`],
+ [`ליזוזים (Lysozyme)`,`אנזים בדמעות וברוק שמפרק את דופן התא של חיידקים.`]
+];
+
+const NOTES_HE = {phagocyte:`פגוציטים בולעים: מונוציטים/מקרופאג׳ים, DC ונויטרופילים.`,granulocyte:`לגרנולוציטים יש גרגירים בציטופלסמה וגרעין מחולק לאונות: נויטרופילים, אאוזינופילים, בזופילים; גם תאי הפיטום מלאים בגרגירים.`,apc:`APC מקצועיים מציגים אנטיגן על MHC II לתאי T. גם תאי B הם APC, אבל הם לא מיאלואידיים.`,lymphoid:`תאי NK ו-ILC הם לימפואידיים אבל מולדים: אין להם קולטן ספציפי לאנטיגן.`,myeloid:`התאים המולדים המיאלואידיים: DC, מונוציטים/מקרופאג׳ים והגרנולוציטים.`,circulating:`אלה מסיירים בזרם הדם ומגויסים לרקמה.`,resident:`אלה חיים ברקמה ושומרים עליה מקומית.`};
+
+const EX_HE = [
+ `הלויקוציט נישא בזרם הדם במהירות מלאה.`,
+ `גלגול: ליד רקמה מודלקת, האנדותל תופס את התא באחיזה חלשה והוא מתגלגל לאורכו ומאט.`,
+ `היצמדות: אותות של כמוקינים משפעלים אותו והוא נצמד בחוזקה לאנדותל.`,
+ `מעבר (transmigration): התא נדחק בין תאי האנדותל לתוך הרקמה ועוקב אחרי מפל הכמוקינים אל הזיהום.`
+];
+
+const ORG_HE = ()=>({
+ bm:`<span class="pill">ראשוני</span><h3>מח עצם</h3><p>המקום שבו <b>כל</b> תאי מערכת החיסון נוצרים. איברים לימפואידיים ראשוניים הם המקום שבו התאים <b>מבשילים</b>.</p>`,
+ thymus:`<span class="pill">ראשוני</span><h3>תימוס</h3><p>תאי אב לימפואידיים ממח העצם מגיעים לכאן כדי להבשיל ל<b>תאי T</b> ולעבור <b>חינוך לסבילות לעצמי</b> (סילוק תאי T שמגיבים חזק לעצמי).</p>`,
+ ln:`<span class="pill">משני</span><h3>בלוטות לימפה (כ-600 בגוף)</h3><ul class="clean"><li>המקום שבו החסינות המולדת והנרכשת נפגשות</li><li>מסננות את נוזל הלימפה; פזורות לאורך כל מערכת הלימפה</li><li>משפעלות לימפוציטים ומתחילות תגובות נגד אנטיגנים שמגיעים בלימפה</li><li>גם מקום שבו תאי B (ותאים אחרים) משלימים את ההבשלה</li></ul><figure class="fig">${FIG.ln()}<figcaption>לימפה זורמת פנימה מהרקמות, לימפוציטים מגיעים מהדם, והשניים נפגשים בבלוטה.</figcaption></figure>`,
+ spleen:`<span class="pill">משני</span><h3>טחול</h3><p>מסנן את <b>הדם</b> (בלוטות הלימפה מסננות לימפה). מתחיל תגובות נגד פתוגנים שבדם, ממחזר ברזל ומאחסן תאי חיסון.</p><div class="grid g2"><div class="callout"><b>עיסה לבנה</b>: אזורי תאי T ו-B. סורקת את הדם לאיתור אנטיגנים; DC, תאי T ותאי B מתקשרים זה עם זה. ה-APC של הטחול מגיעים כתאי מקור דרך הדם ומציגים אנטיגן שנלכד והועבר על ידי מקרופאג׳ים של אזור השוליים (marginal zone).</div><div class="callout pink"><b>עיסה אדומה</b>: מקרופאג׳ים וכדוריות דם אדומות. מפנה כדוריות אדומות זקנות, פגומות או חריגות וממחזרת את הברזל שלהן.</div></div><figure class="fig">${FIG.spleen()}</figure>`,
+ lymph:`<span class="pill">המערכת</span><h3>מערכת הלימפה</h3><p>רשת של איברים, בלוטות, צינורות וכלים שמעבירה לימפה מהרקמות חזרה לזרם הדם. <b>לימפה</b> נוצרת כשנוזל בין-תאי נאסף לנימי הלימפה.</p><ul class="clean"><li>מחזירה עודפי נוזל בין-תאי לדם</li><li>סופגת שומנים וויטמינים מסיסי שומן ממערכת העיכול ומעבירה אותם למחזור הדם</li><li>מובילה DC ואנטיגן מהרקמות לבלוטות הלימפה</li></ul>`
+});
+
+const INN_HE = {
+ barriers:()=>`<figure class="fig">${FIG.barriers()}<figcaption>מחסומי השטח: הדבר הראשון שפתוגן צריך לעבור.</figcaption></figure><div class="grid g3">
+   <div class="card stack"><h3>עור ורירית</h3><p>חומה פיזית. הדבר הראשון שפתוגן צריך לחצות.</p></div>
+   <div class="card stack"><h3>זיעה ודמעות</h3><p>חומציות, ומכילות את הפפטיד האנטי-מיקרוביאלי <b>דרמסידין</b>. המלח שנשאר על העור מעכב גדילה של חיידקים.</p></div>
+   <div class="card stack"><h3>ליזוזים</h3><p>אנזים בדמעות וברוק שמפרק את דופן התא של חיידקים.</p></div>
+   <div class="card stack"><h3>פפטידים אנטי-מיקרוביאליים</h3><p>משבשים את שכבת השומנים הכפולה של ממברנת המיקרואורגניזם.</p></div>
+   <div class="card stack"><h3>חומצת הקיבה ושתן</h3><p>ה-pH הנמוך הורג; זרימת השתן שוטפת מיקרואורגניזמים החוצה באופן מכני.</p></div>
+   <div class="card stack"><h3>מיקרוביום</h3><p>אורגניזמים סימביוטיים תופסים את המקום ואת המשאבים שפתוגנים צריכים.</p></div>
+ </div>`,
+ cells:()=>`<div class="stack">
+   <div class="callout"><b>מתחילים כאן:</b> כל תאי הדם הלבנים הם <b>לויקוציטים</b>, וכולם (מולדים ונרכשים) מבטאים <span class="mono">CD45</span>, האנטיגן הלויקוציטרי המשותף. זהו פוספטאז של טירוזין שמווסת שפעול ואיתות של ציטוקינים.</div>
+   <figure class="fig">${FIG.lineage()}<figcaption>כל תא חיסון מגיע מתא גזע של הדם במח העצם. הענף המיאלואידי נותן את הפגוציטים ואת הגרנולוציטים; הענף הלימפואידי נותן תאי NK, תאי ILC ואת תאי T ו-B של החסינות הנרכשת.</figcaption></figure>
+   <p>בחרו קבוצה כדי להדגיש אותה, ולחצו על תא כדי לראות את הפרופיל שלו.</p>
+   <div class="filters" id="filters" role="group" aria-label="הדגשה">${[['all','הכול'],['myeloid','מיאלואידיים'],['lymphoid','לימפואידיים מולדים'],['phagocyte','פגוציטים'],['granulocyte','גרנולוציטים'],['apc','APC מקצועיים'],['circulating','במחזור הדם'],['resident','שוכני רקמה']].map((f,i)=>`<button aria-pressed="${i===0}" data-f="${f[0]}">${f[1]}</button>`).join('')}</div>
+   <div class="cells" id="cells">${CELLS.map((c,i)=>`<button class="cellbtn" data-i="${i}" aria-pressed="${i===0}">${CELLSVG[c.svg]}<span>${c.name}</span></button>`).join('')}</div>
+   <div class="card" id="celldetail" aria-live="polite"></div>
+   <div class="callout pink" id="filternote" hidden></div>
+   <details class="reveal"><summary>תת-סוגים של תאים דנדריטיים (שקופית 17)</summary>
+     <div class="tablewrap"><table><thead><tr><th>תת-סוג</th><th>סמנים</th><th>תוצר עיקרי</th><th>תפקיד</th></tr></thead><tbody>
+     <tr><td>cDC1</td><td class="mono">XCR1, CD141 (אדם), CD8α (טחול עכבר)</td><td>IL-12</td><td>מציגים אנטיגנים של נגיפים וגידולים לתאי T</td></tr>
+     <tr><td>cDC2</td><td class="mono">CD1c (אדם), CD11b, SIRPα</td><td>IL-6, IL-23, IL-12</td><td>מציגים אנטיגנים של חיידקים, פטריות וטפילים</td></tr>
+     <tr><td>DC פלסמציטואידי</td><td class="mono">CD123, BDCA-2, MHC II נמוך</td><td>כמויות עצומות של IFN מסוג I</td><td>אזעקה נגד נגיפים; IFN מערכתי (גם בזאבת)</td></tr>
+     <tr><td>DC שמקורו במונוציט</td><td class="mono">CD14, CD1a</td><td>TNF, iNOS</td><td>מופיעים באזורי דלקת, מגבירים תגובות T מקומיות</td></tr>
+     <tr><td>תאי לנגרהנס</td><td class="mono">לנגרין (CD207), גרגירי בירבק</td><td>–</td><td>זקיפים באפידרמיס; נודדים לבלוטות שמנקזות את העור</td></tr>
+     </tbody></table></div></details>
+   <details class="reveal"><summary>מה יש בגרגירים (שקופית 20)</summary>
+     <div class="tablewrap"><table><thead><tr><th>תא</th><th>מאוחסן ומוכן</th><th>נוצר בשפעול</th><th>ציטוקינים</th><th>מטרות / פתולוגיה</th></tr></thead><tbody>
+     <tr><td>תא פיטום</td><td>היסטמין, הפרין, טריפטאז, כימאז, TNF</td><td>PGD2, לויקוטריאנים, PAF</td><td>IL-4, IL-13, IL-5, TNF</td><td>טפילים, ארסים, פצעים; אלרגיה, אנפילקסיס</td></tr>
+     <tr><td>בזופיל</td><td>היסטמין, כונדרויטין סולפט</td><td>לויקוטריאן C4</td><td>IL-4, IL-13 (מוקדם)</td><td>תולעים; אלרגיה, אורטיקריה כרונית</td></tr>
+     <tr><td>אאוזינופיל</td><td>Major basic protein, eosinophil peroxidase</td><td>לויקוטריאנים, PAF, ליפוקסינים</td><td>מגיב ל-IL-5; מייצר IL-4, TGF-β</td><td>זחלי תולעים; אסתמה, דלקת ושט אאוזינופילית</td></tr>
+     <tr><td>נויטרופיל</td><td>MPO, אלסטאז, ליזוזים, דפנסינים, לקטופרין</td><td>ROS, לויקוטריאן B4, NETs</td><td>מגיב ל-IL-8; מייצר IL-1β, TNF</td><td>חיידקים, פטריות; מורסה, נזק לרקמה</td></tr>
+     </tbody></table></div></details>
+ </div>`,
+ proteins:()=>`<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
+   <div class="card stack">${FIG.pCyto()}<span class="pill inn">תקשורת</span><h3>ציטוקינים</h3><p>אינטרלוקינים (IL) ואינטרפרונים (IFN). חלבוני איתות שמשנים את התנהגות התאים: שפעול, גיוס, תקשורת.</p></div>
+   <div class="card stack">${FIG.pChemo()}<span class="pill inn">ניווט</span><h3>כמוקינים</h3><p>תת-קבוצה של ציטוקינים שיוצרת מפל ריכוזים כימי. תאי החיסון עוקבים אחריו אל אתר הזיהום או הדלקת (למשל IL-8 מושך נויטרופילים).</p></div>
+   <div class="card stack">${FIG.pComp()}<span class="pill inn">חיסול</span><h3>משלים (Complement)</h3><p>כ-30 חלבונים שמיוצרים בכבד, נעים בדם ופועלים במפל. מופעלים על ידי הפתוגן עצמו או על ידי נוגדנים (פרטים בשבוע הבא).</p></div>
+   <div class="card stack">${FIG.pIron()}<span class="pill inn">סימון · הרעבה</span><h3>חלבוני השלב החריף וחלבונים קושרי ברזל</h3><p><b>CRP</b> ו-<b>mannose-binding lectin</b> מצפים מיקרואורגניזמים ומפעילים את המשלים. <b>לקטופרין, טרנספרין והפסידין</b> נועלים את הברזל כך שהמיקרואורגניזמים לא יכולים לגדול.</p></div>
+ </div>`
+};
+
+const RH = {};
+RH.home = ()=>`
+<section class="view">
+  <div class="stack">
+    <span class="eyebrow">אימונולוגיה בסיסית 027604130 · חורף תשפ״ז</span>
+    <h1>בחרו שיעור</h1>
+    <p class="lead">כל שיעור הוא מדריך לימוד אינטראקטיבי עם הסברים, תרשימים, בוחן וכרטיסיות. שיעורים חדשים יעלו בהמשך.</p>
+  </div>
+  <div class="lessons">${LESSONS.map(l=>{const open=!!l[3];const inner=`<div class="lm"><span class="eyebrow">שיעור ${l[0]} · ${l[1]}</span><span class="pill ${open?'live':''}">${open?'זמין':'בקרוב'}</span></div><span class="lt">${l[2]}</span>`;
+    return open?`<a class="lesson" href="#${l[3]}">${inner}</a>`:`<div class="lesson soon" aria-disabled="true">${inner}</div>`}).join('')}</div>
+</section>`;
+
+RH.start = ()=>`
+<section class="view">
+  <div class="hero">
+    <div class="stack">
+      <span class="eyebrow">אימונולוגיה בסיסית 027604130 · הרצאה 1 · 3.11.2026</span>
+      <h1>מבוא למערכת החיסון</h1>
+      <p class="lead">כל מה שהיה בשקופיות, מסודר מחדש כך שיהיה הגיוני לפי הסדר. קראו את חמשת הפרקים, שחקו עם החלקים האינטראקטיביים, ואז בחנו את עצמכם. מבנה המבחן: 50 שאלות אמריקאיות, שעתיים, ציון עובר 55.</p>
+      <div class="howto"><a class="btn primary" href="#requirements">להתחיל את פרק 1 ←</a><a class="btn" href="#quiz">ישר לבוחן</a></div>
+    </div>
+    <div class="smear" aria-hidden="true"><svg viewBox="0 0 300 300">
+      <g transform="translate(40,40) scale(.9)">${CELLSVG.neutrophil.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(160,30) scale(.8)">${CELLSVG.eosinophil.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(150,150) scale(1)">${CELLSVG.dc.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(40,160) scale(.85)">${CELLSVG.monocyte.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(110,100) scale(.55)">${CELLSVG.tcell.replace(/<\/?svg[^>]*>/g,'')}</g>
+    </svg></div>
+  </div>
+  <div class="callout pink stack">
+    <h3>כל ההרצאה בחמישה משפטים</h3>
+    <p>1. למערכת החיסון יש רשימת משימות: לסייר, לזהות, להחליט אם זה חבר או אויב, לחסל, לתקשר, לזכור, לכבות את התגובה ולרפא.</p>
+    <p>2. היא עושה זאת בעזרת שתי זרועות: <b>מולדת</b> (מהירה, כללית, בלי זיכרון) ו<b>נרכשת</b> (איטית בהתחלה, ספציפית מאוד, עם זיכרון).</p>
+    <p>3. חסינות מולדת = מחסומים + תאים (נויטרופילים, מקרופאג׳ים, DC, גרנולוציטים, תאי NK, ILC) + חלבונים (ציטוקינים, כמוקינים, משלים).</p>
+    <p>4. התאים האלה נעים במחזור הדם או יושבים ברקמה, ופוגשים את תאי החסינות הנרכשת בבלוטות הלימפה ובטחול, שמחוברים בדם ובלימפה.</p>
+    <p>5. ההגנה בנויה בשכבות לפי זמן (0–4 שעות, 4–96 שעות, מעל 96 שעות); הזרוע המולדת מזהה, הזרוע הנרכשת מכוונת, ושתיהן מבצעות. חיסונים מנצלים את הזיכרון; מחלה נובעת מתגובה חלשה מדי, חזקה מדי או מכוונת למטרה הלא נכונה.</p>
+  </div>
+  ${nextBar(0)}
+</section>`;
+
+RH.requirements = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">פרק 1 · שקופיות 4–7</span><h2>מה מערכת החיסון צריכה לדעת לעשות</h2>
+  <p class="lead">ההרצאה נפתחה בתיאור תפקיד. כל דרישה ברשימה נפתרת על ידי מנגנון מסוים. עברו עליהן לפי הסדר: זה בערך סיפור החיים של תגובה חיסונית.</p></div>
+  <div class="req">
+    <div class="reqlist" id="reqlist" role="group" aria-label="דרישות">${REQS.map((r,i)=>`<button aria-pressed="${i===0}" data-i="${i}"><span class="n">${String(i+1).padStart(2,'0')}</span>${r.k}</button>`).join('')}</div>
+    <div class="card reqpanel stack" id="reqpanel" aria-live="polite"></div>
+  </div>
+  <div class="stack">
+    <h2>הצד השני: מה פתוגן צריך</h2>
+    <p class="lead">כל פתוגן צריך לעבור את אותה רשימה. כל שלב הוא מקום שבו מערכת החיסון יכולה לעצור אותו.</p>
+    <div class="vs">
+      <div class="card stack"><span class="pill inn">הפתוגן צריך</span><ul class="clean"><li>גישה</li><li>כניסה</li><li>רבייה</li><li>הישרדות</li><li>הדבקה</li><li>התחמקות והסוואה</li></ul></div>
+      <div class="mid">מול</div>
+      <div class="card stack"><span class="pill ada">התגובה החיסונית</span><ul class="clean"><li>מחסומים (עור, רירית) חוסמים את הגישה</li><li>פפטידים אנטי-מיקרוביאליים, חומצה וליזוזים עוצרים את הכניסה</li><li>פגוציטים ומשלים מגבילים את הרבייה</li><li>נעילת הברזל מרעיבה את הפתוגן</li><li>תאי NK ותאי T הורגים תאים נגועים</li><li>הדיוק והזיכרון של החסינות הנרכשת מנצחים את ההסוואה</li></ul></div>
+    </div>
+  </div>
+  ${nextBar(1)}
+</section>`;
+
+RH['two-arms'] = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">פרק 2 · שקופיות 8–9</span><h2>שתי זרועות: מולדת ונרכשת</h2>
+  <p class="lead">ההשוואה הזו היא עמוד השדרה של כל הקורס. לחצו על זרוע כדי להתמקד בה.</p></div>
+  <div class="armswitch" role="group" aria-label="מיקוד"><button aria-pressed="true" data-f="both">שתיהן</button><button aria-pressed="false" data-f="innate">רק מולדת</button><button aria-pressed="false" data-f="adaptive">רק נרכשת</button></div>
+  <div class="cmp" id="cmp" data-focus="both">
+    <div class="cmprow head"><div class="k"></div><div class="c i">מולדת</div><div class="c a">נרכשת / ספציפית / מסתגלת</div></div>
+    ${[['תזמון','שלב מוקדם: שניות עד שעות','שלב מאוחר: ימים (4–7 בחשיפה ראשונה)'],
+       ['ספציפיות','הגנה כללית נגד קבוצות של מיקרואורגניזמים','ספציפית לאנטיגן אחד (אפיטופ)'],
+       ['מגוון','מוגבל: כמאה קולטנים תורשתיים','עצום: כ-10¹² קולטנים'],
+       ['קולטנים','זהים בכל התאים מאותו סוג, קבועים לכל החיים','שונים בכל לימפוציט, נוצרים באקראי בזמן ההתפתחות'],
+       ['זיכרון','אין (כמעט)','יש: משתפר בכל חשיפה'],
+       ['עצמי מול זר','בנוי לתוך הקולטנים','צריך ללמוד (לסנן תאים שמגיבים לעצמי)'],
+       ['השחקנים','מחסומים, פגוציטים, גרנולוציטים, NK, ILC, משלים','תאי T, תאי B, נוגדנים']
+      ].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
+  </div>
+  <figure class="fig">${FIG.diversity()}<figcaption>הקולטנים המולדים (משמאל) משוכפלים על כל תא, ולכן התגובה מיידית. הקולטנים הנרכשים (מימין) כולם שונים, ולכן צריך קודם למצוא את התא היחיד שמתאים ולהרבות אותו.</figcaption></figure>
+  <div class="callout"><b>אנלוגיה.</b> החסינות המולדת היא השומר בכניסה לבניין: תמיד במשמרת, מזהה תוך שניות ״כל מי שעוטה מסכה״, אבל מתייחס לכל פורץ באותו אופן. החסינות הנרכשת היא משרד חקירות: לוקח לה ימים לפתוח תיק, אבל היא מזהה את האדם המדויק ושומרת את התיק שלו לתמיד.</div>
+  ${nextBar(2)}
+</section>`;
+
+RH.innate = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">פרק 3 · שקופיות 10–24</span><h2>ארגז הכלים המולד</h2>
+  <p class="lead">לחסינות המולדת יש שלושה רכיבים. לחצו על כל אחד מהם.</p></div>
+  <div class="seg" id="innseg" role="group" aria-label="רכיב"><button aria-pressed="true" data-t="barriers">שטח · מחסומים</button><button aria-pressed="false" data-t="cells">תאי · תאים מולדים</button><button aria-pressed="false" data-t="proteins">הומורלי · חלבונים</button></div>
+  <div id="innbody"></div>
+  ${nextBar(3)}
+</section>`;
+
+RH.organization = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">פרק 4 · שקופיות 26–42</span><h2>איפה הכול קורה</h2>
+  <p class="lead">שלוש רמות ארגון: <b>תאים</b> (במחזור הדם מול שוכני רקמה), <b>מדורים</b> (איברים לימפואידיים) וה<b>מערכת</b> שמחברת ביניהם (דם ולימפה).</p></div>
+  <div class="grid g2">
+    <div class="card stack"><span class="pill">במחזור הדם</span><h3>מסיירים בדם</h3><ul class="clean"><li><b>נויטרופילים</b>: הנפוצים ביותר, תגובה מיידית</li><li><b>מונוציטים</b>: תאי המקור של מקרופאג׳ים ו-DC</li><li><b>אאוזינופילים</b>: טפילים, אלרגיה</li><li><b>בזופילים</b>: היסטמין, אלרגיה, דלקת</li><li><b>תאי NK</b>: הורגים תאים נגועים ותאי גידול</li><li>DC לא בשלים רק עוברים בדם בדרכם ממח העצם לרקמה</li></ul></div>
+    <div class="card stack"><span class="pill">שוכני רקמה</span><h3>שומרים על רקמה</h3><ul class="clean"><li><b>מקרופאג׳ים</b>: בנאדיות הריאה, תאי קופפר (כבד), בדרמיס (עור)</li><li><b>DC</b>: תאי לנגרהנס (עור, רירית), DC אינטרסטיציאליים</li><li><b>תאי פיטום</b>: בממשקים של עור ורירית</li><li><b>ILC</b>: במחסומי הרירית, דומים לתאי T מסייעים, בלי TCR</li></ul></div>
+  </div>
+  <div class="callout"><b>רעיון מרכזי (שקופית 31):</b> APC מולדים לא דוגמים אנטיגן בדם. הדם הוא מערכת משלוחים שמביאה תאים לרקמות ולטחול, ושם פוגשים את האנטיגן בפועל.</div>
+  <div class="card stack extra">
+    <h3>איך תא מהדם נכנס לרקמה: Extravasation</h3>
+    <div class="steps" id="exsteps" role="group" aria-label="שלב">${['1 · זרימה','2 · גלגול','3 · היצמדות','4 · מעבר'].map((s,i)=>`<button aria-pressed="${i===0}" data-s="${i}">${s}</button>`).join('')}</div>
+    <svg viewBox="0 0 640 230" role="img" aria-label="לויקוציט יוצא מכלי דם">
+      <rect x="0" y="20" width="640" height="100" fill="var(--eosin-soft)"/>
+      ${t(12,40,'כלי דם · הזרימה משמאל לימין','m','start')}
+      ${Array.from({length:16},(_,i)=>`<rect x="${i*40+1}" y="120" width="38" height="16" rx="5" fill="var(--hema-soft)" stroke="var(--hema)" stroke-opacity=".4"/>`).join('')}
+      ${t(12,152,'אנדותל','m','start')}
+      ${t(12,215,'רקמה (כאן נמצא הזיהום)','m','start')}
+      <g fill="var(--bad)" opacity=".7"><circle cx="520" cy="190" r="4"/><circle cx="534" cy="200" r="4"/><circle cx="546" cy="186" r="4"/><circle cx="560" cy="206" r="4"/></g>
+      <g id="wbc" transform="translate(70,60)"><circle r="18" fill="url(#cyto)" stroke="var(--eosin)"/><circle cx="-5" cy="-3" r="5" fill="var(--hema)"/><circle cx="5" cy="-4" r="5" fill="var(--hema)"/><circle cx="1" cy="6" r="5" fill="var(--hema)"/></g>
+    </svg>
+    <p id="extext" aria-live="polite"></p>
+    <p style="color:var(--muted)">תאים שוכני רקמה (למשל DC) הולכים בכיוון ההפוך: הם יוצאים מהרקמה דרך <b>כלי הלימפה</b> כדי להגיע לבלוטת לימפה כשהם צריכים להציג אנטיגן.</p>
+  </div>
+  <div class="stack">
+    <h3>המסע של DC מהרקמה (שקופית 30)</h3>
+    <div class="flow">
+      <div class="node"><span class="eyebrow">יושב</span><p>מתחת לאפיתל בעור, בריאה ובמעי</p></div><div class="arrow">←</div>
+      <div class="node"><span class="eyebrow">חש</span><p>קולטני PRR מזהים אותות של מיקרואורגניזמים או של נזק</p></div><div class="arrow">←</div>
+      <div class="node"><span class="eyebrow">בולע</span><p>פגוציטוזה, אנדוציטוזה בתיווך קולטן</p></div><div class="arrow">←</div>
+      <div class="node"><span class="eyebrow">מעבד</span><p>פפטידים על MHC II (או על MHC I בהצגה צולבת)</p></div><div class="arrow">←</div>
+      <div class="node"><span class="eyebrow">נודד</span><p>מעלה CCR7, עובר בכלי הלימפה לבלוטה ופוגש תאי T נאיביים</p></div>
+    </div>
+  </div>
+  <div class="stack">
+    <h3>איברים לימפואידיים</h3>
+    <p>מקומות שבהם יש תאי חיסון בכמויות גדולות, ושם הם מתרבים, מתמיינים ומשופעלים.</p>
+    <div class="seg" id="orgseg" role="group" aria-label="איבר"><button aria-pressed="true" data-o="bm">מח עצם</button><button aria-pressed="false" data-o="thymus">תימוס</button><button aria-pressed="false" data-o="ln">בלוטת לימפה</button><button aria-pressed="false" data-o="spleen">טחול</button><button aria-pressed="false" data-o="lymph">מערכת הלימפה</button></div>
+    <div class="orggrid"><figure class="fig body">${FIG.body()}<figcaption>לחצו על איבר בגוף או השתמשו בכפתורים למעלה.</figcaption></figure><div class="card stack" id="orgbody" aria-live="polite"></div></div>
+  </div>
+  <div class="card stack">
+    <h3>מחזור הלימפוציטים: איך תא נדיר מוצא את האנטיגן שלו</h3>
+    <figure class="fig" style="border:0;padding:0">${FIG.recirc()}</figure>
+    <div class="flow">
+      <div class="node"><p>הלימפוציט נכנס לבלוטה מהדם דרך ורידונים מיוחדים (גלגול והיצמדות)</p></div><div class="arrow">←</div>
+      <div class="node"><p>מבלה כיום אחד בסריקת הבלוטה</p></div><div class="arrow">←</div>
+      <div class="node"><p>אין התאמה: יוצא בלימפה, חוזר לדם ועובר לבלוטה הבאה</p></div>
+    </div>
+    <p>כל אוכלוסיית הלימפוציטים דוגמת כל בלוטת לימפה פעם ביום-יומיים. האנטיגן (חופשי או נישא על ידי APC) מוחזק בבלוטה. כשהתא ה<b>תואם</b> (cognate) מוצא אותו, הוא מפסיק לנדוד, מתחלק במשך כמה ימים ויוצא כתאי אפקטור. <b>ההתרבות הזו היא הסיבה שבלוטות לימפה מתנפחות בזמן זיהום.</b></p>
+  </div>
+  ${nextBar(4)}
+</section>`;
+
+RH.strategies = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">פרק 5 · שקופיות 44–57</span><h2>שש האסטרטגיות של מערכת החיסון</h2>
+  <p class="lead">החלק האחרון של ההרצאה הסביר <i>למה</i> יש שתי זרועות. כל אסטרטגיה כאן היא פשרה.</p></div>
+  <div class="card stack tl">
+    <span class="eyebrow">אסטרטגיה 1</span><h3>תזמון: הגנה בשכבות</h3>
+    <p>גררו את המחוון כדי לנוע בזמן מרגע ההדבקה.</p>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="clock" id="clock">0 שעות</span><span id="clocknote" style="color:var(--muted)"></span></div>
+    <label for="tslider" class="eyebrow">שעות מאז ההדבקה</label>
+    <input type="range" id="tslider" min="0" max="100" value="0">
+    <div class="layers" id="layers">
+      <div class="layer"><span class="eyebrow">0–4 שעות</span><h4>מחסומים ואפקטורים מוכנים מראש</h4><ul class="clean"><li>עור, ריר, pH</li><li>פפטידים אנטי-מיקרוביאליים, אנזימים</li><li>משלים</li><li>מקרופאג׳ים ותאי פיטום שוכני רקמה</li></ul></div>
+      <div class="layer"><span class="eyebrow">4–96 שעות</span><h4>תגובה מולדת מושרית</h4><ul class="clean"><li>קולטנים קבועים מזהים תבניות של מיקרואורגניזמים</li><li>ציטוקינים, כמוקינים, אינטרפרונים</li><li>גיוס נויטרופילים ומונוציטים</li><li>דלקת · תאי NK</li></ul></div>
+      <div class="layer"><span class="eyebrow">מעל 96 שעות</span><h4>תגובה נרכשת</h4><ul class="clean"><li>האנטיגן מגיע לבלוטת הלימפה</li><li>הלימפוציטים המעטים שמתאימים מתרבים</li><li>תאי T, נוגדנים</li><li>זיכרון</li></ul></div>
+    </div>
+    <p>כל שכבה קונה זמן לשכבה הבאה. <b>רוב הזיהומים נעצרים בשתי השכבות הראשונות</b>, לפני שצריך את התגובה הנרכשת.</p>
+  </div>
+  <div class="grid g2">
+    <div class="card stack"><span class="eyebrow">אסטרטגיה 2</span><h3>זיהוי: תבניות מול דיוק</h3>
+      <p><span class="pill inn">מולדת</span> כמאה קולטנים תורשתיים, קבועים לכל החיים (קולטני KIR על תאי NK הם היוצא מן הכלל). הם מזהים תבניות שמשותפות לקבוצות שלמות של מיקרואורגניזמים ו<b>חיוניות</b> להן, ולכן למיקרואורגניזם קשה לעבור מוטציה ולהיפטר מהן. לכל התאים מאותו סוג יש אותה ערכה, ולכן כולם מגיבים יחד.</p>
+      <p><span class="pill ada">נרכשת</span> קולטן ייחודי לכל לימפוציט, שנוצר בזמן ההתפתחות (כ-10¹² אפשרויות). דיוק עדין: תאי T מזהים פפטיד על MHC; תאי B מזהים כל אפיטופ. הם יכולים לזהות כל דבר, כולל את העצמי, ולכן צריך לסנן את הרפרטואר.</p></div>
+    <div class="card stack"><span class="eyebrow">אסטרטגיה 3</span><h3>למגוון יש מחיר: זמן</h3>
+      <p>לכל מיקרואורגניזם, רק חלק זעיר מהלימפוציטים נושא קולטן מתאים. את התאים המעטים האלה צריך קודם למצוא, ואז הם צריכים להתחלק פעמים רבות.</p>
+      <p><b>התוצאה:</b> תאי אפקטור נרכשים מופיעים רק 4–7 ימים אחרי החשיפה הראשונה. בינתיים התגובה המולדת מחזיקה את הקו ואומרת לזרוע הנרכשת <i>איזה סוג</i> תגובה לבנות.</p></div>
+  </div>
+  <div class="card stack chart">
+    <span class="eyebrow">אסטרטגיה 4</span><h3>זיכרון</h3>
+    <svg viewBox="0 0 640 260" role="img" aria-label="תרשים סכמטי של תגובה ראשונית ושניונית">
+      <line x1="60" y1="210" x2="620" y2="210" stroke="var(--line)"/><line x1="60" y1="20" x2="60" y2="210" stroke="var(--line)"/>
+      ${[0,7,14,21,28,35,42,49,56].map(d=>`<text x="${60+d*10}" y="228" text-anchor="middle">${d}</text>`).join('')}
+      <text x="340" y="250" text-anchor="middle" style="direction:rtl">ימים</text>
+      <text x="20" y="115" text-anchor="middle" transform="rotate(-90 20 115)" style="direction:rtl">גודל התגובה (סכמטי)</text>
+      <line x1="60" y1="20" x2="60" y2="210" stroke="var(--eosin)" stroke-dasharray="3 4"/>
+      <line x1="340" y1="20" x2="340" y2="210" stroke="var(--eosin)" stroke-dasharray="3 4"/>
+      <text x="66" y="32" text-anchor="end" style="direction:rtl;fill:var(--eosin)">חשיפה ראשונה</text><text x="346" y="32" text-anchor="end" style="direction:rtl;fill:var(--eosin)">חשיפה שנייה (אותו אנטיגן)</text>
+      <path d="M60 208 L110 207 C130 200 150 150 175 150 C200 150 215 190 260 200 L340 200" fill="none" stroke="var(--hema)" stroke-width="3"/>
+      <path d="M340 200 L360 198 C375 150 395 45 425 45 C460 45 500 120 620 160" fill="none" stroke="var(--hema)" stroke-width="3"/>
+      <rect x="62" y="186" width="96" height="16" fill="var(--sunk)"/><text x="110" y="198" text-anchor="middle" style="direction:rtl">השהיה 4–7 ימים</text>
+      <rect x="342" y="186" width="64" height="16" fill="var(--sunk)"/><text x="374" y="198" text-anchor="middle" style="direction:rtl">1–3 ימים</text>
+      <text x="190" y="140" text-anchor="middle" style="direction:rtl">מתונה</text><text x="620" y="192" text-anchor="start" style="direction:rtl">מהירה, גדולה ומותאמת יותר</text>
+    </svg>
+    <p>אחרי התגובה הראשונה רוב התאים שהתרבו מתים; נשארת אוכלוסייה קטנה וארוכת חיים של <b>תאי זיכרון</b>. בחשיפה השנייה כבר יש יותר תאים מתאימים, והם משתפעלים בקלות רבה יותר, ולפעמים זה נותן חסינות לכל החיים. <b>לחסינות המולדת אין זיכרון ספציפי לאנטיגן</b>: הזיהום השני פוגש את אותם קולטנים כמו הראשון.</p>
+  </div>
+  <div class="grid g2">
+    <div class="card stack"><span class="eyebrow">אסטרטגיה 5</span><h3>עצמי מול זר</h3>
+      <p><span class="pill inn">מולדת: מובנה</span></p><ul class="clean"><li>הקולטנים קושרים מבנים שאין לנו (דופן התא של חיידקים, RNA דו-גדילי של נגיפים)</li><li>המדור כמסנן: חיישני חומצות גרעין יושבים במקום שבו ה-DNA וה-RNA שלנו לא אמורים להיות</li><li>העצמי החסר: תאי NK הורגים תאים שחסרות להם מולקולות השטח הרגילות</li><li>על פני התאים שלנו יש מווסתים שלמיקרואורגניזמים אין</li></ul>
+      <p><span class="pill ada">נרכשת: נלמד</span></p><ul class="clean"><li>קולטנים אקראיים יכללו בהכרח גם קולטנים שמגיבים לעצמי</li><li>תאים שנקשרים חזק לעצמי מסולקים בזמן ההתפתחות</li><li>מי שחומק מדוכא (למשל על ידי Tregs, הרצאה 12)</li><li>כשל של המנגנונים האלה = אוטואימוניות</li></ul></div>
+    <div class="card stack"><span class="eyebrow">אסטרטגיה 6</span><h3>שיתוף פעולה: העברת המקל</h3>
+      <p><b>הזרוע המולדת מזהה, הזרוע הנרכשת מכוונת, ושתיהן מבצעות.</b></p>
+      <div class="flow" style="flex-direction:column">
+        <div class="node"><b>זיהום או נזק</b></div><div class="arrow" style="transform:none">↓ זוהתה סכנה</div>
+        <div class="node"><b>תא דנדריטי</b> חש את המיקרואורגניזם ולוקח אנטיגן לבלוטת הלימפה</div><div class="arrow" style="transform:none">↓ האנטיגן מוצג</div>
+        <div class="node"><b>תאי T</b> קוראים אותו, ואז מסייעים או הורגים</div><div class="arrow" style="transform:none">↓ סיוע</div>
+        <div class="node"><b>תאי B</b> מייצרים נוגדנים</div>
+      </div>
+      <p>הזרוע הנרכשת משתמשת שוב באפקטורים מולדים: נוגדנים מפעילים את המשלים ואת הפגוציטים.</p></div>
+  </div>
+  <figure class="fig">${FIG.coop()}<figcaption>אסטרטגיה 6 בתמונה: הזרוע המולדת מזהה (DC), הזרוע הנרכשת מכוונת (תאי T), ושתיהן מבצעות (נוגדנים, תאי אפקטור, פגוציטים).</figcaption></figure>
+  <div class="grid g2">
+    <div class="card stack"><h3>חיסונים: האסטרטגיה בפעולה</h3><ul class="clean"><li>חשיפה ראשונה בלי המחלה, כך שהפתוגן האמיתי פוגש תגובה של חשיפה שנייה</li><li>אפשרי רק כי לזרוע הנרכשת יש ספציפיות וזיכרון</li><li>צריך גם את הזרוע המולדת: החיסון חייב להיראות כמו זיהום (אדג׳ובנטים), אחרת מתעלמים ממנו</li><li>האבעבועות השחורות הוכחדו ב-1980 ופוליו כמעט. חסינות עדר מגינה על מי שלא יכול להגיב בעצמו</li></ul></div>
+    <div class="card stack"><h3>כשהמערכת נכשלת</h3>
+      <div class="facts" style="grid-template-columns:auto 1fr">
+        <dt>מעט מדי</dt><dd><b>כשל חיסוני</b>: תורשתי (חסרים תאים או חלבונים) או נרכש (HIV, כימותרפיה, תרופות מדכאות חיסון)</dd>
+        <dt>נגד העצמי</dt><dd><b>אוטואימוניות</b>: סוכרת מסוג 1, טרשת נפוצה, זאבת, דלקת מפרקים שגרונתית</dd>
+        <dt>יותר מדי</dt><dd><b>רגישות יתר</b>: אלרגיה, דלקת עור ממגע, דלקת כרונית</dd>
+        <dt>לא רצוי</dt><dd><b>דחייה / GVHD</b>: תגובה תקינה נגד שתל שאנחנו רוצים לשמור</dd>
+        <dt>בריחה</dt><dd><b>סרטן</b>: עצמי שעבר התמרה וחמק מהמעקב החיסוני (הרצאה 13)</dd>
+      </div></div>
+  </div>
+  ${nextBar(5)}
+</section>`;
+
+RH.quiz = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">תרגול · בסגנון המבחן</span><h2>בוחן</h2>
+  <p class="lead">${QUIZ.length} שאלות אמריקאיות על ההרצאה, בסדר אקראי. אחרי כל תשובה מופיע הסבר.</p></div>
+  <div class="card stack qcard" id="qcard"></div>
+  ${nextBar(6)}
+</section>`;
+
+RH.cards = ()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">תרגול · מונחים</span><h2>כרטיסיות</h2><p class="lead">לחצו על הכרטיס כדי להפוך אותו. אפשר לעבור בין כרטיסים בכפתורים או במקשי החצים.</p></div>
+  <button class="flip" id="flip" aria-label="הפיכת הכרטיס"><div class="flip-inner"><div class="face"><span class="eyebrow" id="fcn"></span><span class="term" id="fct"></span><span style="color:var(--muted)">לחצו כדי לראות</span></div><div class="face back"><p id="fcd" style="font-size:1.15rem"></p></div></div></button>
+  <div class="fcnav"><button class="btn" id="fcprev">→ הקודם</button><button class="btn" id="fcshuf">ערבוב</button><button class="btn primary" id="fcnext">הבא ←</button></div>
+  <div class="stack"><h3>מילון מונחים</h3><label for="glossq" class="eyebrow">חיפוש מונחים</label><input id="glossq" type="search" placeholder="למשל MHC, NETs, CCR7"><div class="gloss" id="gloss"></div></div>
+  ${nextBar(7)}
+</section>`;
+
+const EN={CELLS,REQS,QUIZ,GLOSS,LESSONS,VIEWS,ORG,EX,INN};
+function buildChrome(){
+  $('#brandtxt').textContent=u('brand');$('#hhome').textContent=u('home');$('#hless').textContent=u('lessons');
+  const lb=$('#langbtn');lb.textContent=u('lang');lb.setAttribute('lang',LANG==='he'?'en':'he');lb.setAttribute('aria-label',u('langLabel'));
+  $('#subnum').textContent=u('subnum');$('#subname').textContent=u('subname');
+  $('#lmenupop').innerHTML=`<a class="home" href="#home">${u('all')}</a>`+LESSONS.map(l=>l[3]?`<a href="#${l[3]}"><span class="mono">${l[0]}</span><span>${l[2]}</span></a>`:`<div class="dis"><span class="mono">${l[0]}</span><span>${l[2]}${u('soon')}</span></div>`).join('');
+  $('#tabs').innerHTML=VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
+}
+function setLang(l){
+  LANG=l==='he'?'he':'en';const he=LANG==='he';
+  try{localStorage.setItem('imm-lang',LANG)}catch(e){}
+  document.documentElement.lang=LANG;document.documentElement.dir=he?'rtl':'ltr';
+  CELLS=he?CELLS_HE:EN.CELLS;REQS=he?REQS_HE:EN.REQS;QUIZ=he?QUIZ_HE:EN.QUIZ;GLOSS=he?GLOSS_HE:EN.GLOSS;
+  LESSONS=EN.LESSONS.map((x,i)=>he?[x[0],x[1],LESSONS_HE[i],x[3]]:x);
+  VIEWS=EN.VIEWS.map((v,i)=>he?{id:v.id,label:VIEWS_HE[i]}:v);
+  ORG=he?ORG_HE():EN.ORG;EX=he?EX_HE:EN.EX;INN=he?INN_HE:EN.INN;
+  FC=GLOSS.map((_,i)=>i);fi=0;
+  document.title=u('title');
+  buildChrome();
+}
+$('#langbtn').addEventListener('click',()=>{setLang(LANG==='he'?'en':'he');route();});
+
 document.addEventListener('click',e=>{const m=$('#lmenu');if(m.open&&!m.contains(e.target))m.open=false;});
-$('#tabs').innerHTML=VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
 function route(){
   const id=(location.hash||'#home').slice(1);
   const inLesson=VIEWS.some(x=>x.id===id);
   $('#sub').hidden=!inLesson; $('#prog').hidden=!inLesson; $('#lmenu').open=false;
-  if(!inLesson){$('#main').innerHTML=R.home();window.scrollTo(0,0);return;}
+  const RV=LANG==='he'?RH:R;
+  if(!inLesson){$('#main').innerHTML=RV.home();window.scrollTo(0,0);return;}
   const v=VIEWS.find(x=>x.id===id);
-  $('#main').innerHTML=R[v.id]();INIT[v.id]&&INIT[v.id]();
+  $('#main').innerHTML=RV[v.id]();INIT[v.id]&&INIT[v.id]();
   document.querySelectorAll('#tabs a').forEach(a=>{const on=a.dataset.v===v.id;a.toggleAttribute('aria-current',on);if(on){a.setAttribute('aria-current','page');a.scrollIntoView({block:'nearest',inline:'center'})}});
   visited.add(v.id);try{localStorage.setItem('imm1-visited',JSON.stringify([...visited]))}catch(e){}
   $('#progbar').style.width=Math.round(visited.size/VIEWS.length*100)+'%';
   window.scrollTo(0,0);
 }
+let initLang='en';try{initLang=localStorage.getItem('imm-lang')||((navigator.language||'').toLowerCase().startsWith('he')?'he':'en')}catch(e){}
+setLang(initLang);
 window.addEventListener('hashchange',route);route();
 </script>
 
