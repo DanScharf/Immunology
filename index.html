@@ -270,6 +270,42 @@ a.node:hover{border-color:var(--eosin)}
 .verdict.kill{background:var(--bad-soft);border-color:var(--bad)}
 .verdict.spare{background:var(--good-soft);border-color:var(--good)}
 .card h4{font-family:var(--f-display);font-size:1rem}
+/* key terms */
+.primer{background:var(--surface);border:1px solid var(--line);border-inline-start:4px solid var(--good);border-radius:12px;padding:12px 16px}
+.primer summary{cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:1.05rem}
+.primer-note{color:var(--muted);font-size:.9rem;margin-top:6px}
+.primer-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px 20px;margin:12px 0 0}
+.primer-list div{min-width:0}
+.primer-list dt{font-weight:700}
+.primer-list dd{margin:0;color:var(--muted);font-size:.92rem;line-height:1.45}
+/* dictionary */
+.dictcard{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;border:1px solid var(--good);background:var(--good-soft);text-decoration:none;color:var(--ink)}
+.dictcard:hover{transform:translateY(-2px)}
+.dictcard .dicon{flex:none;width:48px;height:48px;border-radius:12px;background:var(--surface);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.2rem;color:var(--good)}
+.dictcard b{display:block;font-family:var(--f-display);font-size:1.25rem}
+.dictcard span span{color:var(--muted)}
+.dictcard .darrow{margin-inline-start:auto;font-size:1.4rem;color:var(--good)}
+.dictgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.dterm{position:relative;text-align:start;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);min-width:0}
+.dterm:hover{border-color:var(--eosin);transform:translateY(-1px)}
+.dterm b{font-family:var(--f-display);font-size:1rem;padding-inline-end:20px}
+.dterm span{color:var(--muted);font-size:.86rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dterm em{font-style:normal;font-family:var(--f-mono);font-size:.7rem;color:var(--hema)}
+[dir="rtl"] .dterm em{font-family:var(--f-body)}
+.dterm .dpic{position:absolute;top:9px;inset-inline-end:12px;color:var(--eosin);font-size:1.05rem;-webkit-line-clamp:unset;display:block}
+.dmodal{position:fixed;inset:0;z-index:40;background:rgba(20,14,40,.55);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+.dmodal[hidden]{display:none!important}
+.dcard{position:relative;background:var(--bg);border-radius:18px;padding:22px;max-width:760px;width:100%;max-height:88vh;overflow:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.dclose{position:absolute;top:12px;inset-inline-end:12px;border:1px solid var(--line);background:var(--surface);border-radius:50%;width:36px;height:36px}
+.dcell svg{width:120px;height:120px}
+.dcard .btn{align-self:flex-start}
+/* lesson 3 */
+.tfchip{display:inline-block;align-self:flex-start;font-family:var(--f-mono);font-size:.8rem;padding:4px 10px;border-radius:8px;background:var(--hema-soft);color:var(--hema);direction:ltr}
+.tnode,.lrow,.nk3{cursor:pointer}
+.tnode:hover rect{stroke-width:3}
+.lrow:hover rect:first-child{fill:var(--sunk)}
+.nk3.on{filter:drop-shadow(0 0 6px var(--eosin))}
+.nk3:hover{opacity:.8}
 /* quiz */
 .qcard{max-width:760px}
 .qopts{display:flex;flex-direction:column;gap:8px}
@@ -293,7 +329,7 @@ a.node:hover{border-color:var(--eosin)}
 .gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .gloss div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.93rem}
 .gloss b{font-family:var(--f-display)}
-#glossq{width:100%;max-width:360px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+#glossq,#dictq{width:100%;max-width:360px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
 </style>
 </head>
 <body>
@@ -429,7 +465,7 @@ const FIG = {
   ${callout(320,234,200,282,'l','Urine','flushes microbes out')}
   ${callout(322,74,440,62,'r','Saliva','lysozyme')}
   ${callout(338,160,440,150,'r','Stomach','acid pH kills microbes')}
-  ${callout(330,206,440,232,'r','Gut','microbiome occupies the space')}
+  ${callout(330,206,440,232,'r','Microbiome','symbiotic organisms')}
  </svg>`,
 
  lineage:()=>`<svg class="wide" viewBox="0 0 640 340" role="img" aria-label="Family tree of immune cells">
@@ -477,24 +513,22 @@ const FIG = {
   ${t(76,88,'Lymph nodes','b','end')}${t(76,132,'Thymus','b','end')}${t(224,164,'Spleen','b','start')}${t(76,344,'Bone marrow','b','end')}${t(224,296,'Lymph','b','start')}${t(224,312,'vessels','b','start')}
  </svg>`,
 
- ln:()=>`<svg class="wide" viewBox="0 0 440 250" role="img" aria-label="Lymph node cross-section">
+ ln:()=>`<svg class="wide" viewBox="0 0 440 250" role="img" aria-label="Lymph node">
   <path d="M60 125C60 45 180 25 260 45C330 65 340 105 300 125C340 145 330 185 260 205C180 225 60 205 60 125Z" fill="var(--sunk)" stroke="var(--muted)"/>
-  <ellipse cx="195" cy="125" rx="65" ry="45" fill="var(--hema-soft)" stroke="var(--hema)"/>
-  ${[[98,84],[152,57],[98,170],[156,194]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="17" fill="var(--eosin-soft)" stroke="var(--eosin)"/>`).join('')}
-  ${t(195,122,'T cell zone','b')}${t(195,139,'DCs meet T cells','m')}
+  ${icon('dc',150,112,50)}${icon('tcell',214,92,30)}${icon('tcell',236,128,30)}${icon('tcell',196,150,30)}${[[120,80],[110,150],[170,70]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="var(--good)"/>`).join('')}
+  ${t(190,186,'antigen is held here','m')}${t(190,202,'lymphocytes scan it','m')}
   ${arrow(14,64,66,86)}${arrow(8,128,52,126)}${arrow(14,196,68,172)}
   <line x1="302" y1="118" x2="400" y2="96" stroke="var(--bad)" stroke-width="3"/><line x1="302" y1="124" x2="400" y2="110" stroke="var(--hema)" stroke-width="3"/>
   ${arrow(302,132,400,146)}
-  ${t(150,22,'B cell follicles (pink)','m')}<line x1="150" y1="28" x2="152" y2="40" stroke="var(--muted)"/>
-  ${t(10,236,'afferent lymph brings antigen and DCs in','m','start')}
+  ${t(10,22,'lymph in: antigen and DCs','m','start')}${t(10,38,'from the tissues','m','start')}
   ${t(436,70,'blood vessels:','m','end')}${t(436,86,'lymphocytes enter','m','end')}
-  ${t(436,168,'efferent lymph:','m','end')}${t(436,184,'cells leave','m','end')}
+  ${t(436,168,'lymph out:','m','end')}${t(436,184,'cells leave','m','end')}
  </svg>`,
 
  spleen:()=>`<svg class="wide" viewBox="0 0 440 240" role="img" aria-label="Spleen with white pulp islands inside red pulp">
   <path d="M40 120C40 60 140 35 250 50C340 62 390 100 380 140C370 185 300 205 200 200C110 196 40 180 40 120Z" fill="var(--eosin)" opacity=".28" stroke="var(--eosin)"/>
   ${[[95,105],[180,150],[300,95],[330,165],[250,180],[140,180],[120,140]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="5" ry="3.5" fill="var(--bad)" opacity=".7"/>`).join('')}
-  ${[[130,95,22],[205,85,20],[270,130,24],[175,138,18]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--hema-soft)" stroke="var(--hema)"/><circle cx="${x}" cy="${y}" r="3" fill="var(--bad)"/>`).join('')}
+  ${[[130,95,22],[205,85,20],[270,130,24],[175,138,18]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--hema-soft)" stroke="var(--hema)"/>`).join('')}
   <line x1="205" y1="64" x2="250" y2="26" stroke="var(--muted)"/>${t(256,24,'white pulp: T and B cells','b','start')}${t(256,40,'screens the blood','m','start')}
   <line x1="320" y1="180" x2="340" y2="214" stroke="var(--muted)"/>${t(436,226,'red pulp: macrophages remove old red cells','b','end')}
  </svg>`,
@@ -506,7 +540,7 @@ const FIG = {
   ${[[364,96],[377,96],[370,108],[383,108],[357,108]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="6" fill="var(--eosin)"/>`).join('')}
   ${t(320,36,'match → stops, divides for days → node swells','m')}<line x1="352" y1="42" x2="368" y2="88" stroke="var(--muted)"/>
   ${arrow(402,105,488,105)}${t(445,94,'no match','m')}
-  <rect x="490" y="72" width="130" height="66" rx="14" fill="var(--sunk)" stroke="var(--muted)"/>${t(555,102,'Lymph','h')}${t(555,121,'→ thoracic duct','m')}
+  <rect x="490" y="72" width="130" height="66" rx="14" fill="var(--sunk)" stroke="var(--muted)"/>${t(555,102,'Lymph','h')}${t(555,121,'returns to blood','m')}
   <path d="M555 140C555 200 85 200 85 142" stroke="var(--muted)" stroke-width="2" fill="none" marker-end="url(#arw)"/>
   ${t(320,216,'back to the blood, then on to the next node','m')}
  </svg>`,
@@ -533,19 +567,19 @@ let CELLS = [
   facts:{'Lineage':'Myeloid · granulocyte · polymorphonuclear (lobed nucleus)','Numbers':'50–70% of all leukocytes, the most abundant. ~10¹¹ made per day, lives only 1–2 days','Where':'Circulates in blood; recruited to tissue by IL-8','Kills by':'1. Phagocytosis\n2. Respiratory burst: NADPH oxidase turns O₂ into superoxide and H₂O₂, then myeloperoxidase (MPO) makes hypochlorite (bleach)\n3. Degranulation: elastase, lysozyme, hole-punching defensins, iron-binding lactoferrin\n4. NETs: throws out its own chromatin coated with granule proteins to trap microbes too many or too big to eat','Cytokines':'Responds to IL-8; makes IL-1β and TNF','Targets / disease':'Bacteria, fungi · abscess (pus), tissue damage'}},
  {id:'monocyte',name:'Monocyte',svg:'monocyte',tags:['myeloid','phagocyte','circulating'],
   one:'A mobile precursor pool in the blood that becomes macrophages or DCs once in tissue.',
-  facts:{'Lineage':'Myeloid (kidney-shaped nucleus)','Where':'Circulates. Does not sample antigen in blood; it uses blood to get to tissues','What happens':'Enters inflamed tissue on demand (extravasation) and differentiates into a macrophage (or monocyte-derived DC)','Key point':'Circulation is a distribution system, not where antigen is found'}},
+  facts:{'Lineage':'Myeloid','Where':'Circulates. Does not sample antigen in blood; it uses blood to get to tissues','What happens':'Enters inflamed tissue on demand (extravasation) and differentiates into a macrophage (or monocyte-derived DC)','Key point':'Circulation is a distribution system, not where antigen is found'}},
  {id:'macrophage',name:'Macrophage',svg:'macrophage',tags:['myeloid','phagocyte','apc','resident'],
   one:'The big eater in tissues. Phagocytoses microbes and presents antigen on MHC II.',
-  facts:{'Lineage':'Myeloid','Where':'Tissue resident: alveolar macrophages (lung), Kupffer cells (liver), dermal macrophages (skin); red pulp of spleen','Jobs':'Phagocytosis · professional antigen presenting cell (MHC II) · cytokines (e.g. TNF, IL-6) · clears old red blood cells and recycles iron (spleen)','Part of':'First layer (0–4 h): resident macrophages are pre-positioned'}},
+  facts:{'Lineage':'Myeloid','Where':'Tissue resident: alveolar macrophages (lung), Kupffer cells (liver), dermal macrophages (skin); red pulp of spleen','Jobs':'Phagocytosis · professional antigen presenting cell (MHC II) · cytokines · clears old red blood cells and recycles iron (spleen)','Part of':'First layer (0–4 h): resident macrophages are pre-positioned'}},
  {id:'dc',name:'Dendritic cell',svg:'dc',tags:['myeloid','phagocyte','apc','resident'],
   one:'The messenger. Samples antigen in tissue, then travels to the lymph node to show it to T cells.',
   facts:{'Lineage':'Myeloid','Where':'Just below epithelial surfaces (skin, lung, gut, interstitium). Precursors (pre-DCs) come from bone marrow via blood','Senses':'PRRs (pattern recognition receptors) detect microbial or damage signals','Uptake':'Phagocytosis, receptor-mediated endocytosis','Then':'Processes antigen → MHC II (classical) or MHC I (cross-presentation). Upregulates CCR7 and migrates along lymphatics to the draining lymph node → presents to naïve T cells','Why it matters':'The bridge between innate and adaptive immunity'}},
  {id:'eosinophil',name:'Eosinophil',svg:'eosinophil',tags:['myeloid','granulocyte','circulating'],
   one:'Fights worms (helminths) with toxic granule proteins; also drives asthma.',
-  facts:{'Lineage':'Myeloid · granulocyte (pink granules, bilobed nucleus)','Granules':'Major basic protein, eosinophil peroxidase (toxic to worms and our own tissue)','Made on activation':'Leukotrienes, PAF, lipoxins','Cytokines':'Responds to IL-5; makes IL-4 and TGF-β','Targets / disease':'Antibody-coated helminth larvae · asthma, eosinophilic oesophagitis'}},
+  facts:{'Lineage':'Myeloid · granulocyte','Granules':'Major basic protein, eosinophil peroxidase (toxic to worms and our own tissue)','Made on activation':'Leukotrienes, PAF, lipoxins','Cytokines':'Responds to IL-5; makes IL-4 and TGF-β','Targets / disease':'Antibody-coated helminth larvae · asthma, eosinophilic oesophagitis'}},
  {id:'basophil',name:'Basophil',svg:'basophil',tags:['myeloid','granulocyte','circulating'],
   one:'Rare circulating granulocyte that releases histamine; early source of IL-4.',
-  facts:{'Lineage':'Myeloid · granulocyte (dark purple granules)','Granules':'Histamine, chondroitin sulfate','Made on activation':'Leukotriene C4','Cytokines':'IL-4, IL-13 (early source)','Targets / disease':'Helminths · allergy, chronic urticaria'}},
+  facts:{'Lineage':'Myeloid · granulocyte','Granules':'Histamine, chondroitin sulfate','Made on activation':'Leukotriene C4','Cytokines':'IL-4, IL-13 (early source)','Targets / disease':'Helminths · allergy, chronic urticaria'}},
  {id:'mast',name:'Mast cell',svg:'mast',tags:['myeloid','granulocyte','resident'],
   one:'Tissue-resident sentinel at skin and mucosa. Histamine release = allergy and anaphylaxis.',
   facts:{'Lineage':'Myeloid, granule-filled (counted with granulocytes in the lecture)','Where':'Resident at interfaces: skin and mucosa','Granules (preformed)':'Histamine (dilates vessels), heparin, tryptase, chymase, TNF','Made on activation':'Prostaglandin D2, leukotrienes, platelet-activating factor (PAF)','Cytokines':'IL-4, IL-13, IL-5, TNF','Targets / disease':'Parasites, venoms, wound sensing · allergy, anaphylaxis'}},
@@ -567,7 +601,7 @@ let REQS = [
  {k:'Versatility & communication',m:'Same molecules (cytokines, chemokines) let cells talk, coordinate and tailor the response type to the pathogen.',ex:'IL-5 for worms vs IFN-γ for intracellular pathogens.'},
  {k:'Recall',m:'Memory: long-lived B and T cells remember a previous encounter.',ex:'Second exposure: faster, bigger response (the basis of vaccines).'},
  {k:'Resolution',m:'Suppression, inhibition, switching off once the threat is gone.',ex:'Regulatory T cells (Tregs), MDSCs (myeloid-derived suppressor cells).'},
- {k:'Healing',m:'Support and repair: scaffold, extracellular matrix (ECM), growth factors.',ex:'Macrophages producing growth factors after a wound is cleared.'}
+ {k:'Healing',m:'Support and repair: scaffold, extracellular matrix (ECM), growth factors.',ex:'Production of growth factors and extracellular matrix (ECM) that rebuild the tissue.'}
 ];
 
 let QUIZ = [
@@ -643,7 +677,7 @@ let GLOSS = [
 let LESSONS = [
  [1,'03.11','Introduction to the immune system. Strategies of innate vs adaptive','start'],
  [2,'10.11','Innate immunity: composition and functional mechanisms','l2-start'],
- [3,'17.11','Innate functional mechanisms (continued), immune cell generation and development'],
+ [3,'17.11','Innate functional mechanisms (continued), immune cell generation and development','l3-start'],
  [4,'24.11','Antibodies: structure and function, genetics of diversity'],
  [5,'01.12','Recombination, antigen–antibody reaction'],
  [6,'08.12','B cell development, activation and memory, immune tolerance'],
@@ -688,6 +722,7 @@ R.home = ()=>`
     <h1>Choose a lesson</h1>
     <p class="lead">Each lesson is an interactive study guide with explanations, diagrams, a quiz and flashcards. Lessons go live as they are added.</p>
   </div>
+  <a class="dictcard" href="#dictionary"><span class="dicon">Aa</span><span><b>Dictionary</b><span>Every term from all lessons, each with its own page and a picture where it helps.</span></span><span class="darrow">→</span></a>
   <div class="lessons">${LESSONS.map(l=>{const open=!!l[3];const inner=`<div class="lm"><span class="eyebrow">Lesson ${l[0]} · ${l[1]}</span><span class="pill ${open?'live':''}">${open?'Available':'Coming soon'}</span></div><span class="lt">${l[2]}</span>`;
     return open?`<a class="lesson" href="#${l[3]}">${inner}</a>`:`<div class="lesson soon" aria-disabled="true">${inner}</div>`}).join('')}</div>
 </section>`;
@@ -733,12 +768,8 @@ R.requirements = ()=>`
 
   <div class="stack">
     <h2>The other side: what a pathogen needs</h2>
-    <p class="lead">Every pathogen must get through the same checklist. Each step is a place where the immune system can stop it.</p>
-    <div class="vs">
-      <div class="card stack"><span class="pill inn">Pathogen needs</span><ul class="clean"><li>Access</li><li>Entry</li><li>Reproduction</li><li>Survival</li><li>Infection</li><li>Evasion and camouflage</li></ul></div>
-      <div class="mid">vs</div>
-      <div class="card stack"><span class="pill ada">Immune counter</span><ul class="clean"><li>Barriers (skin, mucosa) block access</li><li>Antimicrobial peptides, acid, lysozyme stop entry</li><li>Phagocytes, complement limit replication</li><li>Iron sequestration starves survival</li><li>NK cells / T cells kill infected cells</li><li>Adaptive precision + memory beats camouflage</li></ul></div>
-    </div>
+    <p class="lead">Slide 7 lists what every pathogen needs in order to cause an infection.</p>
+    <div class="card stack"><span class="pill inn">Pathogen needs</span><ul class="clean"><li>Access</li><li>Entry</li><li>Reproduction</li><li>Survival</li><li>Infection</li><li>Evasion and camouflage</li></ul></div>
   </div>
   ${nextBar(1)}
 </section>`;
@@ -760,7 +791,6 @@ R['two-arms'] = ()=>`
       ].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
   </div>
   <figure class="fig">${FIG.diversity()}<figcaption>Innate receptors (left) are copied onto every cell, so the response is instant. Adaptive receptors (right) are all different, so the one matching cell has to be found and multiplied first.</figcaption></figure>
-  <div class="callout"><b>Analogy.</b> Innate immunity is the building's security guard: always on duty, recognises "anyone wearing a balaclava" in seconds, but treats every intruder the same. Adaptive immunity is a detective agency: takes days to open a case, but identifies the exact individual and keeps their file forever.</div>
   ${nextBar(2)}
 </section>`;
 
@@ -780,7 +810,7 @@ let INN = {
    <div class="card stack"><h3>Lysozyme</h3><p>Enzyme in tears and saliva that destroys bacterial cell walls.</p></div>
    <div class="card stack"><h3>Antimicrobial peptides</h3><p>Disrupt the lipid bilayer of microbial membranes.</p></div>
    <div class="card stack"><h3>Stomach acid and urine</h3><p>Low pH kills; urine flow mechanically washes microbes out.</p></div>
-   <div class="card stack"><h3>Microbiome</h3><p>Symbiotic organisms occupy the space and resources pathogens need.</p></div>
+   <div class="card stack"><h3>Microbiome</h3><p>Symbiotic organisms (the microbiome) are listed among the surface barriers.</p></div>
  </div>`,
  cells:()=>`<div class="stack">
    <div class="callout"><b>Start here:</b> all white blood cells are <b>leukocytes</b>, and every one of them (innate and adaptive) expresses <span class="mono">CD45</span>, the leukocyte common antigen, a protein tyrosine phosphatase that regulates activation and cytokine signaling.</div>
@@ -875,15 +905,15 @@ R.organization = ()=>`
 let ORG = {
  bm:`<span class="pill">primary</span><h3>Bone marrow</h3><p>Where <b>all</b> immune cells are generated. Primary lymphoid organs are where cells <b>mature</b>.</p>`,
  thymus:`<span class="pill">primary</span><h3>Thymus</h3><p>Lymphoid progenitors from the bone marrow travel here to mature into <b>T cells</b> and undergo <b>self-tolerance education</b> (removing T cells that react strongly to self).</p>`,
- ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul><figure class="fig">${FIG.ln()}<figcaption>Lymph flows in from the tissues, lymphocytes arrive from the blood, and the two meet in the node.</figcaption></figure>`,
+ ln:`<span class="pill">secondary</span><h3>Lymph nodes (~600 in the body)</h3><ul class="clean"><li>Where innate and adaptive immunity meet</li><li>Filter lymph fluid; spread throughout the lymphatic system</li><li>Activate lymphocytes and start responses against antigens arriving in lymph</li><li>Also a site where B cells (and others) finish maturing</li></ul><figure class="fig">${FIG.ln()}<figcaption>Lymph brings antigen and DCs from the tissues, lymphocytes arrive from the blood through specialized venules, and they meet in the node (slides 29, 36, 42).</figcaption></figure>`,
  spleen:`<span class="pill">secondary</span><h3>Spleen</h3><p>Filters the <b>blood</b> (LNs filter lymph). Starts responses to blood-borne pathogens, recycles iron, stores immune cells.</p><div class="grid g2"><div class="callout"><b>White pulp</b>: T and B cell zones. Screens blood for antigens; DCs, T and B cells interact. Splenic APCs arrive as precursors via blood and present antigen trapped by marginal-zone macrophages.</div><div class="callout pink"><b>Red pulp</b>: macrophages + red blood cells. Removes old, damaged or abnormal RBCs and recycles iron from them.</div></div><figure class="fig">${FIG.spleen()}</figure>`,
  lymph:`<span class="pill">the system</span><h3>Lymphatic system</h3><p>A network of organs, nodes, ducts and vessels that moves lymph from tissues back to the bloodstream. <b>Lymph</b> forms when interstitial fluid is collected by lymph capillaries.</p><ul class="clean"><li>Returns excess interstitial fluid to blood</li><li>Absorbs fats and fat-soluble vitamins from the gut into circulation</li><li>Carries DCs and antigen from tissues to lymph nodes</li></ul>`
 };
 let EX = [
- 'The leukocyte is carried along in the bloodstream at full speed.',
- 'Rolling: near inflamed tissue, the cell is caught weakly by the endothelium and rolls along it, slowing down.',
- 'Adhesion: chemokine signals activate it and it sticks firmly to the endothelium.',
- 'Transmigration: it squeezes between endothelial cells into the tissue and follows the chemokine gradient to the infection.'
+ 'The circulating cell travels in the bloodstream.',
+ 'Rolling: the cell rolls along the endothelium, the cells lining the vessel.',
+ 'Adhesion: the cell adheres to the endothelium.',
+ 'Transmigration: the cell crosses the endothelium into the tissue. There chemokines guide it to the infection along a chemical gradient (slide 24).'
 ];
 const EXPOS = ['translate(70,60)','translate(260,99)','translate(400,101)','translate(520,170)'];
 
@@ -946,7 +976,7 @@ R.strategies = ()=>`
         <div class="node"><b>T cells</b> read it, then help or kill</div><div class="arrow" style="transform:none">↓ help</div>
         <div class="node"><b>B cells</b> make antibodies</div>
       </div>
-      <p>The adaptive arm reuses innate effectors: antibodies trigger complement and phagocytes.</p></div>
+      <p>The adaptive arm reuses innate effectors: antibodies and complement (slide 55).</p></div>
   </div>
 
   <figure class="fig">${FIG.coop()}<figcaption>Strategy 6 as a picture: the innate arm detects (DC), the adaptive arm directs (T cells) and both execute (antibodies, effector cells, phagocytes).</figcaption></figure>
@@ -1094,7 +1124,7 @@ const TR = {
  'Adaptive':`נרכשת`,'every lymphocyte has its own receptor':`לכל לימפוציט קולטן משלו`,'antigen':`אנטיגן`,'only the matching cell multiplies':`רק התא המתאים מתרבה`,'this takes 4–7 days the first time':`בפעם הראשונה זה לוקח 4–7 ימים`,
  'Tears':`דמעות`,'lysozyme breaks bacterial walls':`ליזוזים מפרק את דופן החיידק`,'Mucosa':`רירית`,'mucus, antimicrobial peptides':`ריר, פפטידים אנטי-מיקרוביאליים`,
  'Skin and sweat':`עור וזיעה`,'wall + acid, dermcidin, salt':`חומה, חומציות, דרמסידין, מלח`,'Urine':`שתן`,'flushes microbes out':`שוטף מיקרואורגניזמים החוצה`,
- 'Saliva':`רוק`,'lysozyme':`ליזוזים`,'Stomach':`קיבה`,'acid pH kills microbes':`החומציות הורגת מיקרואורגניזמים`,'Gut':`מעי`,'microbiome occupies the space':`המיקרוביום תופס את המקום`,
+ 'Saliva':`רוק`,'lysozyme':`ליזוזים`,'Stomach':`קיבה`,'acid pH kills microbes':`החומציות הורגת מיקרואורגניזמים`,'Microbiome':`מיקרוביום`,'symbiotic organisms':`אורגניזמים סימביוטיים`,
  'innate':`מולדת`,'adaptive (later lectures)':`נרכשת (בהרצאות הבאות)`,'Blood stem cell (in bone marrow)':`תא גזע של הדם (במח העצם)`,
  'Myeloid progenitor':`אב מיאלואידי`,'Lymphoid progenitor':`אב לימפואידי`,'Neutrophil':`נויטרופיל`,'Eosinophil':`אאוזינופיל`,'Basophil':`בזופיל`,
  'Mast cell':`תא פיטום`,'Monocyte':`מונוציט`,'NK cell':`תא NK`,'ILCs':`ILC`,'T cell':`תא T`,'B cell':`תא B`,'Macrophage':`מקרופאג׳`,'Dendritic cell':`תא דנדריטי`,
@@ -1104,10 +1134,10 @@ const TR = {
  'sender':`תא שולח`,'receiver':`תא מקבל`,'low':`ריכוז נמוך`,'high: infection':`ריכוז גבוה: זיהום`,'pore in microbe':`חור בדופן החיידק`,'iron locked up':`הברזל נעול`,'starves':`החיידק רעב`,
  'Lymph nodes':`בלוטות לימפה`,'Thymus':`תימוס`,'Spleen':`טחול`,'Bone marrow':`מח עצם`,'Lymph':`לימפה`,'vessels':`כלי לימפה`,
  'T cell zone':`אזור תאי T`,'DCs meet T cells':`DC פוגשים תאי T`,'B cell follicles (pink)':`זקיקי תאי B (בוורוד)`,'afferent lymph brings antigen and DCs in':`לימפה נכנסת מביאה אנטיגן ו-DC`,
- 'blood vessels:':`כלי דם:`,'lymphocytes enter':`כאן נכנסים לימפוציטים`,'efferent lymph:':`לימפה יוצאת:`,'cells leave':`התאים עוזבים`,
+ 'blood vessels:':`כלי דם:`,'lymphocytes enter':`כאן נכנסים לימפוציטים`,'efferent lymph:':`לימפה יוצאת:`,'antigen is held here':`האנטיגן מוחזק כאן`,'lymphocytes scan it':`לימפוציטים סורקים אותו`,'lymph in: antigen and DCs':`לימפה נכנסת: אנטיגן ו-DC`,'from the tissues':`מהרקמות`,'lymph out:':`לימפה יוצאת:`,'cells leave':`התאים עוזבים`,
  'white pulp: T and B cells':`עיסה לבנה: תאי T ו-B`,'screens the blood':`סורקת את הדם`,'red pulp: macrophages remove old red cells':`עיסה אדומה: מקרופאג׳ים מפנים כדוריות אדומות זקנות`,
  'Blood':`דם`,'lymphocytes travel':`לימפוציטים נעים`,'enter':`כניסה`,'Lymph node':`בלוטת לימפה`,'~1 day here':`כיום אחד כאן`,
- 'match → stops, divides for days → node swells':`יש התאמה: נעצר ומתחלק ימים, והבלוטה מתנפחת`,'no match':`אין התאמה`,'→ thoracic duct':`אל הצינור החזי`,
+ 'match → stops, divides for days → node swells':`יש התאמה: נעצר ומתחלק ימים, והבלוטה מתנפחת`,'no match':`אין התאמה`,'returns to blood':`חוזרת לדם`,
  'back to the blood, then on to the next node':`חזרה לדם, ומשם לבלוטה הבאה`,
  'Tissue':`רקמה`,'DC senses danger,':`ה-DC מזהה סכנה`,'takes antigen':`ולוקח אנטיגן`,'① via lymph':`① דרך הלימפה`,'② presents':`② מציג`,'③ helps':`③ מסייע`,
  '④ antibodies and effector T cells return to the tissue':`④ נוגדנים ותאי T אפקטוריים חוזרים לרקמה`
@@ -1125,20 +1155,20 @@ const CELLS_HE = [
    [`ציטוקינים`]:`מגיב ל-IL-8; מייצר IL-1β ו-TNF`,[`מטרות / מחלה`]:`חיידקים, פטריות · מורסה (מוגלה), נזק לרקמה`}},
  {id:'monocyte',name:`מונוציט`,svg:'monocyte',tags:['myeloid','phagocyte','circulating'],
   one:`מאגר נייד של תאי מקור בדם, שהופכים למקרופאג׳ים או ל-DC כשהם נכנסים לרקמה.`,
-  facts:{[`שושלת`]:`מיאלואידי (גרעין בצורת כליה)`,[`איפה`]:`במחזור הדם. הוא לא דוגם אנטיגן בדם; הוא משתמש בדם כדי להגיע לרקמות`,[`מה קורה`]:`נכנס לרקמה מודלקת לפי הצורך (extravasation) ומתמיין למקרופאג׳ (או ל-DC שמקורו במונוציט)`,[`הנקודה החשובה`]:`מחזור הדם הוא מערכת הפצה, לא המקום שבו פוגשים אנטיגן`}},
+  facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`במחזור הדם. הוא לא דוגם אנטיגן בדם; הוא משתמש בדם כדי להגיע לרקמות`,[`מה קורה`]:`נכנס לרקמה מודלקת לפי הצורך (extravasation) ומתמיין למקרופאג׳ (או ל-DC שמקורו במונוציט)`,[`הנקודה החשובה`]:`מחזור הדם הוא מערכת הפצה, לא המקום שבו פוגשים אנטיגן`}},
  {id:'macrophage',name:`מקרופאג׳`,svg:'macrophage',tags:['myeloid','phagocyte','apc','resident'],
   one:`ה״אוכל הגדול״ ברקמות. בולע מיקרואורגניזמים ומציג אנטיגן על MHC II.`,
-  facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`שוכן ברקמות: מקרופאג׳ים של נאדיות הריאה, תאי קופפר בכבד, מקרופאג׳ים של הדרמיס בעור; העיסה האדומה בטחול`,[`תפקידים`]:`פגוציטוזה · תא מציג אנטיגן מקצועי (MHC II) · ציטוקינים (למשל TNF, IL-6) · פינוי כדוריות דם אדומות זקנות ומחזור ברזל (בטחול)`,[`שייך ל`]:`השכבה הראשונה (0–4 שעות): מקרופאג׳ים שוכני רקמה כבר נמצאים במקום`}},
+  facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`שוכן ברקמות: מקרופאג׳ים של נאדיות הריאה, תאי קופפר בכבד, מקרופאג׳ים של הדרמיס בעור; העיסה האדומה בטחול`,[`תפקידים`]:`פגוציטוזה · תא מציג אנטיגן מקצועי (MHC II) · ציטוקינים · פינוי כדוריות דם אדומות זקנות ומחזור ברזל (בטחול)`,[`שייך ל`]:`השכבה הראשונה (0–4 שעות): מקרופאג׳ים שוכני רקמה כבר נמצאים במקום`}},
  {id:'dc',name:`תא דנדריטי`,svg:'dc',tags:['myeloid','phagocyte','apc','resident'],
   one:`השליח. דוגם אנטיגן ברקמה, ואז נודד לבלוטת הלימפה כדי להציג אותו לתאי T.`,
   facts:{[`שושלת`]:`מיאלואידי`,[`איפה`]:`ממש מתחת לאפיתל (עור, ריאה, מעי, רקמת ביניים). תאי המקור (pre-DC) מגיעים ממח העצם דרך הדם`,[`חישה`]:`קולטני PRR מזהים אותות של מיקרואורגניזמים או של נזק`,[`קליטה`]:`פגוציטוזה, אנדוציטוזה בתיווך קולטן`,
    [`ואז`]:`מעבד את האנטיגן ומציג על MHC II (המסלול הקלאסי) או על MHC I (הצגה צולבת, cross-presentation). מעלה ביטוי של CCR7 ונודד בכלי הלימפה לבלוטה המנקזת, שם הוא מציג לתאי T נאיביים`,[`למה זה חשוב`]:`הגשר בין החסינות המולדת לנרכשת`}},
  {id:'eosinophil',name:`אאוזינופיל`,svg:'eosinophil',tags:['myeloid','granulocyte','circulating'],
   one:`נלחם בתולעים (הלמינתים) בעזרת חלבוני גרגירים רעילים; מעורב גם באסתמה.`,
-  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט (גרגירים ורודים, גרעין דו-אונתי)`,[`גרגירים`]:`Major basic protein, eosinophil peroxidase (רעילים לתולעים וגם לרקמה שלנו)`,[`נוצר בשפעול`]:`לויקוטריאנים, PAF, ליפוקסינים`,[`ציטוקינים`]:`מגיב ל-IL-5; מייצר IL-4 ו-TGF-β`,[`מטרות / מחלה`]:`זחלי תולעים מצופים בנוגדנים · אסתמה, דלקת ושט אאוזינופילית`}},
+  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט`,[`גרגירים`]:`Major basic protein, eosinophil peroxidase (רעילים לתולעים וגם לרקמה שלנו)`,[`נוצר בשפעול`]:`לויקוטריאנים, PAF, ליפוקסינים`,[`ציטוקינים`]:`מגיב ל-IL-5; מייצר IL-4 ו-TGF-β`,[`מטרות / מחלה`]:`זחלי תולעים מצופים בנוגדנים · אסתמה, דלקת ושט אאוזינופילית`}},
  {id:'basophil',name:`בזופיל`,svg:'basophil',tags:['myeloid','granulocyte','circulating'],
   one:`גרנולוציט נדיר במחזור הדם שמשחרר היסטמין; מקור מוקדם ל-IL-4.`,
-  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט (גרגירים סגולים כהים)`,[`גרגירים`]:`היסטמין, כונדרויטין סולפט`,[`נוצר בשפעול`]:`לויקוטריאן C4`,[`ציטוקינים`]:`IL-4, IL-13 (מקור מוקדם)`,[`מטרות / מחלה`]:`תולעים · אלרגיה, אורטיקריה כרונית`}},
+  facts:{[`שושלת`]:`מיאלואידי · גרנולוציט`,[`גרגירים`]:`היסטמין, כונדרויטין סולפט`,[`נוצר בשפעול`]:`לויקוטריאן C4`,[`ציטוקינים`]:`IL-4, IL-13 (מקור מוקדם)`,[`מטרות / מחלה`]:`תולעים · אלרגיה, אורטיקריה כרונית`}},
  {id:'mast',name:`תא פיטום (mast cell)`,svg:'mast',tags:['myeloid','granulocyte','resident'],
   one:`זקיף ששוכן ברקמה בעור וברירית. שחרור היסטמין = אלרגיה ואנפילקסיס.`,
   facts:{[`שושלת`]:`מיאלואידי, מלא גרגירים (בהרצאה נמנה עם הגרנולוציטים)`,[`איפה`]:`שוכן בממשקים: עור ורירית`,[`גרגירים (מוכנים מראש)`]:`היסטמין (מרחיב כלי דם), הפרין, טריפטאז, כימאז, TNF`,[`נוצר בשפעול`]:`פרוסטגלנדין D2, לויקוטריאנים, PAF`,[`ציטוקינים`]:`IL-4, IL-13, IL-5, TNF`,[`מטרות / מחלה`]:`טפילים, ארסים, חישת פצעים · אלרגיה, אנפילקסיס`}},
@@ -1160,7 +1190,7 @@ const REQS_HE = [
  {k:`גמישות ותקשורת`,m:`אותן מולקולות (ציטוקינים, כמוקינים) מאפשרות לתאים לדבר, לתאם ולהתאים את סוג התגובה לפתוגן.`,ex:`IL-5 נגד תולעים לעומת IFN-γ נגד פתוגנים תוך-תאיים.`},
  {k:`זיכרון (Recall)`,m:`תאי B ותאי T ארוכי חיים זוכרים מפגש קודם.`,ex:`בחשיפה השנייה התגובה מהירה וגדולה יותר (הבסיס לחיסונים).`},
  {k:`סיום התגובה (Resolution)`,m:`דיכוי, עיכוב וכיבוי התגובה כשהאיום נעלם.`,ex:`תאי T מווסתים (Tregs), תאי MDSC (תאים מדכאים ממקור מיאלואידי).`},
- {k:`ריפוי (Healing)`,m:`תמיכה ותיקון: פיגום, מטריקס חוץ-תאי (ECM), פקטורי גדילה.`,ex:`מקרופאג׳ים שמייצרים פקטורי גדילה אחרי שהפצע נוקה.`}
+ {k:`ריפוי (Healing)`,m:`תמיכה ותיקון: פיגום, מטריקס חוץ-תאי (ECM), פקטורי גדילה.`,ex:`ייצור פקטורי גדילה ומטריקס חוץ-תאי (ECM) שבונים את הרקמה מחדש.`}
 ];
 
 const QUIZ_HE = [
@@ -1235,16 +1265,16 @@ const GLOSS_HE = [
 const NOTES_HE = {phagocyte:`פגוציטים בולעים: מונוציטים/מקרופאג׳ים, DC ונויטרופילים.`,granulocyte:`לגרנולוציטים יש גרגירים בציטופלסמה וגרעין מחולק לאונות: נויטרופילים, אאוזינופילים, בזופילים; גם תאי הפיטום מלאים בגרגירים.`,apc:`APC מקצועיים מציגים אנטיגן על MHC II לתאי T. גם תאי B הם APC, אבל הם לא מיאלואידיים.`,lymphoid:`תאי NK ו-ILC הם לימפואידיים אבל מולדים: אין להם קולטן ספציפי לאנטיגן.`,myeloid:`התאים המולדים המיאלואידיים: DC, מונוציטים/מקרופאג׳ים והגרנולוציטים.`,circulating:`אלה מסיירים בזרם הדם ומגויסים לרקמה.`,resident:`אלה חיים ברקמה ושומרים עליה מקומית.`};
 
 const EX_HE = [
- `הלויקוציט נישא בזרם הדם במהירות מלאה.`,
- `גלגול: ליד רקמה מודלקת, האנדותל תופס את התא באחיזה חלשה והוא מתגלגל לאורכו ומאט.`,
- `היצמדות: אותות של כמוקינים משפעלים אותו והוא נצמד בחוזקה לאנדותל.`,
- `מעבר (transmigration): התא נדחק בין תאי האנדותל לתוך הרקמה ועוקב אחרי מפל הכמוקינים אל הזיהום.`
+ `התא נע בזרם הדם.`,
+ `גלגול: התא מתגלגל לאורך האנדותל, התאים שמרפדים את כלי הדם.`,
+ `היצמדות: התא נצמד לאנדותל.`,
+ `מעבר (transmigration): התא חוצה את האנדותל לתוך הרקמה. שם כמוקינים מכוונים אותו אל הזיהום לאורך מפל כימי (שקופית 24).`
 ];
 
 const ORG_HE = ()=>({
  bm:`<span class="pill">ראשוני</span><h3>מח עצם</h3><p>המקום שבו <b>כל</b> תאי מערכת החיסון נוצרים. איברים לימפואידיים ראשוניים הם המקום שבו התאים <b>מבשילים</b>.</p>`,
  thymus:`<span class="pill">ראשוני</span><h3>תימוס</h3><p>תאי אב לימפואידיים ממח העצם מגיעים לכאן כדי להבשיל ל<b>תאי T</b> ולעבור <b>חינוך לסבילות לעצמי</b> (סילוק תאי T שמגיבים חזק לעצמי).</p>`,
- ln:`<span class="pill">משני</span><h3>בלוטות לימפה (כ-600 בגוף)</h3><ul class="clean"><li>המקום שבו החסינות המולדת והנרכשת נפגשות</li><li>מסננות את נוזל הלימפה; פזורות לאורך כל מערכת הלימפה</li><li>משפעלות לימפוציטים ומתחילות תגובות נגד אנטיגנים שמגיעים בלימפה</li><li>גם מקום שבו תאי B (ותאים אחרים) משלימים את ההבשלה</li></ul><figure class="fig">${FIG.ln()}<figcaption>לימפה זורמת פנימה מהרקמות, לימפוציטים מגיעים מהדם, והשניים נפגשים בבלוטה.</figcaption></figure>`,
+ ln:`<span class="pill">משני</span><h3>בלוטות לימפה (כ-600 בגוף)</h3><ul class="clean"><li>המקום שבו החסינות המולדת והנרכשת נפגשות</li><li>מסננות את נוזל הלימפה; פזורות לאורך כל מערכת הלימפה</li><li>משפעלות לימפוציטים ומתחילות תגובות נגד אנטיגנים שמגיעים בלימפה</li><li>גם מקום שבו תאי B (ותאים אחרים) משלימים את ההבשלה</li></ul><figure class="fig">${FIG.ln()}<figcaption>הלימפה מביאה אנטיגן ו-DC מהרקמות, לימפוציטים מגיעים מהדם דרך ורידונים מיוחדים, והם נפגשים בבלוטה (שקופיות 29, 36, 42).</figcaption></figure>`,
  spleen:`<span class="pill">משני</span><h3>טחול</h3><p>מסנן את <b>הדם</b> (בלוטות הלימפה מסננות לימפה). מתחיל תגובות נגד פתוגנים שבדם, ממחזר ברזל ומאחסן תאי חיסון.</p><div class="grid g2"><div class="callout"><b>עיסה לבנה</b>: אזורי תאי T ו-B. סורקת את הדם לאיתור אנטיגנים; DC, תאי T ותאי B מתקשרים זה עם זה. ה-APC של הטחול מגיעים כתאי מקור דרך הדם ומציגים אנטיגן שנלכד והועבר על ידי מקרופאג׳ים של אזור השוליים (marginal zone).</div><div class="callout pink"><b>עיסה אדומה</b>: מקרופאג׳ים וכדוריות דם אדומות. מפנה כדוריות אדומות זקנות, פגומות או חריגות וממחזרת את הברזל שלהן.</div></div><figure class="fig">${FIG.spleen()}</figure>`,
  lymph:`<span class="pill">המערכת</span><h3>מערכת הלימפה</h3><p>רשת של איברים, בלוטות, צינורות וכלים שמעבירה לימפה מהרקמות חזרה לזרם הדם. <b>לימפה</b> נוצרת כשנוזל בין-תאי נאסף לנימי הלימפה.</p><ul class="clean"><li>מחזירה עודפי נוזל בין-תאי לדם</li><li>סופגת שומנים וויטמינים מסיסי שומן ממערכת העיכול ומעבירה אותם למחזור הדם</li><li>מובילה DC ואנטיגן מהרקמות לבלוטות הלימפה</li></ul>`
 });
@@ -1256,7 +1286,7 @@ const INN_HE = {
    <div class="card stack"><h3>ליזוזים</h3><p>אנזים בדמעות וברוק שמפרק את דופן התא של חיידקים.</p></div>
    <div class="card stack"><h3>פפטידים אנטי-מיקרוביאליים</h3><p>משבשים את שכבת השומנים הכפולה של ממברנת המיקרואורגניזם.</p></div>
    <div class="card stack"><h3>חומצת הקיבה ושתן</h3><p>ה-pH הנמוך הורג; זרימת השתן שוטפת מיקרואורגניזמים החוצה באופן מכני.</p></div>
-   <div class="card stack"><h3>מיקרוביום</h3><p>אורגניזמים סימביוטיים תופסים את המקום ואת המשאבים שפתוגנים צריכים.</p></div>
+   <div class="card stack"><h3>מיקרוביום</h3><p>אורגניזמים סימביוטיים (המיקרוביום) נמנים עם מחסומי השטח.</p></div>
  </div>`,
  cells:()=>`<div class="stack">
    <div class="callout"><b>מתחילים כאן:</b> כל תאי הדם הלבנים הם <b>לויקוציטים</b>, וכולם (מולדים ונרכשים) מבטאים <span class="mono">CD45</span>, האנטיגן הלויקוציטרי המשותף. זהו פוספטאז של טירוזין שמווסת שפעול ואיתות של ציטוקינים.</div>
@@ -1298,6 +1328,7 @@ RH.home = ()=>`
     <h1>בחרו שיעור</h1>
     <p class="lead">כל שיעור הוא מדריך לימוד אינטראקטיבי עם הסברים, תרשימים, בוחן וכרטיסיות. שיעורים חדשים יעלו בהמשך.</p>
   </div>
+  <a class="dictcard" href="#dictionary"><span class="dicon">אב</span><span><b>מילון</b><span>כל המונחים מכל השיעורים, לכל אחד דף משלו ותמונה כשהיא עוזרת.</span></span><span class="darrow">←</span></a>
   <div class="lessons">${LESSONS.map(l=>{const open=!!l[3];const inner=`<div class="lm"><span class="eyebrow">שיעור ${l[0]} · ${l[1]}</span><span class="pill ${open?'live':''}">${open?'זמין':'בקרוב'}</span></div><span class="lt">${l[2]}</span>`;
     return open?`<a class="lesson" href="#${l[3]}">${inner}</a>`:`<div class="lesson soon" aria-disabled="true">${inner}</div>`}).join('')}</div>
 </section>`;
@@ -1340,12 +1371,8 @@ RH.requirements = ()=>`
   </div>
   <div class="stack">
     <h2>הצד השני: מה פתוגן צריך</h2>
-    <p class="lead">כל פתוגן צריך לעבור את אותה רשימה. כל שלב הוא מקום שבו מערכת החיסון יכולה לעצור אותו.</p>
-    <div class="vs">
-      <div class="card stack"><span class="pill inn">הפתוגן צריך</span><ul class="clean"><li>גישה</li><li>כניסה</li><li>רבייה</li><li>הישרדות</li><li>הדבקה</li><li>התחמקות והסוואה</li></ul></div>
-      <div class="mid">מול</div>
-      <div class="card stack"><span class="pill ada">התגובה החיסונית</span><ul class="clean"><li>מחסומים (עור, רירית) חוסמים את הגישה</li><li>פפטידים אנטי-מיקרוביאליים, חומצה וליזוזים עוצרים את הכניסה</li><li>פגוציטים ומשלים מגבילים את הרבייה</li><li>נעילת הברזל מרעיבה את הפתוגן</li><li>תאי NK ותאי T הורגים תאים נגועים</li><li>הדיוק והזיכרון של החסינות הנרכשת מנצחים את ההסוואה</li></ul></div>
-    </div>
+    <p class="lead">שקופית 7 מפרטת מה כל פתוגן צריך כדי לגרום לזיהום.</p>
+    <div class="card stack"><span class="pill inn">הפתוגן צריך</span><ul class="clean"><li>גישה</li><li>כניסה</li><li>רבייה</li><li>הישרדות</li><li>הדבקה</li><li>התחמקות והסוואה</li></ul></div>
   </div>
   ${nextBar(1)}
 </section>`;
@@ -1367,7 +1394,6 @@ RH['two-arms'] = ()=>`
       ].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
   </div>
   <figure class="fig">${FIG.diversity()}<figcaption>הקולטנים המולדים (משמאל) משוכפלים על כל תא, ולכן התגובה מיידית. הקולטנים הנרכשים (מימין) כולם שונים, ולכן צריך קודם למצוא את התא היחיד שמתאים ולהרבות אותו.</figcaption></figure>
-  <div class="callout"><b>אנלוגיה.</b> החסינות המולדת היא השומר בכניסה לבניין: תמיד במשמרת, מזהה תוך שניות ״כל מי שעוטה מסכה״, אבל מתייחס לכל פורץ באותו אופן. החסינות הנרכשת היא משרד חקירות: לוקח לה ימים לפתוח תיק, אבל היא מזהה את האדם המדויק ושומרת את התיק שלו לתמיד.</div>
   ${nextBar(2)}
 </section>`;
 
@@ -1488,7 +1514,7 @@ RH.strategies = ()=>`
         <div class="node"><b>תאי T</b> קוראים אותו, ואז מסייעים או הורגים</div><div class="arrow" style="transform:none">↓ סיוע</div>
         <div class="node"><b>תאי B</b> מייצרים נוגדנים</div>
       </div>
-      <p>הזרוע הנרכשת משתמשת שוב באפקטורים מולדים: נוגדנים מפעילים את המשלים ואת הפגוציטים.</p></div>
+      <p>הזרוע הנרכשת משתמשת שוב באפקטורים מולדים: נוגדנים ומשלים (שקופית 55).</p></div>
   </div>
   <figure class="fig">${FIG.coop()}<figcaption>אסטרטגיה 6 בתמונה: הזרוע המולדת מזהה (DC), הזרוע הנרכשת מכוונת (תאי T), ושתיהן מבצעות (נוגדנים, תאי אפקטור, פגוציטים).</figcaption></figure>
   <div class="grid g2">
@@ -1527,7 +1553,7 @@ function buildChrome(){
   $('#brandtxt').textContent=u('brand');$('#hhome').textContent=u('home');$('#hless').textContent=u('lessons');
   const lb=$('#langbtn');lb.textContent=u('lang');lb.setAttribute('lang',LANG==='he'?'en':'he');lb.setAttribute('aria-label',u('langLabel'));
   $('#subnum').textContent=u('subnum');$('#subname').textContent=u('subname');
-  $('#lmenupop').innerHTML=`<a class="home" href="#home">${u('all')}</a>`+LESSONS.map(l=>l[3]?`<a href="#${l[3]}"><span class="mono">${l[0]}</span><span>${l[2]}</span></a>`:`<div class="dis"><span class="mono">${l[0]}</span><span>${l[2]}${u('soon')}</span></div>`).join('');
+  $('#lmenupop').innerHTML=`<a class="home" href="#home">${u('all')}</a><a class="home" href="#dictionary">${L('Dictionary','מילון')}</a>`+LESSONS.map(l=>l[3]?`<a href="#${l[3]}"><span class="mono">${l[0]}</span><span>${l[2]}</span></a>`:`<div class="dis"><span class="mono">${l[0]}</span><span>${l[2]}${u('soon')}</span></div>`).join('');
   $('#tabs').innerHTML=VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
 }
 function setLang(l){
@@ -1755,7 +1781,7 @@ const PRR={
      ['TLR4',[`lipopolysaccharide (LPS); moves to the endosome after binding`,`ליפופוליסכריד (LPS); עובר לאנדוזום אחרי הקישור`],[`Gram-negative bacteria`,`חיידקים גראם-שליליים`]],
      ['TLR5',[`flagellin`,`פלגלין`],[`bacteria that swim`,`חיידקים שוחים`]],
      [[`C-type lectins (Dectin-1, mannose receptor)`,`לקטינים מסוג C (Dectin-1, קולטן מנוז)`],[`sugars on the microbe: β-glucan, mannose`,`סוכרים על פני המיקרואורגניזם: β-גלוקן, מנוז`],[`fungi, bacteria`,`פטריות, חיידקים`]],
-     ['RAGE',[`advanced glycation end-products (a DAMP)`,`תוצרים סופיים של גליקציה (DAMP)`],[`damaged tissue`,`רקמה פגועה`]],
+     ['RAGE',[`advanced glycation end-products (a DAMP)`,`תוצרים סופיים של גליקציה (DAMP)`],[`not specified in the slides`,`לא מפורט בשקפים`]],
      [[`Purinergic receptors`,`קולטנים פורינרגיים`],[`ATP outside the cell (a DAMP)`,`ATP מחוץ לתא (DAMP)`],[`damaged or dying cells`,`תאים פגועים או מתים`]]]},
  endosome:{t:[`Endosome`,`אנדוזום`],n:[`DNA and RNA look almost the same in microbes and in us, so the receptor can't tell them apart by shape. Location does the job: our own nucleic acids stay in the nucleus and cytosol, so DNA or RNA found inside an endosome probably came from something the cell swallowed. These TLRs are carried to the endosome by the protein UNC93B1. This is a safety step: when our own DNA ends up in the wrong place, TLR7 and TLR9 can drive lupus.`,`DNA ו-RNA נראים כמעט אותו דבר אצל מיקרואורגניזמים ואצלנו, ולכן הקולטן לא יכול להבחין ביניהם לפי הצורה. המיקום עושה את העבודה: חומצות הגרעין שלנו נשארות בגרעין ובציטוזול, ולכן DNA או RNA שנמצאים בתוך אנדוזום כנראה הגיעו ממשהו שהתא בלע. הקולטנים האלה מובלים לאנדוזום על ידי החלבון UNC93B1. זהו צעד בטיחות: כשה-DNA שלנו מגיע למקום הלא נכון, TLR7 ו-TLR9 יכולים לגרום לזאבת.`],
   r:[['TLR3',[`double-stranded RNA`,`RNA דו-גדילי`],[`viruses`,`נגיפים`]],['TLR7 · TLR8',[`single-stranded RNA`,`RNA חד-גדילי`],[`RNA viruses`,`נגיפי RNA`]],['TLR9',[`unmethylated CpG DNA`,`DNA מסוג CpG לא ממותל`],[`bacteria, DNA viruses`,`חיידקים, נגיפי DNA`]]]},
@@ -1830,7 +1856,7 @@ R2['l2-inflammation']=()=>`
   <div class="stack"><span class="eyebrow">${L('Chapter 1 · slides 2–3','פרק 1 · שקופיות 2–3')}</span><h2>${L('Inflammation: bringing the army to the tissue','דלקת: להביא את הצבא לרקמה')}</h2>
   <p class="lead">${L('Inflammation is the recruitment of immune cells and plasma proteins from the blood, their accumulation in the tissue, and their activation to destroy the pathogen.','דלקת היא גיוס של תאי חיסון וחלבוני פלזמה מהדם, הצטברותם ברקמה ושפעולם כדי להשמיד את הפתוגן.')}</p></div>
   <div class="grid g2">
-    <div class="card stack"><span class="pill inn">${L('acute','חריפה')}</span><h3>${L('Acute inflammation','דלקת חריפה')}</h3><p>${L('White blood cells and fluid flow from the blood into the tissue to fight an infection. It lasts hours to days and ends with resolution.','תאי דם לבנים ונוזל זורמים מהדם לרקמה כדי להילחם בזיהום. היא נמשכת שעות עד ימים ונגמרת בסיום התגובה.')}</p></div>
+    <div class="card stack"><span class="pill inn">${L('acute','חריפה')}</span><h3>${L('Acute inflammation','דלקת חריפה')}</h3><p>${L('White blood cells and fluid flow from the blood into the tissue to fight an infection. ','תאי דם לבנים ונוזל זורמים מהדם לרקמה כדי להילחם בזיהום.')}</p></div>
     <div class="card stack"><span class="pill">${L('chronic','כרונית')}</span><h3>${L('Chronic (prolonged) inflammation','דלקת כרונית (ממושכת)')}</h3><p>${L('Damages the tissue and causes loss of function: joint destruction, lung fibrosis, rheumatoid arthritis, multiple sclerosis, inflammatory bowel disease.','פוגעת ברקמה וגורמת לאובדן תפקוד: הרס מפרקים, פיברוזיס בריאות, דלקת מפרקים שגרונתית, טרשת נפוצה, מחלות מעי דלקתיות.')}</p></div>
   </div>
   <div class="card stack">
@@ -1866,7 +1892,7 @@ R2['l2-recognition']=()=>`
   <div class="callout pink">${L('Non-immune cells, such as epithelial cells, also sense PAMPs. They respond by making cytokines and chemokines that recruit immune cells, so they take part in innate immunity too.','גם תאים שאינם תאי חיסון, כמו תאי אפיתל, חשים PAMP. הם מגיבים בייצור ציטוקינים וכמוקינים שמגייסים תאי חיסון, ולכן גם הם משתתפים בחסינות המולדת.')}</div>
   <div class="grid g2">
     <div class="card stack"><span class="pill inn">PAMP</span><h3>${L('Pathogen-associated patterns','תבניות של פתוגנים')}</h3><p>${L('Molecules that belong to microbes: lipopolysaccharide, flagellin, peptidoglycan, viral RNA, unmethylated CpG DNA.','מולקולות ששייכות למיקרואורגניזמים: ליפופוליסכריד, פלגלין, פפטידוגליקן, RNA נגיפי, DNA מסוג CpG לא ממותל.')}</p></div>
-    <div class="card stack"><span class="pill">DAMP</span><h3>${L('Damage (danger)-associated patterns','תבניות של נזק (סכנה)')}</h3><p>${L('Molecules released from our own damaged or dying cells: ATP outside the cell, advanced glycation end-products, crystals, DNA outside the nucleus. They cause <b>sterile inflammation</b>: inflammation without any microbe, for example after an injury.','מולקולות שמשתחררות מתאים פגועים או מתים שלנו: ATP מחוץ לתא, תוצרים סופיים של גליקציה, גבישים, DNA מחוץ לגרעין. הן גורמות ל<b>דלקת סטרילית</b>: דלקת בלי שום מיקרואורגניזם, למשל אחרי פציעה.')}</p></div>
+    <div class="card stack"><span class="pill">DAMP</span><h3>${L('Damage (danger)-associated patterns','תבניות של נזק (סכנה)')}</h3><p>${L('Molecules released from our own damaged or dying cells: ATP outside the cell, advanced glycation end-products, crystals, DNA outside the nucleus. They cause <b>sterile inflammation</b>: inflammation without any microbe.','מולקולות שמשתחררות מתאים פגועים או מתים שלנו: ATP מחוץ לתא, תוצרים סופיים של גליקציה, גבישים, DNA מחוץ לגרעין. הן גורמות ל<b>דלקת סטרילית</b>: דלקת בלי שום מיקרואורגניזם.')}</p></div>
   </div>
   <div class="card stack">
     <h3>${L('Where a receptor sits decides what it sees','המקום שבו הקולטן יושב קובע מה הוא רואה')}</h3>
@@ -2007,7 +2033,7 @@ R2['l2-killing']=()=>`
 R2['l2-decision']=()=>`
 <section class="view">
   <div class="stack"><span class="eyebrow">${L('Chapter 6 · slides 38–50','פרק 6 · שקופיות 38–50')}</span><h2>${L('Kill or spare','להרוג או לחוס')}</h2>
-  <p class="lead">${L('Killers must not kill healthy cells. T cells and NK cells use two different logics to decide, and together they cover each other\'s blind spots.','רוצחים לא אמורים להרוג תאים בריאים. תאי T ותאי NK משתמשים בשתי לוגיקות שונות כדי להחליט, ויחד הם מכסים את הנקודות העיוורות זה של זה.')}</p></div>
+  <p class="lead">${L('T cells and NK cells decide whether to kill in two different ways: T cells read peptides on MHC, NK cells balance signals.','תאי T ותאי NK מחליטים אם להרוג בשתי דרכים שונות: תאי T קוראים פפטידים על MHC, ותאי NK מאזנים בין אותות.')}</p></div>
   <div class="card stack"><span class="pill ada">${L('T cells','תאי T')}</span><h3>${L('T cells read peptides on MHC','תאי T קוראים פפטידים על MHC')}</h3><ul class="clean">
     <li>${L('Each T cell has a specific receptor, the TCR.','לכל תא T יש קולטן ספציפי, ה-TCR.')}</li>
     <li>${L('TCRs recognise peptides, small protein fragments, presented on MHC molecules.','ה-TCR מזהים פפטידים, קטעי חלבון קטנים, שמוצגים על מולקולות MHC.')}</li>
@@ -2261,7 +2287,7 @@ function tipRegexes(){const he=LANG==='he';if(TIPRX[LANG])return TIPRX[LANG];
   const list=[];TIPS.forEach((tp,i)=>(he?tp[1]:tp[0]).forEach(f=>list.push({f,i})));list.sort((a,b)=>b.f.length-a.f.length);
   list.forEach(x=>{x.rx=he?new RegExp(`(^|[^\\u0590-\\u05FFA-Za-z0-9])([ובכלמשה]{0,3})(${reEsc(x.f)})(?![\\u0590-\\u05FFA-Za-z0-9])`):new RegExp(`(^|[^A-Za-z0-9-])(${reEsc(x.f)})(?![A-Za-z0-9])`,x.f===x.f.toLowerCase()?'i':'');});
   return TIPRX[LANG]=list;}
-const TIP_SKIP='svg,a,button,h1,h2,h3,h4,summary,.tip,.pill,.eyebrow,th,dt,label,input,script,style,.mono,.seg,.steps,.filters,.flip,.qopts,#tipbox';
+const TIP_SKIP='svg,a,button,h1,h2,h3,h4,summary,.tip,.pill,.eyebrow,th,dt,label,input,script,style,.mono,.seg,.steps,.filters,.flip,.qopts,#tipbox,.primer,.dictgrid,.dmodal';
 function annotate(root){if(!root||root.nodeType!==1||root.closest('.tip,svg'))return;const he=LANG==='he';const used=new Set();
   for(const x of tipRegexes()){if(used.has(x.i))continue;
     const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
@@ -2277,6 +2303,12 @@ function showTip(el){const tp=TIPS[+el.dataset.t];if(!tp)return;tipbox.innerHTML
   const r=el.getBoundingClientRect(),bw=tipbox.offsetWidth,bh=tipbox.offsetHeight;const left=Math.max(8,Math.min(innerWidth-bw-8,r.left+r.width/2-bw/2));let top=r.top-bh-10,below=false;if(top<8){top=r.bottom+10;below=true;}
   tipbox.style.left=left+'px';tipbox.style.top=top+'px';tipbox.classList.toggle('below',below);tipbox.style.setProperty('--ax',Math.max(12,Math.min(bw-12,r.left+r.width/2-left))+'px');tipOn=el;}
 function hideTip(){tipbox.hidden=true;tipOn=null;}
+function buildPrimer(id){if(id==='home'||/quiz|cards/.test(id))return;const sec=document.querySelector('#main section.view');if(!sec||sec.querySelector('.primer'))return;
+  const seen=[];document.querySelectorAll('#main .tip').forEach(sp=>{const i=+sp.dataset.t;if(!seen.includes(i))seen.push(i);});if(!seen.length)return;
+  const he=LANG==='he';const name=i=>{const f=(he&&TIPS[i][1].length?TIPS[i][1]:TIPS[i][0])[0];return (he&&TIPS[i][1].length)||/[A-Z]/.test(f)?f:f[0].toUpperCase()+f.slice(1);};
+  const box=document.createElement('details');box.className='primer';box.open=true;
+  box.innerHTML=`<summary>${L('Key terms on this page','מונחי מפתח בעמוד הזה')} <span class="pill">${seen.length}</span></summary><p class="primer-note">${L('Basic definitions to read before you start. The same words are underlined in the text: point at one to see its definition again.','הגדרות בסיסיות לקריאה לפני שמתחילים. אותן מילים מסומנות בקו בטקסט: העבירו את העכבר מעל מילה כדי לראות שוב את ההגדרה.')}</p><dl class="primer-list">${seen.map(i=>`<div><dt>${esc(name(i))}</dt><dd>${esc(L(TIPS[i][2],TIPS[i][3]))}</dd></div>`).join('')}</dl>`;
+  const head=sec.querySelector(':scope > .hero')||sec.querySelector(':scope > .stack')||sec.firstElementChild;head.after(box);}
 document.addEventListener('mouseover',e=>{const el=e.target.closest&&e.target.closest('.tip');if(el&&el!==tipOn)showTip(el);});
 document.addEventListener('mouseout',e=>{const el=e.target.closest&&e.target.closest('.tip');if(el&&!el.contains(e.relatedTarget))hideTip();});
 document.addEventListener('focusin',e=>{if(e.target.classList&&e.target.classList.contains('tip'))showTip(e.target);});
@@ -2286,9 +2318,699 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTip();});
 addEventListener('scroll',()=>{if(tipOn)hideTip();},{passive:true});
 new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1&&!n.classList.contains('tip'))annotate(n);}).observe(document.getElementById('main'),{childList:true,subtree:true});
 
+/* ===================== LESSON 3 ===================== */
+const pill=(x,y,txt,f='var(--eosin-soft)',s='var(--eosin)',w=40)=>`<rect x="${x-w/2}" y="${y-9}" width="${w}" height="18" rx="9" fill="${f}" stroke="${s}"/>${t(x,y+4,txt,'mono')}`;
+const ball=(x,y,r,txt,f='var(--hema-soft)',s='var(--hema)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${s}"/>${t(x,y+4,txt,'mono')}`;
+const abD=(x,y)=>`<path d="M${x-10} ${y}L${x} ${y-12}L${x+10} ${y}M${x} ${y-12}V${y-38}" stroke="var(--hema)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+const person=(x,y,c,s)=>`<circle cx="${x}" cy="${y-26}" r="12" fill="${c}" stroke="${s}"/><path d="M${x-20} ${y+14}C${x-20} ${y-8} ${x+20} ${y-8} ${x+20} ${y+14}Z" fill="${c}" stroke="${s}"/>`;
+const rbc=(x,y,r=12)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--bad)" opacity=".75"/><circle cx="${x}" cy="${y}" r="${r*.45}" fill="var(--bad)" opacity=".35"/>`;
+const plt=(x,y)=>`<path d="M${x-9} ${y-2}q4-8 10-5t8 6q-2 7-9 7t-9-8z" fill="var(--hema)" opacity=".55"/>`;
+const op=(n,k)=>n>=k?'1':'.1';
+
+const FIG3 = {
+ adcccdc:()=>`<svg class="wide" viewBox="0 0 640 230" role="img" aria-label="${L('ADCC compared with CDC','השוואה בין ADCC ל-CDC')}">
+  ${t(160,22,'ADCC','h')}${t(480,22,'CDC','h')}
+  <circle cx="100" cy="112" r="50" fill="var(--sunk)" stroke="var(--muted)"/>${[88,112,136].map(y=>yR(148+(y===112?2:0),y)).join('')}
+  ${[88,112,136].map(y=>`<line x1="176" y1="${y}" x2="198" y2="${y}" stroke="var(--eosin)" stroke-width="4"/>`).join('')}${icon('nk',236,112,84)}
+  ${t(100,178,L('target cell','תא מטרה'),'m')}${t(236,166,'CD16','mono')}
+  ${t(160,200,L('NK binds the antibody tail (Fc) with CD16','NK נקשר לזנב הנוגדן (Fc) בעזרת CD16'),'m')}${t(160,216,L('and kills by apoptosis','והורג באפופטוזיס'),'m')}
+  <line x1="320" y1="14" x2="320" y2="222" stroke="var(--line)"/>
+  <circle cx="480" cy="112" r="50" fill="var(--sunk)" stroke="var(--muted)"/>
+  ${[[-50,0],[-36,-36],[0,-50],[36,-36],[50,0],[36,36],[0,50],[-36,36]].map(([dx,dy],i)=>i%2?pill(480+dx*1.18,112+dy*1.18,'C3b','var(--eosin-soft)','var(--eosin)',36):'').join('')}
+  ${[[-50,0],[0,-50],[50,0],[0,50]].map(([dx,dy])=>{const a=Math.atan2(dy,dx)*180/Math.PI+90;return `<g transform="rotate(${a} ${480+dx} ${112+dy})"><path d="M${480+dx-8} ${112+dy}L${480+dx} ${112+dy-10}L${480+dx+8} ${112+dy}M${480+dx} ${112+dy-10}V${112+dy-24}" stroke="var(--hema)" stroke-width="3" fill="none" stroke-linecap="round"/></g>`}).join('')}
+  ${t(480,200,L('bound antibodies switch on complement,','הנוגדנים הקשורים מפעילים את המשלים,'),'m')}${t(480,216,L('which coats the cell with C3b for phagocytes','שמצפה את התא ב-C3b עבור הפגוציטים'),'m')}
+ </svg>`,
+
+ classical:n=>{const ab=x=>`<circle cx="${x-10}" cy="200" r="5" fill="var(--good)"/><circle cx="${x+10}" cy="200" r="5" fill="var(--good)"/>`+abD(x,196);
+  return `<svg class="wide" viewBox="0 0 640 260" role="img" aria-label="${L('The classical complement pathway, step by step','המסלול הקלאסי של המשלים, שלב אחרי שלב')}">
+  <rect x="0" y="204" width="640" height="56" fill="var(--good-soft)"/>${t(14,248,L('pathogen or target cell surface','פני הפתוגן או תא המטרה'),'m','start')}
+  ${ab(108)}${ab(164)}
+  <g opacity="${op(n,1)}"><line x1="136" y1="88" x2="136" y2="120" stroke="var(--hema)" stroke-width="4"/>${[104,120,136,152,168].map(x=>`<line x1="136" y1="120" x2="${x}" y2="150" stroke="var(--hema)" stroke-width="2.5"/><circle cx="${x}" cy="152" r="6" fill="var(--hema)"/>`).join('')}
+   ${ball(116,108,9,'r','var(--eosin-soft)','var(--eosin)')}${ball(156,108,9,'r','var(--eosin-soft)','var(--eosin)')}${ball(112,84,9,'s','var(--eosin)','var(--eosin)')}${ball(160,84,9,'s','var(--eosin)','var(--eosin)')}
+   ${t(136,48,'C1','b')}${t(136,66,L('C1q + 2 C1r + 2 C1s','C1q + 2 C1r + 2 C1s'),'mono')}</g>
+  <g opacity="${op(n,2)}">${ball(250,120,14,'C4','var(--surface)','var(--muted)')}${arrow(254,136,262,184)}${pill(262,194,'C4b')}${arrow(262,108,286,62)}${ball(292,50,15,'C4a','var(--surface)','var(--muted)')}</g>
+  <g opacity="${op(n,3)}">${ball(340,120,14,'C2','var(--surface)','var(--muted)')}${arrow(334,136,312,184)}${pill(306,194,'C2a','var(--hema-soft)','var(--hema)')}${arrow(352,108,370,62)}${ball(380,50,15,'C2b','var(--surface)','var(--muted)')}
+   ${t(284,232,L('C3 convertase (C4b2a)','C3 convertase (C4b2a)'),'b')}</g>
+  <g opacity="${op(n,4)}">${[[440,112],[470,96],[500,116]].map(([x,y])=>ball(x,y,11,'C3','var(--surface)','var(--muted)')).join('')}${arrow(430,128,400,184)}
+   ${[420,462,504,546,588].map(x=>pill(x,194,'C3b')).join('')}${[[536,56],[574,40],[610,62]].map(([x,y])=>ball(x,y,14,'C3a','var(--bad-soft)','var(--bad)')).join('')}
+   ${t(574,92,L('inflammation','דלקת'),'m')}${t(504,232,L('C3b coat: tagged for phagocytes','ציפוי C3b: מסומן לפגוציטים'),'m')}</g>
+ </svg>`},
+
+ outcomes:()=>{const P=[107,320,533];return `<svg class="wide" viewBox="0 0 640 240" role="img" aria-label="${L('The three outcomes of complement','שלוש התוצאות של המשלים')}">
+  ${t(P[0],22,L('Opsonisation','אופסוניזציה'),'h')}${t(P[1],22,L('Inflammation','דלקת'),'h')}${t(P[2],22,L('Lysis','ליזיס'),'h')}
+  <rect x="34" y="96" width="70" height="36" rx="18" fill="var(--good)" opacity=".35" stroke="var(--good)"/>${[[40,90],[70,86],[100,92],[56,140],[92,140]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="var(--eosin)"/>`).join('')}
+  ${icon('macrophage',158,114,88)}${t(P[0],186,L('C3b coats the pathogen;','C3b מצפה את הפתוגן;'),'m')}${t(P[0],202,L('phagocytes grab it through','פגוציטים תופסים אותו דרך'),'m')}${t(P[0],218,L('C3b receptors and engulf it','קולטני C3b ובולעים אותו'),'m')}
+  <line x1="213" y1="14" x2="213" y2="232" stroke="var(--line)"/><line x1="427" y1="14" x2="427" y2="232" stroke="var(--line)"/>
+  ${ball(246,80,13,'C3a','var(--bad-soft)','var(--bad)')}${ball(246,140,13,'C5a','var(--bad-soft)','var(--bad)')}${arrow(262,86,284,100)}${arrow(262,134,284,120)}
+  ${icon('mast',320,110,74)}${[[362,96],[376,110],[364,124],[384,90],[388,130]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--hema)"/>`).join('')}
+  ${t(P[1],186,L('C3a and C5a make mast cells','C3a ו-C5a גורמים לתאי פיטום'),'m')}${t(P[1],202,L('release histamine; C5a also','לשחרר היסטמין; C5a גם'),'m')}${t(P[1],218,L('attracts neutrophils','מושך נויטרופילים'),'m')}
+  <rect x="440" y="98" width="186" height="10" fill="var(--eosin-soft)"/><rect x="440" y="116" width="186" height="10" fill="var(--eosin-soft)"/>
+  <rect x="512" y="78" width="42" height="68" rx="8" fill="var(--hema)" opacity=".85"/><rect x="524" y="78" width="18" height="68" fill="var(--bg)"/>
+  ${[[533,60],[533,160]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--hema)"/>`).join('')}${arrow(533,64,533,82)}${arrow(533,146,533,160)}
+  ${t(P[2],186,L('C5b with C6, C7, C8 and C9','C5b עם C6, C7, C8 ו-C9'),'m')}${t(P[2],202,L('build the membrane attack','בונים את קומפלקס התקיפה'),'m')}${t(P[2],218,L('complex: a pore that lyses','של הממברנה: נקבובית שמפרקת'),'m')}
+ </svg>`},
+
+ mac:n=>`<svg class="wide" viewBox="0 0 640 230" role="img" aria-label="${L('Assembly of the membrane attack complex','הרכבת קומפלקס התקיפה של הממברנה')}">
+  <rect x="0" y="120" width="640" height="12" fill="var(--eosin-soft)"/><rect x="0" y="138" width="640" height="12" fill="var(--eosin-soft)"/>${t(14,174,L('pathogen membrane','ממברנת הפתוגן'),'m','start')}
+  <g opacity="${op(n,1)}">${ball(120,70,16,'C5b','var(--bad-soft)','var(--bad)')}${ball(152,62,13,'C6')}${ball(178,76,13,'C7')}</g>
+  <g opacity="${op(n,2)}"><path d="M178 89L182 128" stroke="var(--hema)" stroke-width="4"/>${t(150,30,L('C5b67 anchors in the membrane','C5b67 נעגן בממברנה'),'m')}</g>
+  <g opacity="${op(n,3)}">${ball(232,84,13,'C8','var(--good-soft)','var(--good)')}<path d="M232 97L232 142" stroke="var(--good)" stroke-width="4"/>${t(250,60,L('C8 enters the membrane first','C8 נכנס ראשון לממברנה'),'m','start')}</g>
+  <g opacity="${op(n,4)}">${[300,322,344].map(x=>`<rect x="${x}" y="92" width="14" height="66" rx="6" fill="var(--hema)" opacity=".8"/>`).join('')}${t(330,84,L('C9 starts a ring','C9 מתחיל טבעת'),'m')}</g>
+  <g opacity="${op(n,5)}"><rect x="430" y="88" width="120" height="74" rx="14" fill="var(--hema)" opacity=".85"/><rect x="462" y="88" width="56" height="74" fill="var(--bg)"/>
+   ${[[490,70],[480,52],[500,190],[490,208]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.5" fill="var(--hema)"/>`).join('')}${arrow(490,74,490,94)}${arrow(490,160,490,182)}
+   ${t(490,36,L('up to 18 C9: a pore about 11 nm wide','עד 18 C9: נקבובית ברוחב 11 ננומטר בערך'),'b')}</g>
+ </svg>`,
+
+ lectin:()=>{const bq=(x,head)=>`<line x1="${x}" y1="58" x2="${x}" y2="100" stroke="var(--hema)" stroke-width="4"/>${[-36,-18,0,18,36].map(d=>`<line x1="${x}" y1="100" x2="${x+d}" y2="150" stroke="var(--hema)" stroke-width="2.5"/>`+head(x+d,156)).join('')}${ball(x-12,84,8,'','var(--eosin)','var(--eosin)')}${ball(x+12,84,8,'','var(--eosin)','var(--eosin)')}`;
+  const hc=(x,y)=>`<circle cx="${x}" cy="${y}" r="7" fill="var(--hema-soft)" stroke="var(--hema)"/>`;
+  const sug=(x,k)=>k===0?`<circle cx="${x}" cy="182" r="6" fill="var(--good)"/>`:k===1?`<path d="M${x} 175l7 12h-14z" fill="var(--bad)"/>`:`<rect x="${x-6}" y="176" width="12" height="12" fill="var(--hema)"/>`;
+  return `<svg class="wide" viewBox="0 0 640 245" role="img" aria-label="${L('Recognition molecules of the lectin pathway','מולקולות הזיהוי של מסלול הלקטין')}">
+  <rect x="0" y="172" width="640" height="34" fill="var(--good-soft)"/>${Array.from({length:21},(_,i)=>sug(16+i*30,i%3)).join('')}
+  ${bq(120,hc)}${bq(320,(x,y)=>hc(x,y)+t(x,y+4,'Ac','mono'))}${bq(520,hc)}
+  ${t(120,30,'MBL','h')}${t(120,48,L('mannose, fucose, GlcNAc','מנוז, פוקוז, GlcNAc'),'m')}
+  ${t(320,30,L('Ficolins 1–3','פיקולינים 1–3'),'h')}${t(320,48,L('acetylated sugars','סוכרים מאוצטלים'),'m')}
+  ${t(520,30,L('Collectins 10, 11','קולקטינים 10, 11'),'h')}${t(520,48,L('collectin-11 binds fucose','קולקטין-11 קושר פוקוז'),'m')}
+  <circle cx="30" cy="226" r="5" fill="var(--good)"/>${t(40,230,L('mannose','מנוז'),'m','start')}<path d="M130 220l6 11h-12z" fill="var(--bad)"/>${t(142,230,L('fucose','פוקוז'),'m','start')}<rect x="220" y="221" width="10" height="10" fill="var(--hema)"/>${t(236,230,'N-acetylglucosamine','m','start')}<circle cx="430" cy="226" r="6" fill="var(--eosin)"/>${t(442,230,L('MASP enzymes','אנזימי MASP'),'m','start')}
+ </svg>`},
+
+ alt:mode=>{const host=mode==='host';const surf=host?'var(--hema-soft)':'var(--good-soft)';
+  const P=[100,250,400,550];
+  const steps=host?[
+   [pill(P[0],176,'C3b'),L('C3b lands on our cell','C3b נוחת על התא שלנו')],
+   [pill(P[1],176,'C3b')+ball(P[1],144,16,'H','var(--good-soft)','var(--good)'),L('factor H binds, helped by sialic acid','פקטור H נקשר, בעזרת חומצה סיאלית')],
+   [pill(P[2],176,'C3b')+ball(P[2]-6,144,16,'H','var(--good-soft)','var(--good)')+ball(P[2]+26,140,13,'I','var(--bad-soft)','var(--bad)'),L('factor I cuts C3b','פקטור I חותך את C3b')],
+   [pill(P[3],176,'iC3b','var(--sunk)','var(--muted)',46),L('inactive iC3b: the cell is spared','iC3b לא פעיל: התא ניצל')]]:[
+   [pill(P[0],176,'C3b')+ball(P[0],144,14,'B','var(--surface)','var(--hema)'),L('C3b grabs factor B','C3b תופס את פקטור B')],
+   [pill(P[1],176,'C3b')+ball(P[1],144,14,'B','var(--surface)','var(--hema)')+ball(P[1]+30,118,11,'D','var(--bad-soft)','var(--bad)')+ball(P[1]+40,70,9,'Ba','var(--surface)','var(--muted)'),L('factor D cuts B; Ba leaves','פקטור D חותך את B; Ba עוזב')],
+   [pill(P[2],176,'C3b')+ball(P[2],144,14,'Bb','var(--hema-soft)','var(--hema)')+`<rect x="${P[2]+14}" y="130" width="26" height="44" rx="8" fill="none" stroke="var(--good)" stroke-width="3"/>`+t(P[2]+54,134,'P','b'),L('properdin holds C3bBb','פרופרדין מייצב את C3bBb')],
+   [[P[3]-36,P[3],P[3]+36].map(x=>pill(x,176,'C3b',undefined,undefined,34)).join('')+ball(P[3],120,12,'C3','var(--surface)','var(--muted)'),L('Bb cuts C3: more C3b','Bb חותך C3: עוד C3b')]];
+  return `<svg class="wide" viewBox="0 0 640 245" role="img" aria-label="${host?L('The alternative pathway on our own cell','המסלול החלופי על תא שלנו'):L('The alternative pathway on a pathogen','המסלול החלופי על פתוגן')}">
+  <rect x="0" y="186" width="640" height="26" fill="${surf}"/>${host?Array.from({length:16},(_,i)=>`<path d="M${20+i*40} 199l5-6l5 6l-5 6z" fill="var(--hema)"/>`).join(''):''}
+  ${t(14,30,host?L('Our own cell (with sialic acid)','תא שלנו (עם חומצה סיאלית)'):L('Pathogen surface','פני הפתוגן'),'h','start')}
+  ${steps.map((s,i)=>{const p=(`${i+1}. `+s[1]).split(/(?<=[,:;]) /);return s[0]+t(P[i],p.length>1?220:230,p[0],'m')+(p[1]?t(P[i],236,p.slice(1).join(' '),'m'):'')}).join('')}
+  ${[0,1,2].map(i=>arrow(P[i]+34,150,P[i+1]-36,150)).join('')}
+ </svg>`},
+
+ loop:()=>{const lv=[[70,[110]],[250,[50,90,130,170]],[450,Array.from({length:12},(_,i)=>26+i*14.5)]];
+  let o='';lv[1][1].forEach(y=>o+=`<line x1="92" y1="110" x2="226" y2="${y}" stroke="var(--line)"/>`);lv[1][1].forEach((y,i)=>lv[2][1].slice(i*3,i*3+3).forEach(y2=>o+=`<line x1="274" y1="${y}" x2="426" y2="${y2}" stroke="var(--line)"/>`));
+  return `<svg class="wide" viewBox="0 0 640 230" role="img" aria-label="${L('The amplification loop: one C3b becomes many','לולאת ההגברה: C3b אחד הופך להרבה')}">${o}
+  ${pill(70,110,'C3b',undefined,undefined,44)}${lv[1][1].map(y=>pill(250,y,'C3b',undefined,undefined,44)).join('')}${lv[2][1].map(y=>pill(450,y,'C3b',undefined,undefined,40)).join('')}
+  <rect x="520" y="16" width="100" height="186" rx="12" fill="var(--eosin)" opacity=".25" stroke="var(--eosin)"/>${t(570,104,L('surface','פני השטח'),'b')}${t(570,122,L('coated','מצופים'),'b')}
+  ${t(70,150,L('one C3b','C3b אחד'),'m')}${t(70,166,L('builds C3bBb','בונה C3bBb'),'m')}${t(250,204,L('each convertase','כל convertase'),'m')}${t(250,220,L('cuts many C3','חותך הרבה C3'),'m')}${t(450,220,L('each new C3b builds','כל C3b חדש בונה'),'m')}${t(570,220,L('a new convertase','convertase חדש'),'m')}
+ </svg>`},
+
+ summary:sel=>{const o=k=>sel==='all'||sel===k?'1':'.2';
+  const top=[['cl',20,L('Classical','קלאסי'),L('antibody bound to antigen','נוגדן שקשור לאנטיגן'),L('C1q · C1r · C1s','C1q · C1r · C1s')],['le',230,L('Lectin','לקטין'),L('MBL, ficolins, collectins on sugars','MBL, פיקולינים, קולקטינים על סוכרים'),'MASP-1 · MASP-2'],['al',440,L('Alternative','חלופי'),L('C3b from tickover','C3b מ-tickover'),L('factor B · D · properdin','פקטור B · D · פרופרדין')]];
+  return `<svg class="wide" viewBox="0 0 640 330" role="img" aria-label="${L('Three complement pathways converge','שלושת מסלולי המשלים מתאחדים')}">
+  ${top.map(([k,x,a,b,c])=>`<g opacity="${o(k)}"><rect x="${x}" y="10" width="180" height="78" rx="12" fill="var(--surface)" stroke="var(--eosin)"/>${t(x+90,32,a,'b')}${t(x+90,52,b,'m')}${t(x+90,72,c,'mono')}<line x1="${x+90}" y1="88" x2="320" y2="116" stroke="var(--muted)" stroke-width="2" marker-end="url(#arw)"/></g>`).join('')}
+  <rect x="200" y="118" width="240" height="48" rx="12" fill="var(--eosin-soft)" stroke="var(--eosin)"/>${t(320,138,L('C3 convertase','C3 convertase'),'b')}${t(320,156,sel==='al'?'C3bBb':sel==='all'?L('C4b2a or C3bBb','C4b2a או C3bBb'):'C4b2a','mono')}
+  ${arrow(200,142,150,142)}${t(140,138,L('C3a: inflammation','C3a: דלקת'),'m','end')}${arrow(440,142,490,142)}${t(500,138,L('C3b: opsonisation','C3b: אופסוניזציה'),'m','start')}
+  ${arrow(320,166,320,192)}<rect x="200" y="194" width="240" height="48" rx="12" fill="var(--hema-soft)" stroke="var(--hema)"/>${t(320,214,L('C5 convertase','C5 convertase'),'b')}${t(320,232,L('C3 convertase + one more C3b','C3 convertase + עוד C3b'),'m')}
+  ${arrow(200,218,150,218)}${t(140,222,L('C5a: inflammation','C5a: דלקת'),'m','end')}
+  ${arrow(320,242,320,268)}<rect x="200" y="270" width="240" height="50" rx="12" fill="var(--hema)" opacity=".85"/><text x="320" y="291" text-anchor="middle" class="b" style="fill:var(--bg)${LANG==='he'?';direction:rtl':''}">${L('Membrane attack complex','קומפלקס התקיפה של הממברנה')}</text><text x="320" y="309" text-anchor="middle" class="m" style="fill:var(--bg)${LANG==='he'?';direction:rtl':''}">C5b · C6 · C7 · C8 · C9</text>
+ </svg>`},
+
+ division:()=>{const P=[107,320,533];const c=(x,y,r,k)=>k==='S'?`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--good-soft)" stroke="var(--good)" stroke-width="2"/>${t(x,y+5,'S','b')}`:`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--eosin-soft)" stroke="var(--eosin)" stroke-width="2"/>${t(x,y+5,'P','b')}`;
+  const pn=(cx,a,b,h)=>c(cx,64,22,'S')+arrow(cx-8,88,cx-34,120)+arrow(cx+8,88,cx+34,120)+c(cx-42,142,19,a)+c(cx+42,142,19,b)+t(cx,22,h,'b');
+  return `<svg class="wide" viewBox="0 0 640 220" role="img" aria-label="${L('Symmetric and asymmetric stem cell division','חלוקה סימטרית וא-סימטרית של תאי גזע')}">
+  ${pn(P[0],'S','S',L('Symmetric: renewal','סימטרית: התחדשות'))}${pn(P[1],'P','P',L('Symmetric: differentiation','סימטרית: התמיינות'))}${pn(P[2],'S','P',L('Asymmetric','א-סימטרית'))}
+  ${t(P[0],190,L('two stem cells','שני תאי גזע'),'m')}${t(P[1],190,L('two progenitors','שני תאי אב'),'m')}${t(P[2],190,L('one of each','אחד מכל סוג'),'m')}
+  <circle cx="220" cy="210" r="6" fill="var(--good-soft)" stroke="var(--good)"/>${t(232,214,L('S = stem cell','S = תא גזע'),'m','start')}<circle cx="360" cy="210" r="6" fill="var(--eosin-soft)" stroke="var(--eosin)"/>${t(372,214,L('P = progenitor','P = תא אב'),'m','start')}
+ </svg>`},
+
+ tree:sel=>{const N={lt:[320,28,'LT-HSC'],st:[320,78,'ST-HSC'],mpp:[320,128,'MPP'],cmp:[190,190,'CMP'],gmlp:[450,190,'GMLP'],mep:[90,256,'MEP'],gmp:[300,256,'GMP'],clp:[510,256,'CLP']};
+  const E=[['lt','st'],['st','mpp'],['mpp','cmp'],['mpp','gmlp'],['cmp','mep'],['cmp','gmp'],['gmlp','gmp'],['gmlp','clp']];
+  const leaf=[[50,'rbc',L('red cell','כדורית אדומה'),'mep'],[130,'plt',L('platelet','טסית'),'mep'],[220,'neutrophil',L('granulocytes','גרנולוציטים'),'gmp'],[300,'monocyte',L('monocyte','מונוציט'),'gmp'],[380,'dc','DC','gmp'],[450,'nk','NK','clp'],[515,'tcell','B','clp'],[580,'tcell','T','clp']];
+  return `<svg class="wide" viewBox="0 0 640 372" role="img" aria-label="${L('The blood cell family tree. Click a progenitor.','עץ המשפחה של תאי הדם. לחצו על תא אב.')}">
+  ${E.map(([a,b])=>`<line x1="${N[a][0]}" y1="${N[a][1]+14}" x2="${N[b][0]}" y2="${N[b][1]-14}" stroke="var(--muted)" stroke-width="1.5"/>`).join('')}
+  ${leaf.map(([x,,,p])=>`<line x1="${N[p][0]}" y1="${N[p][1]+14}" x2="${x}" y2="306" stroke="var(--line)" stroke-width="1.5"/>`).join('')}
+  ${Object.entries(N).map(([k,[x,y,l]])=>`<g class="tnode${sel===k?' on':''}" data-n="${k}"><rect x="${x-42}" y="${y-14}" width="84" height="28" rx="14" fill="${k==='lt'||k==='st'?'var(--good-soft)':'var(--surface)'}" stroke="${sel===k?'var(--eosin)':k==='lt'||k==='st'?'var(--good)':'var(--hema)'}" stroke-width="${sel===k?3:1.5}"/>${t(x,y+5,l,'mono')}</g>`).join('')}
+  ${leaf.map(([x,k,l])=>(k==='rbc'?rbc(x,326):k==='plt'?plt(x,326):icon(k,x,326,34))+t(x,362,l,'m')).join('')}
+  ${t(214,128,L('bone marrow','מח עצם'),'m','end')}
+ </svg>`},
+
+ macorigin:()=>{const P=[107,320,533];return `<svg class="wide" viewBox="0 0 640 270" role="img" aria-label="${L('Three origins of tissue macrophages','שלושה מקורות של מקרופאג׳ים ברקמות')}">
+  ${t(P[0],22,L('From HSCs','מתאי גזע'),'h')}${t(P[1],22,L('From blood monocytes','ממונוציטים בדם'),'h')}${t(P[2],22,L('From the yolk sac','משק החלמון'),'h')}
+  <circle cx="${P[0]}" cy="66" r="20" fill="var(--good-soft)" stroke="var(--good)"/>${t(P[0],71,'HSC','mono')}${arrow(P[0],88,P[0],108)}
+  <rect x="${P[0]-30}" y="110" width="60" height="26" rx="13" fill="var(--surface)" stroke="var(--hema)"/>${t(P[0],127,'GMP','mono')}${arrow(P[0],138,P[0],160)}${icon('monocyte',P[0]-20,182,34)}${icon('monocyte',P[0]+20,182,34)}
+  ${t(P[0],222,L('bone marrow keeps making','מח העצם ממשיך לייצר'),'m')}${t(P[0],238,L('new monocytes for life','מונוציטים חדשים כל החיים'),'m')}
+  <rect x="${P[1]-90}" y="48" width="180" height="40" rx="20" fill="var(--eosin-soft)"/>${icon('monocyte',P[1],68,32)}${t(P[1]+52,72,L('blood','דם'),'m','start')}${arrow(P[1],90,P[1],138)}
+  ${icon('macrophage',P[1],168,58)}${t(P[1],222,L('enters a tissue and becomes','נכנס לרקמה והופך'),'m')}${t(P[1],238,L('a macrophage (gut: all the time)','למקרופאג׳ (במעי: כל הזמן)'),'m')}
+  <ellipse cx="${P[2]}" cy="70" rx="40" ry="24" fill="var(--sunk)" stroke="var(--muted)"/>${t(P[2],75,L('embryo','עובר'),'m')}${arrow(P[2],96,P[2],138)}
+  ${icon('macrophage',P[2],168,58)}<path d="M${P[2]+36} 150a20 20 0 1 1 0 36" stroke="var(--good)" stroke-width="2.5" fill="none" marker-end="url(#arw)"/>
+  ${t(P[2],222,L('settles before birth and','מתיישב לפני הלידה'),'m')}${t(P[2],238,L('renews itself (microglia)','ומחדש את עצמו (מיקרוגליה)'),'m')}
+  <line x1="213" y1="14" x2="213" y2="250" stroke="var(--line)"/><line x1="427" y1="14" x2="427" y2="250" stroke="var(--line)"/>
+ </svg>`},
+
+ lymph:()=>`<svg class="wide" viewBox="0 0 640 250" role="img" aria-label="${L('What the lymphoid progenitor makes and where','מה תא האב הלימפואידי מייצר, ואיפה')}">
+  <rect x="250" y="12" width="140" height="32" rx="16" fill="var(--surface)" stroke="var(--hema)"/>${t(320,33,L('lymphoid progenitor','תא אב לימפואידי'),'b')}
+  <rect x="20" y="80" width="380" height="120" rx="18" fill="var(--sunk)" stroke="var(--line)"/>${t(36,100,L('In the bone marrow','במח העצם'),'b','start')}
+  <rect x="430" y="80" width="190" height="120" rx="18" fill="var(--hema-soft)" stroke="var(--hema)"/>${t(446,100,L('In the thymus','בתימוס'),'b','start')}
+  ${arrow(300,44,220,78)}${arrow(340,44,520,78)}
+  ${icon('nk',90,148,52)}${t(90,192,L('NK cell','תא NK'),'m')}${icon('tcell',210,148,46)}${t(210,192,L('B cell','תא B'),'m')}${icon('ilc',330,148,50)}${t(330,192,'ILC','m')}
+  ${icon('tcell',525,148,46)}${t(525,192,L('T cell','תא T'),'m')}
+  ${t(525,226,L('self-reactive T cells removed','תאי T שמגיבים לעצמי מסולקים'),'m')}${t(210,226,L('no antigen-specific receptor: NK, ILC','בלי קולטן ספציפי לאנטיגן: NK, ILC'),'m')}
+ </svg>`,
+
+ life:sel=>{const X=h=>150+Math.log10(h)/5.5*470;
+  const R=[['neu',L('neutrophil','נויטרופיל'),[[5,135,.55],[24,48,1]],'e'],['eos',L('eosinophil','אאוזינופיל'),[[8,12,.55],[192,288,1]],'e'],['mono',L('monocyte','מונוציט'),[[24,168,1]],'e'],['plt',L('platelet','טסית'),[[168,240,1]],'o'],['nk',L('NK cell','תא NK'),[[260,420,1]],'e'],['rbc',L('red cell','כדורית אדומה'),[[2400,2880,1]],'o'],['mac',L('tissue macrophage','מקרופאג׳ ברקמה'),[[24*30,24*365*30,.45]],'e'],['naive',L('naive T cell','תא T נאיבי'),[[24*365*5,24*365*10,1]],'a'],['plasma',L('plasma cell','תא פלזמה'),[[24*365*2,24*365*30,.6]],'a']];
+  const col={e:'var(--eosin)',a:'var(--hema)',o:'var(--muted)'};
+  const ticks=[[1,L('1 hour','שעה')],[24,L('1 day','יום')],[168,L('1 week','שבוע')],[720,L('1 month','חודש')],[8760,L('1 year','שנה')],[87600,L('10 years','10 שנים')]];
+  return `<svg class="wide" viewBox="0 0 640 ${46+R.length*28}" role="img" aria-label="${L('How long each blood cell lives, on a log time scale','כמה זמן חי כל תא דם, בסקאלת זמן לוגריתמית')}">
+  ${ticks.map(([h,l])=>`<line x1="${X(h)}" y1="24" x2="${X(h)}" y2="${36+R.length*28}" stroke="var(--line)"/>${t(X(h),16,l,'m')}`).join('')}
+  ${R.map(([k,l,bars,c],i)=>{const y=44+i*28;return `<g class="lrow${sel===k?' on':''}" data-k="${k}"><rect x="0" y="${y-12}" width="640" height="26" fill="${sel===k?'var(--sunk)':'transparent'}"/>${t(140,y+4,l,sel===k?'b':'m','end')}${bars.map(([a,b,o])=>`<rect x="${X(a)}" y="${y-7}" width="${Math.max(6,X(b)-X(a))}" height="14" rx="7" fill="${col[c]}" opacity="${o}"/>`).join('')}</g>`}).join('')}
+ </svg>`},
+
+ trained:()=>`<svg class="wide" viewBox="0 0 640 240" role="img" aria-label="${L('Trained immunity: a faster, stronger second response','חסינות מאומנת: תגובה שנייה מהירה וחזקה יותר')}">
+  <line x1="40" y1="190" x2="620" y2="190" stroke="var(--line)"/>${t(330,214,L('time','זמן'),'m')}
+  <path d="M40 188C70 188 90 150 110 150C130 150 150 188 180 188" fill="none" stroke="var(--hema)" stroke-width="3"/>
+  <path d="M440 188C450 188 460 60 490 60C520 60 550 188 600 188" fill="none" stroke="var(--eosin)" stroke-width="3"/>
+  ${bact(110,120,10)}${t(110,42,L('First encounter','מפגש ראשון'),'b')}${t(110,60,L('modest response','תגובה מתונה'),'m')}
+  ${icon('macrophage',300,140,62)}${t(300,42,L('Rest','מנוחה'),'b')}${t(300,60,L('keeps epigenetic marks','שומר סימנים אפיגנטיים'),'m')}
+  <circle cx="490" cy="40" r="6" fill="var(--bad)"/>${t(498,44,L('even an unrelated pathogen','גם פתוגן לא קשור'),'m','start')}
+  ${t(490,82,L('faster, stronger','מהירה וחזקה יותר'),'b')}
+  <rect x="180" y="226" width="1" height="1" fill="none"/>
+ </svg>`,
+
+ histone:()=>`<svg class="mini" viewBox="0 0 260 120" role="img" aria-label="${L('H3K4me3 keeps a gene open','H3K4me3 משאיר גן פתוח')}">
+  <path d="M10 80C30 50 50 50 60 80S90 110 100 80S130 50 140 80" stroke="var(--hema)" stroke-width="2.5" fill="none"/>${[40,80,120].map(x=>`<circle cx="${x}" cy="80" r="14" fill="var(--hema-soft)" stroke="var(--hema)"/>`).join('')}
+  <line x1="120" y1="66" x2="120" y2="44" stroke="var(--eosin)" stroke-width="2"/><path d="M120 44h22l-6 7l6 7h-22z" fill="var(--eosin)"/>${t(150,36,'H3K4me3','mono','start')}
+  <path d="M140 80H250" stroke="var(--good)" stroke-width="5"/>${t(196,104,L('TNF, IL-6 genes: open','גני TNF, IL-6: פתוחים'),'m')}
+ </svg>`,
+
+ niche:sel=>{const g=(k,body)=>`<g class="nk3${sel===k?' on':''}" data-k="${k}">${body}</g>`;
+  return `<svg class="wide" viewBox="0 0 640 320" role="img" aria-label="${L('The bone marrow niche. Click a part.','הנישה במח העצם. לחצו על רכיב.')}">
+  ${g('vessel',`<rect x="0" y="20" width="640" height="56" rx="0" fill="var(--eosin)" opacity=".25"/>${Array.from({length:16},(_,i)=>`<rect x="${i*40+2}" y="76" width="36" height="10" rx="4" fill="var(--hema-soft)" stroke="var(--hema)" stroke-opacity=".5"/>`).join('')}${t(14,44,L('small blood vessel, lined by endothelial cells','כלי דם קטן, מרופד בתאי אנדותל'),'m','start')}`)}
+  ${g('bone',`<rect x="0" y="262" width="640" height="58" fill="var(--sunk)"/>${Array.from({length:12},(_,i)=>`<line x1="${i*56}" y1="320" x2="${i*56+40}" y2="268" stroke="var(--line)"/>`).join('')}${t(14,308,L('bone','עצם'),'b','start')}`)}
+  ${g('osteoblast',[60,96,132,168].map(x=>`<rect x="${x}" y="244" width="32" height="18" rx="4" fill="var(--good-soft)" stroke="var(--good)"/>`).join('')+t(116,290,L('osteoblasts','אוסטאובלסטים'),'m'))}
+  ${g('osteoclast',`<ellipse cx="560" cy="248" rx="44" ry="16" fill="var(--bad-soft)" stroke="var(--bad)"/>${[540,556,572].map(x=>`<circle cx="${x}" cy="248" r="4" fill="var(--bad)"/>`).join('')}${t(560,290,L('osteoclast','אוסטאוקלסט'),'m')}`)}
+  ${g('stromal',`<path d="M220 110C250 96 290 104 300 120C290 134 250 140 220 128Z" fill="var(--good-soft)" stroke="var(--good)"/>${t(196,112,L('stromal cell','תא סטרומה'),'m','end')}`)}
+  ${g('hsc',`<circle cx="330" cy="170" r="24" fill="var(--good-soft)" stroke="var(--good)" stroke-width="2"/>${t(330,175,'HSC','b')}${t(330,214,'CXCR4 · c-Kit','mono')}`)}
+  ${arrow(290,128,316,150,'var(--good)')}${t(286,150,'CXCL12 · SCF','mono','end')}
+  ${g('macrophage',`${icon('macrophage',150,170,58)}${t(150,214,L('macrophage','מקרופאג׳'),'m')}`)}
+  ${g('mk',`<circle cx="500" cy="160" r="34" fill="var(--hema-soft)" stroke="var(--hema)"/><path d="M486 150q14-12 28 0q-6 12-14 10q-8 2-14-10z" fill="var(--hema)" opacity=".8"/>${t(500,214,L('megakaryocyte','מגהקריוציט'),'m')}${arrow(466,164,358,170,'var(--hema)')}${t(412,156,'TGF-β','mono')}`)}
+ </svg>`},
+
+ transplant:()=>`<svg class="wide" viewBox="0 0 640 230" role="img" aria-label="${L('Autologous and allogeneic stem cell transplants','השתלת תאי גזע עצמית ומתורם')}">
+  ${t(160,22,L('Autologous','עצמית (אוטולוגית)'),'h')}${t(480,22,L('Allogeneic','מתורם (אלוגנאית)'),'h')}
+  ${person(60,110,'var(--hema-soft)','var(--hema)')}${arrow(86,96,124,96)}<rect x="128" y="80" width="26" height="40" rx="6" fill="var(--good-soft)" stroke="var(--good)"/>${t(141,140,L('frozen','מוקפא'),'m')}
+  ${arrow(158,96,196,96)}${person(230,110,'var(--hema-soft)','var(--hema)')}${t(230,140,L('after chemo','אחרי כימו'),'m')}<path d="M196 50l10 14h-8l8 16" stroke="var(--bad)" stroke-width="3" fill="none"/>
+  ${t(160,186,L('the patient\'s own cells come back','התאים של המטופל עצמו חוזרים'),'m')}${t(160,202,L('but may still carry the disease','אבל עלולים לשאת את המחלה'),'m')}
+  <line x1="320" y1="14" x2="320" y2="222" stroke="var(--line)"/>
+  ${person(390,110,'var(--good-soft)','var(--good)')}${t(390,140,L('donor','תורם'),'m')}${arrow(416,96,544,96)}${person(570,110,'var(--hema-soft)','var(--hema)')}${t(570,140,L('patient','מטופל'),'m')}
+  <path d="M384 78l6 10h-12z" fill="var(--good)"/>${t(420,82,'HLA','mono','start')}<rect x="564" y="72" width="12" height="12" fill="var(--hema)"/>${t(536,82,'HLA','mono','end')}
+  ${t(480,186,L('HLA of donor and patient','ה-HLA של התורם והמטופל'),'m')}${t(480,202,L('may not match','עלול לא להתאים'),'m')}
+ </svg>`,
+
+ reject:()=>`<svg class="wide" viewBox="0 0 640 210" role="img" aria-label="${L('Host T cells and NK cells reject donor cells','תאי T ותאי NK של המקבל דוחים את תאי התורם')}">
+  ${icon('tcell',100,90,56)}${t(100,132,L('host CD8 T cell','תא T מסוג CD8 של המקבל'),'m')}
+  <circle cx="230" cy="90" r="34" fill="var(--good-soft)" stroke="var(--good)"/>${t(230,94,L('donor','תורם'),'m')}${[[196,80],[196,100]].map(([x,y])=>`<path d="M${x} ${y-6}l6 12h-12z" fill="var(--good)"/>`).join('')}
+  <line x1="126" y1="90" x2="190" y2="90" stroke="var(--eosin)" stroke-width="4"/>${t(158,80,'TCR','mono')}
+  <rect x="120" y="20" width="96" height="30" rx="15" fill="var(--bad-soft)" stroke="var(--bad)"/>${t(168,40,L('Foreign!','זר!'),'b')}
+  ${t(165,180,L('TCR sees donor HLA as foreign','ה-TCR רואה את HLA התורם כזר'),'m')}
+  <line x1="320" y1="14" x2="320" y2="200" stroke="var(--line)"/>
+  ${icon('nk',420,90,56)}${t(420,132,L('host NK cell','תא NK של המקבל'),'m')}
+  <circle cx="550" cy="90" r="34" fill="var(--good-soft)" stroke="var(--good)"/>${t(550,94,L('donor','תורם'),'m')}${arrow(446,90,512,90,'var(--bad)')}
+  <rect x="430" y="20" width="132" height="30" rx="15" fill="var(--bad-soft)" stroke="var(--bad)"/>${t(496,40,L('Missing self!','עצמי חסר!'),'b')}
+  ${t(485,180,L('no matching self HLA to inhibit it','אין HLA עצמי מתאים שיעכב אותו'),'m')}
+ </svg>`,
+
+ gvhd:n=>{const P=[107,320,533];return `<svg class="wide" viewBox="0 0 640 250" role="img" aria-label="${L('The three steps of graft-versus-host disease','שלושת השלבים של מחלת שתל נגד מאכסן')}">
+  <g opacity="${op(n,1)}">${t(P[0],22,L('1. Tissue damage','1. נזק לרקמה'),'b')}
+   ${[50,82,114,146].map(x=>`<rect x="${x}" y="140" width="28" height="40" rx="6" fill="var(--sunk)" stroke="var(--muted)"/>`).join('')}
+   <path d="M90 48l10 18h-9l9 22" stroke="var(--bad)" stroke-width="3" fill="none"/><path d="M130 48l10 18h-9l9 22" stroke="var(--bad)" stroke-width="3" fill="none"/>
+   ${[[70,116],[110,108],[150,118],[96,126]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="var(--bad)"/>`).join('')}${t(P[0],206,L('danger signals such as TNF','אותות סכנה כמו TNF'),'m')}</g>
+  <g opacity="${op(n,2)}">${t(P[1],22,L('2. T cell activation','2. שפעול תאי T'),'b')}
+   ${icon('dc',270,110,64)}${icon('tcell',346,110,40)}<line x1="296" y1="110" x2="326" y2="110" stroke="var(--eosin)" stroke-width="4"/>
+   ${[[340,160],[360,172],[380,158],[352,186],[374,190]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="9" fill="var(--hema-soft)" stroke="var(--hema)"/>`).join('')}${t(P[1],218,L('donor T cells multiply','תאי T של התורם מתרבים'),'m')}</g>
+  <g opacity="${op(n,3)}">${t(P[2],22,L('3. Attack on tissues','3. תקיפת רקמות'),'b')}
+   ${icon('tcell',470,90,40)}${icon('tcell',500,124,40)}${[[560,80],[592,80],[560,112],[592,112]].map(([x,y])=>`<rect x="${x-14}" y="${y-14}" width="28" height="28" rx="6" fill="var(--sunk)" stroke="var(--muted)"/>`).join('')}${arrow(490,90,540,86,'var(--bad)')}${arrow(520,124,540,114,'var(--bad)')}
+   ${t(P[2],180,L('skin · gut · liver','עור · מעי · כבד'),'b')}</g>
+  <line x1="213" y1="14" x2="213" y2="240" stroke="var(--line)"/><line x1="427" y1="14" x2="427" y2="240" stroke="var(--line)"/>
+ </svg>`}
+};
+
+const L3VIEWS_DEF=[
+ {id:'l3-start',en:'Overview',he:'סקירה'},
+ {id:'l3-complement',en:'1 · Complement',he:'1 · המשלים'},
+ {id:'l3-pathways',en:'2 · Three pathways',he:'2 · שלושה מסלולים'},
+ {id:'l3-blood',en:'3 · Making blood cells',he:'3 · ייצור תאי דם'},
+ {id:'l3-fates',en:'4 · Where cells end up',he:'4 · לאן התאים הולכים'},
+ {id:'l3-choice',en:'5 · Fate, lifespan, training',he:'5 · גורל, אורך חיים, אימון'},
+ {id:'l3-niche',en:'6 · Niche and transplants',he:'6 · נישה והשתלות'},
+ {id:'l3-wrap',en:'7 · Innate immunity: summary',he:'7 · חסינות מולדת: סיכום'},
+ {id:'l3-quiz',en:'Quiz',he:'בוחן'},
+ {id:'l3-cards',en:'Flashcards',he:'כרטיסיות'}
+];
+const l3views=()=>L3VIEWS_DEF.map(v=>({id:v.id,label:LANG==='he'?v.he:v.en}));
+const nb3=i=>nextBar(i,l3views());
+const stepBtns=(id,arr)=>`<div class="steps" id="${id}" role="group">${arr.map((s,i)=>`<button aria-pressed="${i===0}" data-s="${i+1}">${i+1} · ${L(s[0],s[1])}</button>`).join('')}</div>`;
+
+const CLS=[
+ [`C1 binds`,`C1 נקשר`,`C1 is one C1q with two C1r and two C1s. C1q binds the tails (Fc) of two antibodies sitting side by side on the surface. This switches on C1r, and C1r switches on C1s. Free antibody floating in the blood cannot do this: C1q needs at least two tails close together.`,`C1 הוא C1q אחד עם שני C1r ושני C1s. C1q נקשר לזנבות (Fc) של שני נוגדנים שיושבים זה ליד זה על פני השטח. זה מפעיל את C1r, ו-C1r מפעיל את C1s. נוגדן חופשי שצף בדם לא יכול לעשות את זה: C1q צריך לפחות שני זנבות קרובים.`],
+ [`C1s cuts C4`,`C1s חותך את C4`,`The large piece, C4b, attaches to the cell surface. The small piece, C4a, is released.`,`החלק הגדול, C4b, נצמד לפני התא. החלק הקטן, C4a, משתחרר.`],
+ [`C2 joins: the C3 convertase`,`C2 מצטרף: ה-C3 convertase`,`C2 binds C4b and C1s cuts it. C2a stays on C4b and C2b is released. Together C4b and C2a form the C3 convertase, C4b2a. (Some newer texts swap the names and write C4b2b.)`,`C2 נקשר ל-C4b ו-C1s חותך אותו. C2a נשאר על C4b ו-C2b משתחרר. יחד C4b ו-C2a יוצרים את ה-C3 convertase,‏ C4b2a. (בחלק מהספרים החדשים השמות הפוכים וכותבים C4b2b.)`],
+ [`C3 is cut`,`C3 נחתך`,`The C3 convertase cuts many C3 molecules. C3b coats the cell and marks it for phagocytes. C3a is released and promotes inflammation. One C1 makes many convertases, and each cuts hundreds of C3.`,`ה-C3 convertase חותך מולקולות C3 רבות. C3b מצפה את התא ומסמן אותו לפגוציטים. C3a משתחרר ומעודד דלקת. C1 אחד יוצר convertase רבים, וכל אחד חותך מאות C3.`]
+];
+const MACS=[
+ [`C5b, C6, C7`,`C5b, C6, C7`,`C5b, cut from C5 by the C5 convertase, binds C6 and then C7.`,`C5b, שנחתך מ-C5 על ידי ה-C5 convertase, נקשר ל-C6 ואז ל-C7.`],
+ [`Anchoring`,`עיגון`,`With C7 bound, the C5b67 complex becomes fatty enough to anchor in the membrane lipids.`,`כש-C7 קשור, הקומפלקס C5b67 נעשה שומני מספיק כדי להיעגן בשומני הממברנה.`],
+ [`C8`,`C8`,`C8 joins, and part of it is the first protein to enter the membrane.`,`C8 מצטרף, וחלק ממנו הוא החלבון הראשון שנכנס לממברנה.`],
+ [`C9 ring starts`,`טבעת C9 מתחילה`,`C5b-8 recruits C9, and C9 molecules start to form a ring.`,`C5b-8 מגייס C9, ומולקולות C9 מתחילות ליצור טבעת.`],
+ [`The pore`,`הנקבובית`,`Up to eighteen C9 molecules complete a channel about 11 nm wide that lyses the cell. One pore can lyse a red blood cell; nucleated cells can shed pores and need more of them.`,`עד שמונה-עשרה מולקולות C9 משלימות תעלה ברוחב 11 ננומטר בערך שמפרקת את התא. נקבובית אחת יכולה לפרק כדורית דם אדומה; תאים בעלי גרעין יכולים להשיל נקבוביות וצריכים יותר מהן.`]
+];
+const TREE={
+ lt:[`LT-HSC · long-term HSC`,`LT-HSC · תא גזע לטווח ארוך`,`Renews itself for life and can sustain blood production for decades. It rests most of the time (quiescence) and divides only about once every 25–50 weeks in humans. TGF-β helps keep it quiet, which protects its DNA from copying errors.`,`מחדש את עצמו לכל החיים ויכול לקיים ייצור דם במשך עשרות שנים. רוב הזמן הוא במנוחה (quiescence) ומתחלק רק פעם ב-25–50 שבועות בערך אצל בני אדם. TGF-β עוזר לשמור עליו שקט, וכך ה-DNA שלו מוגן משגיאות העתקה.`],
+ st:[`ST-HSC · short-term HSC`,`ST-HSC · תא גזע לטווח קצר`,`Renews itself for a limited time (weeks to months), then becomes an MPP.`,`מחדש את עצמו לזמן מוגבל (שבועות עד חודשים), ואז הופך ל-MPP.`],
+ mpp:[`MPP · multipotent progenitor`,`MPP · תא אב רב-כשרוני`,`Makes every blood lineage but renews itself less than HSCs.`,`מייצר את כל שושלות הדם אבל מחדש את עצמו פחות מתאי הגזע.`],
+ cmp:[`CMP · common myeloid progenitor`,`CMP · תא אב מיאלואידי משותף`,`Makes MEPs and GMPs.`,`מייצר MEP ו-GMP.`],
+ gmlp:[`GMLP · granulocyte, macrophage and lymphoid progenitor`,`GMLP · תא אב לגרנולוציטים, מקרופאג׳ים ולימפוציטים`,`Also called LMPP. Makes GMPs and CLPs, but not red cells or platelets.`,`נקרא גם LMPP. מייצר GMP ו-CLP, אבל לא כדוריות אדומות או טסיות.`],
+ mep:[`MEP · megakaryocyte-erythroid progenitor`,`MEP · תא אב למגהקריוציטים ולאריתרוציטים`,`Makes red cells and platelets (platelets bud off megakaryocytes).`,`מייצר כדוריות אדומות וטסיות (טסיות ננתקות ממגהקריוציטים).`],
+ gmp:[`GMP · granulocyte-macrophage progenitor`,`GMP · תא אב לגרנולוציטים ומקרופאג׳ים`,`Makes granulocytes, monocytes and dendritic cells. GM-CSF drives this branch.`,`מייצר גרנולוציטים, מונוציטים ותאים דנדריטיים. GM-CSF מניע את הענף הזה.`],
+ clp:[`CLP · common lymphoid progenitor`,`CLP · תא אב לימפואידי משותף`,`Makes NK cells, B cells and T cells (and ILCs).`,`מייצר תאי NK, תאי B ותאי T (וגם ILC).`]
+};
+const LIFE={
+ neu:[`Hours to days in blood (estimates range from 5 to 135 hours), 1–2 days in tissue. About 10¹¹ made every day.`,`שעות עד ימים בדם (ההערכות נעות בין 5 ל-135 שעות), 1–2 ימים ברקמה. כ-10¹¹ נוצרים בכל יום.`],
+ eos:[`8–12 hours in blood, 8–12 days in tissue.`,`8–12 שעות בדם, 8–12 ימים ברקמה.`],
+ mono:[`About 1 day in blood (classical monocytes), 4–7 days for other subsets. Then they become macrophages or dendritic cells.`,`כיום אחד בדם (מונוציטים קלאסיים), 4–7 ימים לתת-סוגים אחרים. אחר כך הם הופכים למקרופאג׳ים או לתאים דנדריטיים.`],
+ plt:[`7–10 days. About 10¹¹ made every day.`,`7–10 ימים. כ-10¹¹ נוצרות בכל יום.`],
+ nk:[`About 2 weeks.`,`כשבועיים.`],
+ rbc:[`100–120 days. About 2 × 10¹¹ made every day.`,`100–120 ימים. כ-2 × 10¹¹ נוצרות בכל יום.`],
+ mac:[`Many populations (lung, liver, brain) maintain themselves for life by dividing in place. In the gut and skin, monocytes keep replacing them.`,`אוכלוסיות רבות (ריאה, כבד, מוח) מקיימות את עצמן לכל החיים בחלוקה במקום. במעי ובעור מונוציטים מחליפים אותן כל הזמן.`],
+ naive:[`Has not yet met its antigen. Lives years, about 5–10 years in human labelling studies. Thymic output falls with age. Memory T cell populations stay stable because division balances death.`,`עוד לא פגש את האנטיגן שלו. חי שנים, כ-5–10 שנים במחקרי סימון בבני אדם. תפוקת התימוס יורדת עם הגיל. אוכלוסיות תאי T זיכרון נשארות יציבות כי החלוקה מאזנת את המוות.`],
+ plasma:[`Long-lived antibody-making cell. Lives for years, even decades, in bone marrow niches (more later in the course).`,`תא ארוך חיים שמייצר נוגדנים. חי שנים, אפילו עשרות שנים, בנישות במח העצם (נרחיב בהמשך הקורס).`]
+};
+const NICHE={
+ vessel:[`Blood vessels and endothelial cells`,`כלי דם ותאי אנדותל`,`The main HSC niche is around small blood vessels. Endothelial cells make the key niche factors CXCL12 and SCF.`,`הנישה העיקרית של תאי הגזע נמצאת סביב כלי דם קטנים. תאי האנדותל מייצרים את גורמי הנישה המרכזיים CXCL12 ו-SCF.`],
+ stromal:[`Perivascular stromal cells`,`תאי סטרומה סביב כלי הדם`,`They make CXCL12 (also called SDF-1) and stem cell factor (SCF). CXCL12 binds CXCR4 and SCF binds c-Kit on the HSC. Both keep HSCs in the marrow and maintain them; deleting CXCL12 or CXCR4 empties the marrow of HSCs.`,`הם מייצרים CXCL12 (שנקרא גם SDF-1) ו-stem cell factor ‏(SCF). CXCL12 נקשר ל-CXCR4 ו-SCF נקשר ל-c-Kit על תא הגזע. שניהם שומרים את תאי הגזע במח העצם ומקיימים אותם; מחיקה של CXCL12 או CXCR4 מרוקנת את מח העצם מתאי גזע.`],
+ hsc:[`The HSC`,`תא הגזע`,`Carries CXCR4 and c-Kit to receive the niche signals. It mostly rests (quiescence).`,`נושא CXCR4 ו-c-Kit כדי לקלוט את אותות הנישה. רוב הזמן הוא במנוחה (quiescence).`],
+ bone:[`Bone`,`עצם`,`HSCs live in the marrow inside bones, next to the bone surface.`,`תאי הגזע חיים במח שבתוך העצמות, ליד פני העצם.`],
+ osteoblast:[`Osteoblasts`,`אוסטאובלסטים`,`Bone-building cells. They release osteopontin, which limits HSC numbers, and they support lymphoid progenitors. They do not maintain HSCs through CXCL12 or SCF.`,`תאים שבונים עצם. הם משחררים אוסטאופונטין, שמגביל את מספר תאי הגזע, ותומכים בתאי אב לימפואידיים. הם לא מקיימים את תאי הגזע דרך CXCL12 או SCF.`],
+ osteoclast:[`Osteoclast`,`אוסטאוקלסט`,`A bone-resorbing cell on the inner bone surface.`,`תא שמפרק עצם על פני העצם הפנימיים.`],
+ macrophage:[`Bone marrow macrophages`,`מקרופאג׳ים של מח העצם`,`Help keep HSCs in the marrow.`,`עוזרים לשמור את תאי הגזע במח העצם.`],
+ mk:[`Megakaryocytes`,`מגהקריוציטים`,`Quiet HSCs sit next to megakaryocytes. Their TGF-β (and CXCL4) helps return HSCs to rest after stress.`,`תאי גזע שקטים יושבים ליד מגהקריוציטים. ה-TGF-β שלהם (וגם CXCL4) עוזר להחזיר את תאי הגזע למנוחה אחרי עקה.`]
+};
+const GVH=[[`Tissue damage`,`נזק לרקמה`,`Conditioning, the irradiation or chemotherapy given before the transplant, damages the patient's tissues, most of all the gut lining. The damaged tissues release danger signals such as TNF.`,`ההכנה (conditioning), ההקרנה או הכימותרפיה שניתנות לפני ההשתלה, פוגעת ברקמות של המטופל, ובעיקר בדופן המעי. הרקמות הפגועות משחררות אותות סכנה כמו TNF.`],
+ [`T cell activation`,`שפעול תאי T`,`The danger signals switch on the patient's own antigen presenting cells. They carry the patient's HLA, which differs from the donor's. Donor CD4 T cells see it through HLA class II, donor CD8 T cells through HLA class I, and they multiply.`,`אותות הסכנה משפעלים את התאים מציגי האנטיגן של המטופל עצמו. הם נושאים את ה-HLA של המטופל, ששונה משל התורם. תאי T מסוג CD4 של התורם מזהים אותו דרך HLA מסוג II, ותאי T מסוג CD8 דרך HLA מסוג I, והם מתרבים.`],
+ [`Attack on tissues`,`תקיפת רקמות`,`Activated donor T cells and their cytokines attack the patient's tissues, mainly the skin, gut and liver. This is graft-versus-host disease.`,`תאי T משופעלים של התורם והציטוקינים שלהם תוקפים את רקמות המטופל, בעיקר עור, מעי וכבד. זו מחלת שתל נגד מאכסן.`]];
+const TFS=[
+ [`Myeloid vs red cells`,`מיאלואידי מול אדום`,'PU.1 ⊣ GATA1',`PU.1 binds GATA1 and blocks the megakaryocyte-erythroid fate (red cells and platelets). Higher PU.1 activity favours monocytes.`,`PU.1 נקשר ל-GATA1 וחוסם את הגורל המגהקריוציטי-אריתרואידי (כדוריות אדומות וטסיות). פעילות גבוהה יותר של PU.1 מעדיפה מונוציטים.`],
+ [`Granulocyte vs monocyte`,`גרנולוציט מול מונוציט`,'C/EBPα',`C/EBPα directs the progenitor to the granulocyte-monocyte stage; mice without it have no neutrophils. Granulocytes need less PU.1 activity than monocytes.`,`C/EBPα מכוון את תא האב לשלב הגרנולוציט-מונוציט; לעכברים בלעדיו אין נויטרופילים. גרנולוציטים צריכים פחות פעילות של PU.1 ממונוציטים.`],
+ [`Eosinophils`,`אאוזינופילים`,'GATA1 · GATA2 · IL-5',`GATA1 is essential for eosinophil commitment, and GATA2 alone can instruct it. Blocking IL-5 suppresses eosinophil maturation.`,`GATA1 חיוני להתחייבות לאאוזינופיל, ו-GATA2 לבדו יכול לכוון אליו. חסימת IL-5 מדכאת את הבשלת האאוזינופילים.`],
+ [`B cells`,`תאי B`,'E2A → EBF1 → Pax5',`E2A, EBF1 and Pax5 drive the B cell programme. Pax5 locks in B cell identity.`,`E2A, ‏EBF1 ו-Pax5 מניעים את תוכנית תאי ה-B. Pax5 נועל את הזהות של תא B.`],
+ [`T cells`,`תאי T`,'Notch → GATA3 · TCF1',`Notch receptor signals in the thymus switch on GATA3 and TCF1, which start the T cell programme. Notch also blocks B cell development there. (Notch is a receptor, not a transcription factor.)`,`אותות מקולטן Notch בתימוס מפעילים את GATA3 ו-TCF1, שמתחילים את תוכנית תאי ה-T. Notch גם חוסם שם התפתחות של תאי B. (Notch הוא קולטן, לא פקטור שעתוק.)`],
+ [`NK cells and ILCs`,`תאי NK ו-ILC`,'Id2 · Nfil3 → T-bet / GATA3 / RORγt',`Id2 and Nfil3 come first, then T-bet, GATA3 or RORγt: the same factors that define the helper T cell subsets.`,`Id2 ו-Nfil3 באים קודם, ואחריהם T-bet,‏ GATA3 או RORγt: אותם פקטורים שמגדירים את תת-סוגי תאי ה-T המסייעים.`]
+];
+
+const R3={};
+R3['l3-start']=()=>`
+<section class="view">
+  <div class="hero">
+    <div class="stack">
+      <span class="eyebrow">${L('Basic Immunology 027604130 · Lecture 3 · 17.11.2026','אימונולוגיה בסיסית 027604130 · הרצאה 3 · 17.11.2026')}</span>
+      <h1>${L('Complement, and where immune cells come from','המשלים, ומאיפה באים תאי החיסון')}</h1>
+      <p class="lead">${L('The first part finishes the killing mechanisms with complement. The second part goes back to the beginning: how blood stem cells make every immune cell, where those cells live, how long they last, and what happens when we transplant them. The lecture ends with a summary of innate immunity.','החלק הראשון משלים את מנגנוני ההרג עם המשלים. החלק השני חוזר להתחלה: איך תאי גזע של הדם מייצרים כל תא חיסון, איפה התאים האלה חיים, כמה זמן הם מחזיקים ומה קורה כשמשתילים אותם. ההרצאה מסתיימת בסיכום של החסינות המולדת.')}</p>
+      <div class="howto"><a class="btn primary" href="#l3-complement">${L('Start chapter 1 →','להתחיל את פרק 1 ←')}</a><a class="btn" href="#l3-quiz">${L('Jump to quiz','ישר לבוחן')}</a></div>
+    </div>
+    <div class="smear" aria-hidden="true"><svg viewBox="0 0 300 300">
+      <circle cx="150" cy="150" r="40" fill="var(--good-soft)" stroke="var(--good)" stroke-width="3"/><text x="150" y="157" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="20" font-weight="600" fill="var(--good)">HSC</text>
+      <g transform="translate(20,20) scale(.75)">${CELLSVG.neutrophil.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(200,25) scale(.7)">${CELLSVG.monocyte.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(210,200) scale(.7)">${CELLSVG.nk.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <g transform="translate(25,205) scale(.7)">${CELLSVG.tcell.replace(/<\/?svg[^>]*>/g,'')}</g>
+      <circle cx="150" cy="40" r="14" fill="var(--bad)" opacity=".7"/><circle cx="150" cy="262" r="10" fill="var(--hema)" opacity=".5"/>
+    </svg></div>
+  </div>
+  <div class="callout pink stack">
+    <h3>${L('The whole lecture in six sentences','כל ההרצאה בשישה משפטים')}</h3>
+    ${[[`Complement is a cascade of blood proteins that tags pathogens for phagocytes (C3b), calls in inflammation (C3a, C5a) and punches holes in them (the membrane attack complex).`,`המשלים הוא מפל של חלבוני דם שמסמן פתוגנים לפגוציטים (C3b), מזמין דלקת (C3a,‏ C5a) ומנקב בהם חורים (קומפלקס התקיפה של הממברנה).`],
+       [`Three pathways start it: classical (antibodies), lectin (sugars) and alternative (always on, amplifies the others). All three build a C3 convertase and then share every step.`,`שלושה מסלולים מפעילים אותו: הקלאסי (נוגדנים), הלקטין (סוכרים) והחלופי (פעיל תמיד ומגביר את האחרים). שלושתם בונים C3 convertase ומשם עוברים את אותם שלבים.`],
+       [`All blood cells come from hematopoietic stem cells in the bone marrow, through myeloid and lymphoid progenitors. Transcription factors decide each fate.`,`כל תאי הדם באים מתאי גזע המטופויטיים במח העצם, דרך תאי אב מיאלואידיים ולימפואידיים. פקטורי שעתוק מכריעים את הגורל של כל תא.`],
+       [`Innate cells live hours to days and are replaced constantly; lymphocytes live years; many tissue macrophages renew themselves in place, and they can be "trained".`,`תאים מולדים חיים שעות עד ימים ומוחלפים כל הזמן; לימפוציטים חיים שנים; מקרופאג׳ים רבים ברקמות מחדשים את עצמם במקום, ואפשר "לאמן" אותם.`],
+       [`Stem cells live in a niche around blood vessels that keeps them quiet and in place (CXCL12–CXCR4, SCF–c-Kit).`,`תאי גזע חיים בנישה סביב כלי דם שמשאירה אותם שקטים ובמקום (CXCL12–CXCR4,‏ SCF–c-Kit).`],
+       [`In a transplant from a donor, the host can reject the graft and the graft can attack the host (GVHD), so HLA matching matters.`,`בהשתלה מתורם, המקבל יכול לדחות את השתל והשתל יכול לתקוף את המקבל (GVHD), ולכן התאמת HLA חשובה.`]].map((s,i)=>`<p>${i+1}. ${L(s[0],s[1])}</p>`).join('')}
+  </div>
+  ${nb3(0)}
+</section>`;
+
+R3['l3-complement']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 1 · slides 2–8','פרק 1 · שקופיות 2–8')}</span><h2>${L('Complement: CDC','המשלים: CDC')}</h2>
+  <p class="lead">${L('Complement-dependent cytotoxicity (CDC) is the third innate killing mechanism, after cell death and ADCC. Complement is a set of blood proteins that switch each other on in a cascade.','ציטוטוקסיות תלוית משלים (CDC) היא מנגנון ההרג המולד השלישי, אחרי מוות תאי ו-ADCC. המשלים הוא קבוצה של חלבוני דם שמפעילים זה את זה במפל.')}</p></div>
+  <div class="grid g3">
+    <div class="card stack"><span class="pill inn">1</span><h3>${L('Opsonisation','אופסוניזציה')}</h3><p>${L('Makes phagocytosis easier by coating the pathogen.','מקלה על פגוציטוזה בכך שהיא מצפה את הפתוגן.')}</p></div>
+    <div class="card stack"><span class="pill inn">2</span><h3>${L('Inflammation','דלקת')}</h3><p>${L('Increases inflammation by boosting immune cell activity.','מגבירה דלקת בכך שהיא מחזקת את פעילות תאי החיסון.')}</p></div>
+    <div class="card stack"><span class="pill inn">3</span><h3>${L('Lysis','ליזיס')}</h3><p>${L('Punches holes in the pathogen\'s membrane.','מנקבת חורים בממברנה של הפתוגן.')}</p></div>
+  </div>
+  ${fig(FIG3.adcccdc(),L('Both start with antibodies on the target. In ADCC an NK cell grabs the antibody tail; in CDC the bound antibodies switch on complement.','שניהם מתחילים בנוגדנים על המטרה. ב-ADCC תא NK נאחז בזנב הנוגדן; ב-CDC הנוגדנים הקשורים מפעילים את המשלים.'))}
+  <div class="card stack"><h3>${L('The classical pathway, step by step','המסלול הקלאסי, שלב אחרי שלב')}</h3>
+    <p>${L('Triggered by antibodies bound to antigens on a surface.','מופעל על ידי נוגדנים שקשורים לאנטיגנים על פני שטח.')}</p>
+    ${stepBtns('clsteps',CLS)}<div id="clfig"></div><p id="cltext" aria-live="polite"></p>
+    <details class="reveal"><summary>${L('More: C1q and lupus','הרחבה: C1q וזאבת')}</summary><p>${L('C1q also binds C-reactive protein and the surface of dying cells directly, so this pathway is older than antibodies. People who lack C1q almost always get lupus (C4 or C2 deficiency less often): immune complexes and debris from dying cells are not cleared and become targets of autoimmunity.','C1q נקשר גם ל-C-reactive protein ולפני השטח של תאים גוססים באופן ישיר, ולכן המסלול הזה עתיק יותר מהנוגדנים. אנשים שחסר להם C1q כמעט תמיד חולים בזאבת (חסר ב-C4 או C2 פחות): קומפלקסים חיסוניים ושאריות של תאים מתים לא מפונים והופכים למטרות של אוטואימוניות.')}</p></details>
+  </div>
+  <div class="stack"><h3>${L('After C3: the three outcomes','אחרי C3: שלוש התוצאות')}</h3>
+    <p>${L('When one more C3b joins the C3 convertase, it becomes the <b>C5 convertase</b>. It cuts C5 into C5a and C5b. C3a and C5a are called <b>anaphylatoxins</b>.','כש-C3b נוסף מצטרף ל-C3 convertase, הוא הופך ל<b>C5 convertase</b>. הוא חותך את C5 ל-C5a ול-C5b. ‏C3a ו-C5a נקראים <b>אנפילטוקסינים</b>.')}</p>
+    ${fig(FIG3.outcomes())}</div>
+  <div class="card stack"><h3>${L('Lysis: building the membrane attack complex (MAC)','ליזיס: בניית קומפלקס התקיפה של הממברנה (MAC)')}</h3>
+    ${stepBtns('macsteps',MACS)}<div id="macfig"></div><p id="mactext" aria-live="polite"></p>
+    <p style="color:var(--muted)">${L('Low levels of MAC on our own cells can trigger signalling instead of death.','רמות נמוכות של MAC על התאים שלנו יכולות להפעיל איתות במקום מוות.')}</p></div>
+  ${nb3(1)}
+</section>`;
+
+R3['l3-pathways']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 2 · slides 9–14','פרק 2 · שקופיות 9–14')}</span><h2>${L('Three ways to start complement','שלוש דרכים להפעיל את המשלים')}</h2>
+  <p class="lead">${L('Each pathway has its own trigger. All three build a C3 convertase, and from that point they share every step.','לכל מסלול יש מפעיל משלו. שלושתם בונים C3 convertase, ומשם הם עוברים את אותם שלבים בדיוק.')}</p></div>
+  <div class="card stack"><h3>${L('The lectin pathway: sugars instead of antibodies','מסלול הלקטין: סוכרים במקום נוגדנים')}</h3>
+    ${fig(FIG3.lectin())}
+    <ul class="clean">
+      <li>${L('Three families of blood proteins start it: <b>mannose-binding lectin (MBL)</b>, <b>ficolins</b> 1–3 and <b>collectins</b> 10 and 11. Each has collagen stalks like C1q and heads that bind sugars on pathogens.','שלוש משפחות של חלבוני דם מפעילות אותו: <b>mannose-binding lectin ‏(MBL)</b>, <b>פיקולינים</b> 1–3 ו<b>קולקטינים</b> 10 ו-11. לכל אחד יש גבעולי קולגן כמו ל-C1q וראשים שקושרים סוכרים על פני פתוגנים.')}</li>
+      <li>${L('Each carries <b>MASPs</b> (MBL-associated serine proteases), which switch on when the heads bind. MASP-1 activates itself and then MASP-2; MASP-2 cuts C4; both cut C2.','כל אחד נושא <b>MASP</b> (פרוטאזות סרין שקשורות ל-MBL), שמופעלים כשהראשים נקשרים. MASP-1 מפעיל את עצמו ואז את MASP-2; ‏MASP-2 חותך את C4; שניהם חותכים את C2.')}</li>
+      <li>${L('The result is <b>C4b2a</b>, the same C3 convertase as the classical pathway. It works early in infection, before any antibodies exist. MBL is an acute-phase protein made by the liver.','התוצאה היא <b>C4b2a</b>, אותו C3 convertase כמו במסלול הקלאסי. הוא פועל מוקדם בזיהום, לפני שיש נוגדנים. MBL הוא חלבון של השלב החריף שמיוצר בכבד.')}</li>
+    </ul>
+    <p style="color:var(--muted)">${L('Children with low levels of lectin pathway proteins can have recurrent infections.','לילדים עם רמות נמוכות של חלבוני מסלול הלקטין עלולים להיות זיהומים חוזרים.')}</p></div>
+  <div class="card stack"><h3>${L('The alternative pathway: always on, kept in check','המסלול החלופי: תמיד פעיל, ונשמר בשליטה')}</h3>
+    <p>${L('A little C3 is always active in the blood ("tickover": C3 slowly reacts with water and acts like C3b). So complement checks every surface without waiting for antibodies or sugar recognition. What happens next depends on the surface. Switch between a pathogen and one of our own cells.','קצת C3 תמיד פעיל בדם ("tickover": ‏C3 מגיב לאט עם מים ומתנהג כמו C3b). כך המשלים בודק כל משטח בלי לחכות לנוגדנים או לזיהוי סוכרים. מה שקורה אחר כך תלוי במשטח. החליפו בין פתוגן לבין תא שלנו.')}</p>
+    ${seg('altseg',[['pathogen',L('On a pathogen','על פתוגן')],['host',L('On our own cell','על תא שלנו')]])}
+    <div id="altfig"></div><p id="alttext" aria-live="polite"></p></div>
+  <div class="stack"><h3>${L('The amplification loop','לולאת ההגברה')}</h3>
+    ${fig(FIG3.loop(),L('Every C3b on a surface can bind factor B and become a new convertase, so each convertase makes more. C3b from the classical and lectin pathways enters the same loop: whichever pathway starts it, most of the C3b on a target (80–90% of C5 activation in experiments) comes from this loop.','כל C3b על משטח יכול לקשור פקטור B ולהפוך ל-convertase חדש, כך שכל convertase מייצר עוד. C3b מהמסלול הקלאסי ומסלול הלקטין נכנס לאותה לולאה: לא משנה איזה מסלול מתחיל, רוב ה-C3b על המטרה (80–90% משפעול C5 בניסויים) מגיע מהלולאה הזו.'))}</div>
+  <div class="card stack"><h3>${L('Summary: pick a pathway','סיכום: בחרו מסלול')}</h3>
+    ${seg('sumseg',[['all',L('All','הכול')],['cl',L('Classical','קלאסי')],['le',L('Lectin','לקטין')],['al',L('Alternative','חלופי')]])}
+    <div id="sumfig"></div></div>
+  ${nb3(2)}
+</section>`;
+
+R3['l3-blood']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 3 · slides 16–20, 27–28','פרק 3 · שקופיות 16–20, 27–28')}</span><h2>${L('Making blood cells: hematopoiesis','ייצור תאי דם: המטופויאזיס')}</h2>
+  <p class="lead">${L('Most immune cells live only days, so the body has to keep making them. All of them come from hematopoietic stem cells (HSCs) in the bone marrow.','רוב תאי החיסון חיים רק ימים, ולכן הגוף צריך לייצר אותם כל הזמן. כולם באים מתאי גזע המטופויטיים (HSC) במח העצם.')}</p></div>
+  <div class="grid g2">
+    <div class="card stack"><span class="pill live">${L('stem cell','תא גזע')}</span><h3>${L('Stem cells','תאי גזע')}</h3><p>${L('Unspecialised cells that renew themselves and also give rise to specialised cells. The first stem cells form during embryonic development.','תאים לא ממוינים שמחדשים את עצמם וגם יוצרים תאים ממוינים. תאי הגזע הראשונים נוצרים בזמן ההתפתחות העוברית.')}</p></div>
+    <div class="card stack"><span class="pill inn">${L('progenitor','תא אב')}</span><h3>${L('Progenitors','תאי אב')}</h3><p>${L('Come from stem cells. More specialised, renew themselves less, can make fewer cell types, and run out within weeks after a transplant.','באים מתאי גזע. ממוינים יותר, מחדשים את עצמם פחות, יכולים לייצר פחות סוגי תאים, ואוזלים תוך שבועות אחרי השתלה.')}</p></div>
+  </div>
+  ${fig(FIG3.division())}
+  <div class="card stack"><h3>${L('The family tree: click a progenitor','עץ המשפחה: לחצו על תא אב')}</h3>
+    <div id="treefig"></div><div class="callout" id="treetext" aria-live="polite"></div>
+    <p style="color:var(--muted)">${L('Newer single-cell studies show that many progenitors are mixtures, so the tree is a simplification.','מחקרים חדשים ברמת התא הבודד מראים שתאי אב רבים הם תערובות, כך שהעץ הוא פישוט.')}</p></div>
+  <div class="grid g2">
+    <div class="callout"><b>${L('Why rest?','למה לנוח?')}</b> ${L('Every division copies DNA and risks a mutation. A stem cell that divided all the time would collect errors over a lifetime. Staying quiet means fewer copies, fewer mistakes, and a reserve that stays reliable for decades.','כל חלוקה מעתיקה DNA ומסתכנת במוטציה. תא גזע שהיה מתחלק כל הזמן היה צובר שגיאות לאורך החיים. שקט פירושו פחות העתקות, פחות טעויות, ומאגר שנשאר אמין לעשרות שנים.')}</div>
+    <div class="callout pink"><b>${L('Collecting stem cells.','איסוף תאי גזע.')}</b> ${L('G-CSF lowers CXCL12 in the bone marrow, which releases HSCs into the blood. This is how stem cells are collected from donors.','G-CSF מוריד את CXCL12 במח העצם, וזה משחרר תאי גזע לדם. כך אוספים תאי גזע מתורמים.')}</div>
+  </div>
+  ${nb3(3)}
+</section>`;
+
+R3['l3-fates']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 4 · slides 21–26','פרק 4 · שקופיות 21–26')}</span><h2>${L('Where cells end up','לאן התאים מגיעים')}</h2></div>
+  <div class="stack"><h3>${L('Where tissue macrophages come from','מאיפה באים המקרופאג׳ים שברקמות')}</h3>${fig(FIG3.macorigin())}</div>
+  <div class="stack"><h3>${L('Each tissue has its own macrophage','לכל רקמה יש מקרופאג׳ משלה')}</h3>
+  ${tbl([L('Macrophage','מקרופאג׳'),L('Tissue','רקמה'),L('Special jobs','תפקידים מיוחדים'),L('Renewal','התחדשות')],[
+    [L('Kupffer cells','תאי קופפר'),L('liver','כבד'),L('filter blood coming from the gut, remove bacteria and old red cells, recycle iron from haem, make IL-10 (tolerance)','מסננים דם שמגיע מהמעי, מפנים חיידקים וכדוריות אדומות זקנות, ממחזרים ברזל מהם, מייצרים IL-10 (סבילות)'),L('self-renew','מתחדשים בעצמם')],
+    [L('Alveolar macrophages','מקרופאג׳ים של נאדיות הריאה'),L('lung','ריאה'),L('clear inhaled dust and pathogens, recycle surfactant, keep tolerance to inhaled allergens, respond only above a high threshold','מפנים אבק ופתוגנים שנשאפו, ממחזרים סורפקטנט, שומרים על סבילות לאלרגנים שנשאפים, מגיבים רק מעל סף גבוה'),L('self-renew','מתחדשים בעצמם')],
+    [L('Microglia','מיקרוגליה'),L('brain and spinal cord','מוח וחוט שדרה'),L('prune weak synapses tagged with C1q and C3, clear dead neurons, survey the brain with moving processes','גוזמים סינפסות חלשות שמסומנות ב-C1q וב-C3, מפנים נוירונים מתים, סורקים את המוח בשלוחות נעות'),L('self-renew (from the yolk sac)','מתחדשים בעצמם (משק החלמון)')],
+    [L('Langerhans cells','תאי לנגרהנס'),L('epidermis','אפידרמיס'),L('catch antigen through langerin and carry it to lymph nodes, keep tolerance to the skin microbiome','לוכדים אנטיגן דרך לנגרין ומביאים אותו לבלוטות הלימפה, שומרים על סבילות למיקרוביום של העור'),L('not stated in the slides','לא מצוין בשקפים')],
+    [L('Red pulp macrophages','מקרופאג׳ים של העיסה האדומה'),L('spleen','טחול'),L('recycle iron from old red cells','ממחזרים ברזל מכדוריות אדומות זקנות'),L('self-renew','מתחדשים בעצמם')],
+    [L('Dermal macrophages','מקרופאג׳ים של הדרמיס'),L('dermis','דרמיס'),L('survey wounds, eat pathogens and debris, recruit other immune cells after injury','סורקים פצעים, בולעים פתוגנים ושאריות, מגייסים תאי חיסון אחרים אחרי פציעה'),L('replaced by monocytes','מוחלפים ממונוציטים')],
+    [L('Gut macrophages','מקרופאג׳ים של המעי'),L('lamina propria','למינה פרופריה'),L('clear bacteria that cross the gut lining while keeping inflammation low, help maintain the crypts','מפנים חיידקים שחוצים את דופן המעי ושומרים על דלקת נמוכה, עוזרים לתחזק את הקריפטות'),L('replaced by monocytes','מוחלפים ממונוציטים')]])}</div>
+  <div class="stack"><h3>${L('The lymphoid side','הצד הלימפואידי')}</h3>${fig(FIG3.lymph(),L('T cells mature in the thymus. During this training the thymus removes T cells that would react against the body\'s own tissues; the rest leave ready to protect the body.','תאי T מבשילים בתימוס. במהלך האימון הזה התימוס מסלק תאי T שהיו מגיבים נגד רקמות הגוף; השאר יוצאים מוכנים להגן על הגוף.'))}</div>
+  <div class="grid g2">
+    <div class="card stack"><span class="pill">ILC</span><h3>${L('Innate lymphoid cells stay in tissues','תאים לימפואידיים מולדים נשארים ברקמות')}</h3><p>${L('They live mostly inside tissues, especially at barrier surfaces such as the gut lining. When the tissue is infected or injured, they release cytokines that direct the immune response there.','הם חיים בעיקר בתוך רקמות, במיוחד במחסומים כמו דופן המעי. כשהרקמה נגועה או פגועה, הם משחררים ציטוקינים שמכוונים את התגובה החיסונית שם.')}</p></div>
+    <div class="card stack"><span class="pill">NK</span><h3>${L('NK cells patrol the body','תאי NK מסיירים בגוף')}</h3><p>${L('They circulate in the blood and also settle in the spleen, liver and lungs. They kill infected, cancerous and stressed cells.','הם נעים בדם וגם מתיישבים בטחול, בכבד ובריאות. הם הורגים תאים נגועים, סרטניים ותאים בעקה.')}</p></div>
+  </div>
+  <div class="stack"><h3>${L('Where lymphocytes go after development','לאן לימפוציטים הולכים אחרי ההתפתחות')}</h3>
+  ${tbl([L('Cell','תא'),L('Made in','נוצר ב'),L('Settles in','מתיישב ב')],[
+    [L('B cell','תא B'),L('bone marrow','מח העצם'),L('lymph nodes, spleen','בלוטות לימפה, טחול')],
+    [L('T cell','תא T'),L('matures in the thymus','מבשיל בתימוס'),L('lymph nodes, spleen, and many stay in tissues throughout the body','בלוטות לימפה, טחול, ורבים נשארים ברקמות בכל הגוף')],
+    [L('NK cell','תא NK'),L('bone marrow','מח העצם'),L('blood, spleen, liver, lungs','דם, טחול, כבד, ריאות')]])}</div>
+  ${nb3(4)}
+</section>`;
+
+R3['l3-choice']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 5 · slides 29–32','פרק 5 · שקופיות 29–32')}</span><h2>${L('Fate, lifespan and training','גורל, אורך חיים ואימון')}</h2></div>
+  <div class="stack"><h3>${L('Lineage choice is written by transcription factors','בחירת השושלת נכתבת על ידי פקטורי שעתוק')}</h3>
+  <div class="grid g3">${TFS.map(f=>`<div class="card stack"><h3>${L(f[0],f[1])}</h3><span class="tfchip">${f[2]}</span><p>${L(f[3],f[4])}</p></div>`).join('')}</div></div>
+  <div class="card stack"><h3>${L('How long each cell lives','כמה זמן חי כל תא')}</h3>
+    <p>${L('Click a row. The time scale is logarithmic: each step to the right is about ten times longer. Pink is innate, purple is lymphocytes, grey is other blood cells. Faded bars are ranges or the blood phase.','לחצו על שורה. סקאלת הזמן לוגריתמית: כל צעד ימינה ארוך פי עשרה בערך. ורוד הוא מולד, סגול הוא לימפוציטים, אפור הוא תאי דם אחרים. פסים דהויים הם טווחים או השלב בדם.')}</p>
+    <div id="lifefig"></div><div class="callout" id="lifetext" aria-live="polite"></div>
+    <p><b>${L('Innate cells live hours to days and are replaced constantly. Lymphocytes live years.','תאים מולדים חיים שעות עד ימים ומוחלפים כל הזמן. לימפוציטים חיים שנים.')}</b> ${L('Why do tissue macrophages renew themselves while neutrophils don\'t? Macrophages stay in their tissue for life and maintain themselves locally; neutrophils are short-lived by design, so the marrow does the replacing.','למה מקרופאג׳ים ברקמות מחדשים את עצמם ונויטרופילים לא? המקרופאג׳ים נשארים ברקמה שלהם לכל החיים ומתחזקים את עצמם במקום; נויטרופילים קצרי חיים מלכתחילה, ולכן מח העצם הוא שמחליף אותם.')}</p></div>
+  <div class="card stack"><h3>${L('Trained immunity: an innate "memory"','חסינות מאומנת: "זיכרון" מולד')}</h3>
+    ${fig(FIG3.trained())}
+    <div class="grid g2" style="align-items:center">
+      <p>${L('After a first pathogen, a macrophage rests but keeps <b>epigenetic marks</b>: chemical tags on DNA and on the histone proteins that package it. The DNA sequence does not change. A later encounter, even with an unrelated pathogen, gets a faster and stronger response. Example: training human monocytes with beta-glucan from the fungus Candida raises the mark H3K4me3 at the TNF and IL-6 genes, keeping them open for at least a week.','אחרי פתוגן ראשון, המקרופאג׳ נח אבל שומר <b>סימנים אפיגנטיים</b>: תגים כימיים על ה-DNA ועל חלבוני ההיסטון שאורזים אותו. רצף ה-DNA לא משתנה. מפגש מאוחר יותר, אפילו עם פתוגן לא קשור, מקבל תגובה מהירה וחזקה יותר. דוגמה: אימון מונוציטים אנושיים עם בטא-גלוקן מהפטרייה Candida מעלה את הסימן H3K4me3 בגנים של TNF ו-IL-6, ומשאיר אותם פתוחים לפחות שבוע.')}</p>
+      ${FIG3.histone()}</div>
+    <div class="grid g2">
+      <div class="callout"><b>${L('Compared with adaptive memory','בהשוואה לזיכרון הנרכש')}</b> ${L('Trained immunity is less specific and shorter: at least 3 months, up to about a year. Some stimuli make the second response weaker instead.','חסינות מאומנת פחות ספציפית וקצרה יותר: לפחות 3 חודשים, עד שנה בערך. חלק מהגירויים דווקא מחלישים את התגובה השנייה.')}</div>
+      <div class="callout pink"><b>${L('How can it last months if monocytes live days?','איך זה מחזיק חודשים אם מונוציטים חיים ימים?')}</b> ${L('Training can reach the long-lived stem and progenitor cells in the bone marrow, which keep producing trained monocytes. Long-lived tissue macrophages can also stay trained themselves.','האימון יכול להגיע לתאי הגזע ותאי האב ארוכי החיים במח העצם, שממשיכים לייצר מונוציטים מאומנים. גם מקרופאג׳ים ארוכי חיים ברקמות יכולים להישאר מאומנים בעצמם.')}</div>
+    </div></div>
+  ${nb3(5)}
+</section>`;
+
+R3['l3-niche']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 6 · slides 34–42','פרק 6 · שקופיות 34–42')}</span><h2>${L('The stem cell niche and transplantation','הנישה של תאי הגזע והשתלות')}</h2></div>
+  <div class="card stack"><h3>${L('The bone marrow niche: click a part','הנישה במח העצם: לחצו על רכיב')}</h3>
+    <div id="nichefig"></div><div class="callout" id="nichetext" aria-live="polite"></div></div>
+  <div class="stack"><h3>${L('HSC markers','סמנים של תאי גזע')}</h3><p>${L('Markers are surface molecules that let us find and sort HSCs.','סמנים הם מולקולות על פני התא שמאפשרות למצוא ולמיין תאי גזע.')}</p>
+  ${tbl([L('Marker','סמן'),L('What it tells us','מה הוא אומר')],[
+    ['CD34',L('human stem and progenitor cells; used to count transplant grafts (minimum about 2 million CD34⁺ cells per kg of the recipient)','תאי גזע ותאי אב של האדם; משמש לספירת שתלים (מינימום של כ-2 מיליון תאי CD34⁺ לכל ק״ג של המקבל)')],
+    ['c-Kit (CD117)',L('the receptor for stem cell factor (SCF)','הקולטן ל-stem cell factor ‏(SCF)')],
+    ['CXCR4',L('binds CXCL12 (SDF-1); losing either empties the marrow of HSCs','נקשר ל-CXCL12 ‏(SDF-1); אובדן של אחד מהם מרוקן את מח העצם מתאי גזע')],
+    ['Lin⁻',L('no markers of mature blood cells','בלי סמנים של תאי דם בוגרים')],
+    ['Sca-1',L('mouse only; mouse HSCs are Lin⁻ Sca-1⁺ c-Kit⁺ ("LSK")','רק בעכבר; תאי הגזע בעכבר הם Lin⁻ Sca-1⁺ c-Kit⁺ ‏("LSK")')]])}</div>
+  <div class="stack"><h3>${L('Stem cell transplantation','השתלת תאי גזע')}</h3>
+    ${fig(FIG3.transplant(),L('HLA (human leukocyte antigen) is the human MHC. It is the most variable set of genes in the human genome, and matching it is the main criterion for choosing a donor. Fewer than 30% of patients have an HLA-matched sibling. SCF and other cytokines can support HSCs in culture.','HLA ‏(human leukocyte antigen) הוא ה-MHC של האדם. זו קבוצת הגנים המגוונת ביותר בגנום האנושי, והתאמה שלה היא הקריטריון העיקרי לבחירת תורם. לפחות מ-30% מהמטופלים יש אח או אחות עם HLA תואם. SCF וציטוקינים אחרים יכולים לתמוך בתאי גזע בתרבית.'))}</div>
+  <div class="stack"><h3>${L('Rejection: the host attacks the graft','דחייה: המקבל תוקף את השתל')}</h3>
+    ${fig(FIG3.reject(),L('Conditioning does not remove every host immune cell. Surviving host T cells are the main rejecters: their TCRs see donor HLA as foreign. Host NK cells can also kill donor stem cells, mainly when HLA is mismatched. Rejection can happen even with matched HLA, through minor histocompatibility antigens.','ההכנה לא מסלקת כל תא חיסון של המקבל. תאי T של המקבל ששרדו הם הדוחים העיקריים: ה-TCR שלהם רואה את HLA התורם כזר. גם תאי NK של המקבל יכולים להרוג תאי גזע של התורם, בעיקר כשה-HLA לא תואם. דחייה יכולה לקרות גם עם HLA תואם, דרך אנטיגנים מינוריים של התאמת רקמות.'))}</div>
+  <div class="card stack"><h3>${L('Graft-versus-host disease (GVHD): the graft attacks the host','מחלת שתל נגד מאכסן (GVHD): השתל תוקף את המקבל')}</h3>
+    ${stepBtns('gvsteps',GVH)}<div id="gvfig"></div><p id="gvtext" aria-live="polite"></p>
+    <div class="callout"><b>${L('Prevention.','מניעה.')}</b> ${L('HLA-matched donors, removing T cells from the graft (selecting CD34⁺ cells does this too), and immunosuppressants such as cyclosporine and methotrexate.','תורמים עם HLA תואם, סילוק תאי T מהשתל (גם בחירת תאי CD34⁺ עושה זאת), ותרופות מדכאות חיסון כמו ציקלוספורין ומתוטרקסט.')}</div></div>
+  ${nb3(6)}
+</section>`;
+
+R3['l3-wrap']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Chapter 7 · slides 43–45','פרק 7 · שקופיות 43–45')}</span><h2>${L('Innate immunity: putting it together','חסינות מולדת: מחברים את הכול')}</h2>
+  <p class="lead">${L('This closes the innate part of the course. The two arms solve the same problem in opposite ways.','זה סוגר את החלק המולד של הקורס. שתי הזרועות פותרות את אותה בעיה בדרכים הפוכות.')}</p></div>
+  <div class="cmp" data-focus="both">
+    <div class="cmprow head"><div class="k"></div><div class="c i">${L('Innate','מולדת')}</div><div class="c a">${L('Adaptive','נרכשת')}</div></div>
+    ${[[L('Receptors','קולטנים'),L('PRRs, the same on every cell of a type','PRR, זהים בכל התאים מאותו סוג'),L('TCR or BCR, different on each lymphocyte','TCR או BCR, שונה בכל לימפוציט')],
+       [L('Recognition','זיהוי'),L('shared patterns of pathogens (PAMPs) and damage (DAMPs)','תבניות משותפות של פתוגנים (PAMP) ושל נזק (DAMP)'),L('one exact molecule, the antigen','מולקולה אחת מדויקת, האנטיגן')],
+       [L('Speed','מהירות'),L('minutes to hours','דקות עד שעות'),L('4–7 days after a first exposure, because the few matching cells must multiply','4–7 ימים אחרי חשיפה ראשונה, כי התאים המעטים שמתאימים צריכים להתרבות')],
+       [L('Memory','זיכרון'),L('no antigen-specific memory (trained immunity gives non-specific readiness)','אין זיכרון ספציפי לאנטיגן (חסינות מאומנת נותנת מוכנות לא ספציפית)'),L('memory cells give a faster, stronger second response','תאי זיכרון נותנים תגובה שנייה מהירה וחזקה יותר')],
+       [L('Self vs non-self','עצמי מול זר'),L('built into the receptors, which bind what the body does not have','בנוי לתוך הקולטנים, שקושרים את מה שאין בגוף'),L('learned, by removing or suppressing self-reactive lymphocytes','נלמד, בסילוק או בדיכוי של לימפוציטים שמגיבים לעצמי')]].map(r=>`<div class="cmprow"><div class="k">${r[0]}</div><div class="c i">${r[1]}</div><div class="c a">${r[2]}</div></div>`).join('')}
+  </div>
+  <div class="stack"><h3>${L('A layered defence: each layer buys time','הגנה בשכבות: כל שכבה קונה זמן')}</h3>
+    <div class="layers">
+      <div class="layer"><span class="eyebrow">${L('0 – 4 hours','0–4 שעות')}</span><h4>${L('Barriers and ready-made effectors','מחסומים ואפקטורים מוכנים')}</h4><p>${L('Skin, mucosa, complement and resident macrophages act at once, with nothing to induce.','עור, רירית, משלים ומקרופאג׳ים שוכני רקמה פועלים מיד, בלי שצריך להשרות כלום.')}</p></div>
+      <div class="layer"><span class="eyebrow">${L('4 hours – 4 days','4 שעות – 4 ימים')}</span><h4>${L('Induced innate response','תגובה מולדת מושרית')}</h4><p>${L('PRRs sense the pathogen, cytokines call in neutrophils, monocytes and NK cells, and inflammation begins.','PRR חשים את הפתוגן, ציטוקינים מזמינים נויטרופילים, מונוציטים ותאי NK, והדלקת מתחילה.')}</p></div>
+      <div class="layer"><span class="eyebrow">${L('4 days – weeks','4 ימים – שבועות')}</span><h4>${L('Adaptive response','תגובה נרכשת')}</h4><p>${L('The few matching lymphocytes multiply, then T cells and antibodies clear the pathogen and memory remains.','הלימפוציטים המעטים שמתאימים מתרבים, ואז תאי T ונוגדנים מסלקים את הפתוגן ונשאר זיכרון.')}</p></div>
+    </div>
+    <p><b>${L('Many pathogens are stopped by the two innate layers before the adaptive response is needed.','פתוגנים רבים נעצרים בשתי השכבות המולדות לפני שצריך את התגובה הנרכשת.')}</b></p></div>
+  <div class="stack"><h3>${L('Innate detects, adaptive directs, both execute','המולדת מזהה, הנרכשת מכוונת, שתיהן מבצעות')}</h3>
+    ${fig(FIG.coop())}
+    <ol class="steps-list">${[[`Fast and fixed`,`מהירה וקבועה`,`The same receptors on every cell read shared patterns of pathogens and of damage.`,`אותם קולטנים בכל תא קוראים תבניות משותפות של פתוגנים ושל נזק.`],[`Decides kill or spare`,`מחליטה להרוג או לחוס`,`For example NK cells checking for missing self. It kills by phagocytosis, cell death and complement.`,`למשל תאי NK שבודקים עצמי חסר. היא הורגת בפגוציטוזה, במוות תאי ובמשלים.`],[`Holds the line`,`מחזיקה את הקו`,`For days, and tells the adaptive arm what to respond to.`,`במשך ימים, ואומרת לזרוע הנרכשת למה להגיב.`],[`Both arms execute`,`שתי הזרועות מבצעות`,`NK cells and CD8 T cells kill infected cells, and antibodies recruit innate effectors (complement, ADCC).`,`תאי NK ותאי T מסוג CD8 הורגים תאים נגועים, ונוגדנים מגייסים אפקטורים מולדים (משלים, ADCC).`]].map(s=>`<li><b>${L(s[0],s[1])}</b><span>${L(s[2],s[3])}</span></li>`).join('')}</ol></div>
+  ${nb3(7)}
+</section>`;
+
+R3['l3-quiz']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Practice · exam style','תרגול · בסגנון המבחן')}</span><h2>${L('Quiz','בוחן')}</h2>
+  <p class="lead">${L(`${L3QUIZ.length} multiple-choice questions on lecture 3, in random order. Each answer shows an explanation.`,`${L3QUIZ.length} שאלות אמריקאיות על הרצאה 3, בסדר אקראי. אחרי כל תשובה מופיע הסבר.`)}</p></div>
+  <div class="card stack qcard" id="qcard"></div>
+  ${nb3(8)}
+</section>`;
+
+R3['l3-cards']=()=>`
+<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Practice · terms','תרגול · מונחים')}</span><h2>${L('Flashcards','כרטיסיות')}</h2><p class="lead">${L('Tap the card to flip. Use the arrow keys or buttons to move.','לחצו על הכרטיס כדי להפוך אותו. אפשר לעבור בין כרטיסים בכפתורים או במקשי החצים.')}</p></div>
+  <button class="flip" id="flip" aria-label="${L('Flip card','הפיכת הכרטיס')}"><div class="flip-inner"><div class="face"><span class="eyebrow" id="fcn"></span><span class="term" id="fct"></span><span style="color:var(--muted)">${L('tap to reveal','לחצו כדי לראות')}</span></div><div class="face back"><p id="fcd" style="font-size:1.15rem"></p></div></div></button>
+  <div class="fcnav"><button class="btn" id="fcprev">${L('← Prev','→ הקודם')}</button><button class="btn" id="fcshuf">${L('Shuffle','ערבוב')}</button><button class="btn primary" id="fcnext">${L('Next →','הבא ←')}</button></div>
+  <div class="stack"><h3>${L('Glossary','מילון מונחים')}</h3><label for="glossq" class="eyebrow">${L('Search terms','חיפוש מונחים')}</label><input id="glossq" type="search" placeholder="${L('e.g. C3b, MAC, HSC','למשל C3b, MAC, HSC')}"><div class="gloss" id="gloss"></div></div>
+  ${nb3(9)}
+</section>`;
+
+const INIT3={
+ 'l3-complement'(){const sc=n=>{document.querySelectorAll('#clsteps button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.s===n));$('#clfig').innerHTML=fig(FIG3.classical(n));const s=CLS[n-1];$('#cltext').innerHTML=`<b>${L(s[0],s[1])}.</b> ${L(s[2],s[3])}`;};
+   $('#clsteps').onclick=e=>{const b=e.target.closest('button');if(b)sc(+b.dataset.s)};sc(1);
+   const sm=n=>{document.querySelectorAll('#macsteps button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.s===n));$('#macfig').innerHTML=fig(FIG3.mac(n));const s=MACS[n-1];$('#mactext').innerHTML=`<b>${L(s[0],s[1])}.</b> ${L(s[2],s[3])}`;};
+   $('#macsteps').onclick=e=>{const b=e.target.closest('button');if(b)sm(+b.dataset.s)};sm(1);},
+ 'l3-pathways'(){const sa=k=>{segOn('altseg',k);$('#altfig').innerHTML=fig(FIG3.alt(k));$('#alttext').innerHTML=k==='host'?L('<b>Our own cell.</b> Factor H binds C3b with help from sialic acid and heparan sulfate on our cells. It pushes factor B away and helps factor I cut C3b into inactive iC3b. Our cells also carry membrane regulators (MCP, DAF, CR1). The loop stops.','<b>תא שלנו.</b> פקטור H נקשר ל-C3b בעזרת חומצה סיאלית והפרן סולפט שעל התאים שלנו. הוא דוחק את פקטור B ועוזר לפקטור I לחתוך את C3b ל-iC3b לא פעיל. על התאים שלנו יש גם מווסתים בממברנה (MCP,‏ DAF,‏ CR1). הלולאה נעצרת.'):L('<b>A pathogen.</b> Pathogens lack the host molecules that hold factor H, so factor B wins. Factor D cuts it, Bb stays, and properdin stabilises the C3bBb convertase five- to tenfold (alone it lasts about 90 seconds). More C3b coats the pathogen. Like pattern recognition receptors, this is another way innate immunity tells self from non-self.','<b>פתוגן.</b> לפתוגנים חסרות מולקולות המאכסן שמחזיקות את פקטור H, ולכן פקטור B מנצח. פקטור D חותך אותו, Bb נשאר, ופרופרדין מייצב את ה-convertase ‏C3bBb פי חמישה עד עשרה (לבד הוא מחזיק כ-90 שניות). עוד C3b מצפה את הפתוגן. כמו הקולטנים לזיהוי תבניות, זו עוד דרך שבה החסינות המולדת מבחינה בין עצמי לזר.');};
+   $('#altseg').onclick=e=>{const b=e.target.closest('button');if(b)sa(b.dataset.k)};sa('pathogen');
+   const ss=k=>{segOn('sumseg',k);$('#sumfig').innerHTML=fig(FIG3.summary(k));};$('#sumseg').onclick=e=>{const b=e.target.closest('button');if(b)ss(b.dataset.k)};ss('all');},
+ 'l3-blood'(){const st=k=>{$('#treefig').innerHTML=fig(FIG3.tree(k));const d=TREE[k];$('#treetext').innerHTML=`<b>${L(d[0],d[1])}.</b> ${L(d[2],d[3])}`;document.querySelectorAll('.tnode').forEach(g=>g.onclick=()=>st(g.dataset.n));};st('lt');},
+ 'l3-choice'(){const sl=k=>{$('#lifefig').innerHTML=fig(FIG3.life(k));$('#lifetext').textContent=L(LIFE[k][0],LIFE[k][1]);document.querySelectorAll('.lrow').forEach(g=>g.onclick=()=>sl(g.dataset.k));};sl('neu');},
+ 'l3-niche'(){const sn=k=>{$('#nichefig').innerHTML=fig(FIG3.niche(k));const d=NICHE[k];$('#nichetext').innerHTML=`<b>${L(d[0],d[1])}.</b> ${L(d[2],d[3])}`;document.querySelectorAll('.nk3').forEach(g=>g.onclick=()=>sn(g.dataset.k));};sn('stromal');
+   const sg=n=>{document.querySelectorAll('#gvsteps button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.s===n));$('#gvfig').innerHTML=fig(FIG3.gvhd(n));const s=GVH[n-1];$('#gvtext').innerHTML=`<b>${L(s[0],s[1])}.</b> ${L(s[2],s[3])}`;};
+   $('#gvsteps').onclick=e=>{const b=e.target.closest('button');if(b)sg(+b.dataset.s)};sg(1);},
+ 'l3-quiz'(){QZ=l3quiz();QKEY='imm3-best';quizStart();},
+ 'l3-cards'(){GL=l3gloss();FC=GL.map((_,i)=>i);fi=0;fcInit();}
+};
+
+const L3QUIZ=[
+ {q:[`Which is NOT one of the three functions of complement?`,`מה מהבאים אינו אחד משלושת התפקידים של המשלים?`],o:[[`Opsonisation`,`אופסוניזציה`],[`Inflammation`,`דלקת`],[`Lysis`,`ליזיס`],[`Antibody production`,`ייצור נוגדנים`]],a:3,e:[`Complement opsonises (C3b), promotes inflammation (C3a, C5a) and lyses (MAC). Antibodies are made by B cells.`,`המשלים מבצע אופסוניזציה (C3b), מקדם דלקת (C3a,‏ C5a) ומפרק (MAC). נוגדנים מיוצרים על ידי תאי B.`]},
+ {q:[`What triggers the classical pathway?`,`מה מפעיל את המסלול הקלאסי?`],o:[[`Sugars on the pathogen surface`,`סוכרים על פני הפתוגן`],[`Antibodies bound to antigen on a surface`,`נוגדנים שקשורים לאנטיגן על פני שטח`],[`Spontaneous C3 tickover`,`tickover ספונטני של C3`],[`Histamine`,`היסטמין`]],a:1,e:[`C1q binds the Fc tails of at least two antibodies close together on a surface.`,`C1q נקשר לזנבות Fc של לפחות שני נוגדנים קרובים על פני שטח.`]},
+ {q:[`Why doesn't free antibody floating in the blood switch on C1?`,`למה נוגדן חופשי שצף בדם לא מפעיל את C1?`],o:[[`C1q needs at least two antibody tails close together on a surface`,`C1q צריך לפחות שני זנבות נוגדן קרובים על פני שטח`],[`Free antibodies have no Fc tail`,`לנוגדנים חופשיים אין זנב Fc`],[`C1 is only found inside cells`,`C1 נמצא רק בתוך תאים`],[`Factor H blocks it`,`פקטור H חוסם אותו`]],a:0,e:[`This makes the pathway fire only where antibodies have actually bound a target.`,`כך המסלול מופעל רק במקום שבו נוגדנים באמת נקשרו למטרה.`]},
+ {q:[`In the classical pathway, which enzyme cuts C4 and C2?`,`במסלול הקלאסי, איזה אנזים חותך את C4 ואת C2?`],o:[[`C1q`,`C1q`],[`C1r`,`C1r`],[`C1s`,`C1s`],[`Factor D`,`פקטור D`]],a:2,e:[`C1q binds antibodies, C1r switches on C1s, and C1s cuts C4 and then C2.`,`C1q נקשר לנוגדנים, C1r מפעיל את C1s, ו-C1s חותך את C4 ואחר כך את C2.`]},
+ {q:[`What is the classical (and lectin) C3 convertase?`,`מהו ה-C3 convertase של המסלול הקלאסי (ושל מסלול הלקטין)?`],o:[[`C3bBb`,`C3bBb`],[`C4b2a`,`C4b2a`],[`C5b-9`,`C5b-9`],[`C1qrs`,`C1qrs`]],a:1,e:[`C4b2a. The alternative pathway makes C3bBb. Some newer texts call the classical one C4b2b.`,`C4b2a. המסלול החלופי יוצר C3bBb. בחלק מהספרים החדשים קוראים לקלאסי C4b2b.`]},
+ {q:[`What does C3b do?`,`מה C3b עושה?`],o:[[`It is released and causes inflammation`,`הוא משתחרר וגורם לדלקת`],[`It coats the cell and marks it for phagocytes`,`הוא מצפה את התא ומסמן אותו לפגוציטים`],[`It forms the pore`,`הוא יוצר את הנקבובית`],[`It blocks factor B`,`הוא חוסם את פקטור B`]],a:1,e:[`C3b is the opsonin. C3a is the small piece that leaves and promotes inflammation.`,`C3b הוא האופסונין. C3a הוא החלק הקטן שעוזב ומקדם דלקת.`]},
+ {q:[`How is the C5 convertase formed?`,`איך נוצר ה-C5 convertase?`],o:[[`C1q binds C5`,`C1q נקשר ל-C5`],[`One more C3b joins a C3 convertase`,`C3b נוסף מצטרף ל-C3 convertase`],[`MASP-2 cuts C5 directly`,`MASP-2 חותך את C5 ישירות`],[`C9 forms a ring`,`C9 יוצר טבעת`]],a:1,e:[`The C5 convertase cuts C5 into C5a (inflammation) and C5b (starts the MAC).`,`ה-C5 convertase חותך את C5 ל-C5a (דלקת) ול-C5b (מתחיל את ה-MAC).`]},
+ {q:[`C3a and C5a are called anaphylatoxins because they…`,`C3a ו-C5a נקראים אנפילטוקסינים כי הם…`],o:[[`Kill bacteria directly`,`הורגים חיידקים ישירות`],[`Make mast cells and basophils release histamine`,`גורמים לתאי פיטום ולבזופילים לשחרר היסטמין`],[`Coat the pathogen`,`מצפים את הפתוגן`],[`Form the MAC`,`יוצרים את ה-MAC`]],a:1,e:[`Histamine widens blood vessels. C5a also attracts neutrophils.`,`היסטמין מרחיב כלי דם. C5a גם מושך נויטרופילים.`]},
+ {q:[`Which components form the membrane attack complex?`,`אילו רכיבים יוצרים את קומפלקס התקיפה של הממברנה?`],o:[[`C1q, C1r, C1s`,`C1q, C1r, C1s`],[`C3a and C5a`,`C3a ו-C5a`],[`C5b, C6, C7, C8 and C9`,`C5b, C6, C7, C8 ו-C9`],[`Factor B and factor D`,`פקטור B ופקטור D`]],a:2,e:[`C5b-9. Up to 18 C9 molecules complete a pore about 11 nm wide.`,`C5b-9. עד 18 מולקולות C9 משלימות נקבובית ברוחב 11 ננומטר בערך.`]},
+ {q:[`Which MAC component is the first to enter the membrane?`,`איזה רכיב של ה-MAC נכנס ראשון לממברנה?`],o:[[`C5b`,`C5b`],[`C6`,`C6`],[`C8`,`C8`],[`C3b`,`C3b`]],a:2,e:[`C5b67 anchors in the membrane lipids, then part of C8 is the first protein to penetrate it.`,`C5b67 נעגן בשומני הממברנה, ואז חלק מ-C8 הוא החלבון הראשון שחודר אליה.`]},
+ {q:[`Which molecules start the lectin pathway?`,`אילו מולקולות מתחילות את מסלול הלקטין?`],o:[[`Antibodies`,`נוגדנים`],[`MBL, ficolins and collectins`,`MBL, פיקולינים וקולקטינים`],[`Factor H and factor I`,`פקטור H ופקטור I`],[`TLRs`,`TLR`]],a:1,e:[`They bind sugars on pathogens and carry MASP enzymes on collagen stalks, like C1q carries C1r and C1s.`,`הם קושרים סוכרים על פתוגנים ונושאים אנזימי MASP על גבעולי קולגן, כמו ש-C1q נושא את C1r ו-C1s.`]},
+ {q:[`In the lectin pathway, which enzyme cuts C4?`,`במסלול הלקטין, איזה אנזים חותך את C4?`],o:[[`MASP-2`,`MASP-2`],[`C1s`,`C1s`],[`Factor D`,`פקטור D`],[`Properdin`,`פרופרדין`]],a:0,e:[`MASP-1 activates itself and then MASP-2. MASP-2 cuts C4; both cut C2. The result is C4b2a.`,`MASP-1 מפעיל את עצמו ואז את MASP-2. ‏MASP-2 חותך את C4; שניהם חותכים את C2. התוצאה היא C4b2a.`]},
+ {q:[`What keeps the alternative pathway running all the time at a low level?`,`מה שומר על המסלול החלופי פעיל כל הזמן ברמה נמוכה?`],o:[[`Tickover: C3 slowly reacts with water`,`tickover: ‏C3 מגיב לאט עם מים`],[`Antibodies in the blood`,`נוגדנים בדם`],[`Mannose on our cells`,`מנוז על התאים שלנו`],[`Histamine`,`היסטמין`]],a:0,e:[`C3(H2O) acts like C3b, so every surface is checked without waiting for antibodies or sugars.`,`C3(H2O) מתנהג כמו C3b, ולכן כל משטח נבדק בלי לחכות לנוגדנים או לסוכרים.`]},
+ {q:[`In the alternative pathway, what does factor D do?`,`במסלול החלופי, מה פקטור D עושה?`],o:[[`Binds C3b`,`נקשר ל-C3b`],[`Cuts factor B bound to C3b into Ba and Bb`,`חותך את פקטור B שקשור ל-C3b ל-Ba ול-Bb`],[`Destroys C3b`,`הורס את C3b`],[`Forms the pore`,`יוצר את הנקבובית`]],a:1,e:[`Ba leaves and Bb stays. C3bBb is the alternative C3 convertase.`,`Ba עוזב ו-Bb נשאר. ‏C3bBb הוא ה-C3 convertase החלופי.`]},
+ {q:[`What does properdin do?`,`מה פרופרדין עושה?`],o:[[`Cuts C3b`,`חותך את C3b`],[`Stabilises the C3bBb convertase`,`מייצב את ה-convertase ‏C3bBb`],[`Binds sugars`,`קושר סוכרים`],[`Blocks factor B`,`חוסם את פקטור B`]],a:1,e:[`Alone C3bBb lasts about 90 seconds; properdin makes it last five to ten times longer.`,`לבד C3bBb מחזיק כ-90 שניות; פרופרדין מאריך את זה פי חמישה עד עשרה.`]},
+ {q:[`Why doesn't the alternative pathway destroy our own cells?`,`למה המסלול החלופי לא הורס את התאים שלנו?`],o:[[`Our cells have no C3`,`לתאים שלנו אין C3`],[`Factor H, helped by sialic acid on our cells, displaces factor B and helps factor I inactivate C3b`,`פקטור H, בעזרת חומצה סיאלית שעל התאים שלנו, דוחק את פקטור B ועוזר לפקטור I לנטרל את C3b`],[`Our cells make antibodies against complement`,`התאים שלנו מייצרים נוגדנים נגד המשלים`],[`Properdin only binds pathogens`,`פרופרדין נקשר רק לפתוגנים`]],a:1,e:[`Pathogens lack the host molecules that hold factor H, so factor B wins there.`,`לפתוגנים חסרות מולקולות המאכסן שמחזיקות את פקטור H, ולכן שם פקטור B מנצח.`]},
+ {q:[`Why is the alternative pathway called the amplifier of the other two?`,`למה המסלול החלופי נקרא המגביר של שני האחרים?`],o:[[`It makes antibodies`,`הוא מייצר נוגדנים`],[`Every C3b, from any pathway, can build a new C3bBb convertase that makes more C3b`,`כל C3b, מכל מסלול, יכול לבנות convertase חדש של C3bBb שמייצר עוד C3b`],[`It works only after the classical pathway ends`,`הוא פועל רק אחרי שהמסלול הקלאסי נגמר`],[`It activates C1q`,`הוא משפעל את C1q`]],a:1,e:[`Most of the C3b on a target comes from this loop, whichever pathway started it.`,`רוב ה-C3b על המטרה מגיע מהלולאה הזו, לא משנה איזה מסלול התחיל.`]},
+ {q:[`Deficiency of which complement protein almost always causes lupus?`,`חסר באיזה חלבון משלים כמעט תמיד גורם לזאבת?`],o:[[`C3`,`C3`],[`C9`,`C9`],[`C1q`,`C1q`],[`Factor B`,`פקטור B`]],a:2,e:[`Without C1q, immune complexes and debris from dying cells are not cleared and become targets of autoimmunity.`,`בלי C1q, קומפלקסים חיסוניים ושאריות של תאים מתים לא מפונים והופכים למטרות של אוטואימוניות.`]},
+ {q:[`An asymmetric stem cell division gives…`,`חלוקה א-סימטרית של תא גזע נותנת…`],o:[[`Two stem cells`,`שני תאי גזע`],[`Two progenitors`,`שני תאי אב`],[`One stem cell and one progenitor`,`תא גזע אחד ותא אב אחד`],[`Two mature cells`,`שני תאים בוגרים`]],a:2,e:[`Symmetric divisions give two identical daughters: both stem cells or both progenitors.`,`חלוקות סימטריות נותנות שתי בנות זהות: שני תאי גזע או שני תאי אב.`]},
+ {q:[`Which progenitor makes red cells and platelets?`,`איזה תא אב מייצר כדוריות אדומות וטסיות?`],o:[[`GMP`,`GMP`],[`MEP`,`MEP`],[`CLP`,`CLP`],[`GMLP`,`GMLP`]],a:1,e:[`MEP = megakaryocyte-erythroid progenitor. GMP makes granulocytes, monocytes and DCs; CLP makes lymphocytes.`,`MEP = תא אב למגהקריוציטים ולאריתרוציטים. GMP מייצר גרנולוציטים, מונוציטים ו-DC; ‏CLP מייצר לימפוציטים.`]},
+ {q:[`Why do long-term HSCs divide only about once every 25–50 weeks?`,`למה תאי גזע לטווח ארוך מתחלקים רק פעם ב-25–50 שבועות בערך?`],o:[[`They lack nutrients`,`חסרים להם חומרי מזון`],[`Resting protects their DNA from copying errors`,`המנוחה מגינה על ה-DNA שלהם משגיאות העתקה`],[`They are already dead`,`הם כבר מתים`],[`The niche has no space`,`אין מקום בנישה`]],a:1,e:[`Fewer divisions mean fewer mutations, so the reserve stays reliable for decades. TGF-β helps keep them quiet.`,`פחות חלוקות פירושן פחות מוטציות, ולכן המאגר נשאר אמין לעשרות שנים. TGF-β עוזר לשמור עליהם שקטים.`]},
+ {q:[`Where do microglia in the brain come from?`,`מאיפה באים המיקרוגליה במוח?`],o:[[`Blood monocytes throughout life`,`ממונוציטים בדם לאורך החיים`],[`Yolk sac progenitors before birth; they renew themselves`,`מתאי אב של שק החלמון לפני הלידה; הם מחדשים את עצמם`],[`The thymus`,`מהתימוס`],[`Lymph nodes`,`מבלוטות הלימפה`]],a:1,e:[`Gut and skin macrophages, by contrast, are constantly replaced by blood monocytes.`,`מקרופאג׳ים של המעי והעור, לעומת זאת, מוחלפים כל הזמן במונוציטים מהדם.`]},
+ {q:[`Where do T cells mature?`,`איפה תאי T מבשילים?`],o:[[`Bone marrow`,`במח העצם`],[`Thymus`,`בתימוס`],[`Spleen`,`בטחול`],[`Liver`,`בכבד`]],a:1,e:[`There the thymus removes T cells that would react against the body. NK, B and ILCs develop in the bone marrow.`,`שם התימוס מסלק תאי T שהיו מגיבים נגד הגוף. NK, ‏B ו-ILC מתפתחים במח העצם.`]},
+ {q:[`Which transcription factor locks in B cell identity?`,`איזה פקטור שעתוק נועל את הזהות של תא B?`],o:[[`PU.1`,`PU.1`],[`GATA1`,`GATA1`],[`Pax5`,`Pax5`],[`T-bet`,`T-bet`]],a:2,e:[`E2A and EBF1 start the B cell programme; Pax5 locks it in.`,`E2A ו-EBF1 מתחילים את תוכנית תאי ה-B; ‏Pax5 נועל אותה.`]},
+ {q:[`Which signal in the thymus starts the T cell programme?`,`איזה אות בתימוס מתחיל את תוכנית תאי ה-T?`],o:[[`Notch receptor signalling`,`איתות דרך הקולטן Notch`],[`IL-5`,`IL-5`],[`C/EBPα`,`C/EBPα`],[`G-CSF`,`G-CSF`]],a:0,e:[`Notch switches on GATA3 and TCF1 and blocks B cell development there.`,`Notch מפעיל את GATA3 ו-TCF1 וחוסם שם התפתחות של תאי B.`]},
+ {q:[`Which cell lives the longest?`,`איזה תא חי הכי הרבה זמן?`],o:[[`Neutrophil`,`נויטרופיל`],[`Red blood cell`,`כדורית דם אדומה`],[`Naive T cell`,`תא T נאיבי`],[`NK cell`,`תא NK`]],a:2,e:[`Naive T cells live years (5–10 in human studies). Red cells 100–120 days, NK cells about 2 weeks, neutrophils hours to days.`,`תאי T נאיביים חיים שנים (5–10 במחקרים בבני אדם). כדוריות אדומות 100–120 ימים, תאי NK כשבועיים, נויטרופילים שעות עד ימים.`]},
+ {q:[`What is trained immunity?`,`מהי חסינות מאומנת?`],o:[[`Antibody memory`,`זיכרון של נוגדנים`],[`Epigenetic marks that let innate cells respond faster and stronger to a later, even unrelated, pathogen`,`סימנים אפיגנטיים שמאפשרים לתאים מולדים להגיב מהר וחזק יותר לפתוגן מאוחר יותר, גם לא קשור`],[`A mutation in macrophage DNA`,`מוטציה ב-DNA של מקרופאג׳`],[`T cell training in the thymus`,`אימון של תאי T בתימוס`]],a:1,e:[`The DNA sequence does not change. It lasts months, up to about a year, and is less specific than adaptive memory.`,`רצף ה-DNA לא משתנה. זה נמשך חודשים, עד שנה בערך, ופחות ספציפי מזיכרון נרכש.`]},
+ {q:[`Which signal pairs keep HSCs in the bone marrow niche?`,`אילו זוגות אותות שומרים את תאי הגזע בנישה במח העצם?`],o:[[`CXCL12–CXCR4 and SCF–c-Kit`,`CXCL12–CXCR4 ו-SCF–c-Kit`],[`IL-5–IL-5R and GATA1`,`IL-5–IL-5R ו-GATA1`],[`CD47–SIRPα`,`CD47–SIRPα`],[`TNF–TNFR1`,`TNF–TNFR1`]],a:0,e:[`Perivascular stromal and endothelial cells make CXCL12 and SCF. Deleting CXCL12 or CXCR4 empties the marrow of HSCs.`,`תאי סטרומה סביב כלי הדם ותאי אנדותל מייצרים CXCL12 ו-SCF. מחיקה של CXCL12 או CXCR4 מרוקנת את מח העצם מתאי גזע.`]},
+ {q:[`Which marker is used to count human stem cells in a transplant graft?`,`באיזה סמן משתמשים כדי לספור תאי גזע אנושיים בשתל?`],o:[[`CD34`,`CD34`],[`Sca-1`,`Sca-1`],[`CD16`,`CD16`],[`CD45 only`,`רק CD45`]],a:0,e:[`The accepted minimum is about 2 million CD34⁺ cells per kg. Sca-1 is a mouse marker.`,`המינימום המקובל הוא כ-2 מיליון תאי CD34⁺ לכל ק״ג. Sca-1 הוא סמן של עכבר.`]},
+ {q:[`What is the main risk of an autologous transplant?`,`מה הסיכון העיקרי בהשתלה עצמית (אוטולוגית)?`],o:[[`GVHD`,`GVHD`],[`HLA mismatch`,`אי-התאמת HLA`],[`The collected cells may still carry the disease`,`התאים שנאספו עלולים עדיין לשאת את המחלה`],[`NK cell rejection`,`דחייה על ידי תאי NK`]],a:2,e:[`The patient's own cells come back after high-dose chemotherapy, so there is no HLA mismatch.`,`התאים של המטופל עצמו חוזרים אחרי כימותרפיה במינון גבוה, ולכן אין אי-התאמת HLA.`]},
+ {q:[`In GVHD, who attacks whom?`,`ב-GVHD, מי תוקף את מי?`],o:[[`Host T cells attack the graft`,`תאי T של המקבל תוקפים את השתל`],[`Donor T cells attack the patient's tissues`,`תאי T של התורם תוקפים את רקמות המטופל`],[`Antibodies attack red cells`,`נוגדנים תוקפים כדוריות אדומות`],[`Complement attacks the graft`,`המשלים תוקף את השתל`]],a:1,e:[`Mainly skin, gut and liver. Host cells attacking the graft is rejection.`,`בעיקר עור, מעי וכבד. כשתאי המקבל תוקפים את השתל, זו דחייה.`]},
+ {q:[`How does conditioning contribute to GVHD?`,`איך ההכנה (conditioning) תורמת ל-GVHD?`],o:[[`It kills donor T cells`,`היא הורגת את תאי ה-T של התורם`],[`Damaged tissue releases danger signals (e.g. TNF) that switch on host APCs`,`רקמה פגועה משחררת אותות סכנה (למשל TNF) שמשפעלים את ה-APC של המקבל`],[`It matches the HLA`,`היא מתאימה את ה-HLA`],[`It removes all host immune cells`,`היא מסלקת את כל תאי החיסון של המקבל`]],a:1,e:[`The activated host APCs present host HLA to donor T cells, which multiply and attack.`,`ה-APC המשופעלים של המקבל מציגים HLA של המקבל לתאי T של התורם, שמתרבים ותוקפים.`]},
+ {q:[`Host NK cells kill donor stem cells mainly when…`,`תאי NK של המקבל הורגים תאי גזע של התורם בעיקר כאשר…`],o:[[`HLA is perfectly matched`,`ה-HLA תואם לגמרי`],[`HLA is mismatched, so the donor cell looks like "missing self"`,`ה-HLA לא תואם, ולכן תא התורם נראה כמו "עצמי חסר"`],[`The graft has too many CD34⁺ cells`,`בשתל יש יותר מדי תאי CD34⁺`],[`Complement is active`,`המשלים פעיל`]],a:1,e:[`Without self HLA, nothing engages the NK cell's inhibitory receptors.`,`בלי HLA עצמי, שום דבר לא מפעיל את הקולטנים המעכבים של תא ה-NK.`]}
+];
+const l3quiz=()=>L3QUIZ.map(q=>({q:L(q.q[0],q.q[1]),o:q.o.map(x=>L(x[0],x[1])),a:q.a,e:L(q.e[0],q.e[1])}));
+
+const L3GLOSS=[
+ [[`Complement`,`משלים`],[`About 30 blood proteins that activate each other in a cascade to opsonise, inflame and lyse.`,`כ-30 חלבוני דם שמפעילים זה את זה במפל כדי לבצע אופסוניזציה, לעורר דלקת ולפרק.`]],
+ [[`CDC`,`CDC`],[`Complement-dependent cytotoxicity: killing through complement.`,`ציטוטוקסיות תלוית משלים: הרג דרך המשלים.`]],
+ [[`C1`,`C1`],[`C1q plus two C1r and two C1s; binds antibody tails and starts the classical pathway.`,`C1q ועוד שני C1r ושני C1s; נקשר לזנבות נוגדנים ומתחיל את המסלול הקלאסי.`]],
+ [[`C3 convertase`,`C3 convertase`],[`Enzyme complex that cuts C3: C4b2a (classical, lectin) or C3bBb (alternative).`,`קומפלקס אנזימטי שחותך את C3: ‏C4b2a (קלאסי, לקטין) או C3bBb (חלופי).`]],
+ [[`C5 convertase`,`C5 convertase`],[`A C3 convertase with one more C3b; cuts C5.`,`C3 convertase עם עוד C3b; חותך את C5.`]],
+ [[`C3b`,`C3b`],[`The large C3 fragment that coats surfaces and marks them for phagocytes.`,`החלק הגדול של C3 שמצפה משטחים ומסמן אותם לפגוציטים.`]],
+ [[`C3a · C5a`,`C3a · C5a`],[`Anaphylatoxins: make mast cells release histamine; C5a also attracts neutrophils.`,`אנפילטוקסינים: גורמים לתאי פיטום לשחרר היסטמין; C5a גם מושך נויטרופילים.`]],
+ [[`MAC`,`MAC`],[`Membrane attack complex, C5b-9: a pore of up to 18 C9 molecules that lyses cells.`,`קומפלקס התקיפה של הממברנה, C5b-9: נקבובית של עד 18 מולקולות C9 שמפרקת תאים.`]],
+ [[`MBL`,`MBL`],[`Mannose-binding lectin: liver-made acute-phase protein that starts the lectin pathway.`,`Mannose-binding lectin: חלבון של השלב החריף מהכבד שמתחיל את מסלול הלקטין.`]],
+ [[`MASP-1 · MASP-2`,`MASP-1 · MASP-2`],[`Serine proteases on lectin-pathway molecules; MASP-2 cuts C4, both cut C2.`,`פרוטאזות סרין על מולקולות מסלול הלקטין; MASP-2 חותך את C4, שניהם חותכים את C2.`]],
+ [[`Tickover`,`Tickover`],[`Slow spontaneous activation of C3 by water that keeps the alternative pathway on.`,`שפעול איטי וספונטני של C3 על ידי מים שמשאיר את המסלול החלופי פעיל.`]],
+ [[`Factor B · factor D`,`פקטור B · פקטור D`],[`B binds C3b; D cuts it into Ba (leaves) and Bb (stays, forms C3bBb).`,`B נקשר ל-C3b; ‏D חותך אותו ל-Ba (עוזב) ול-Bb (נשאר ויוצר C3bBb).`]],
+ [[`Properdin`,`פרופרדין`],[`Stabilises the C3bBb convertase five- to tenfold.`,`מייצב את ה-convertase ‏C3bBb פי חמישה עד עשרה.`]],
+ [[`Factor H · factor I`,`פקטור H · פקטור I`],[`Regulators that protect our cells: H displaces B, I cuts C3b into inactive iC3b.`,`מווסתים שמגינים על התאים שלנו: H דוחק את B, ‏I חותך את C3b ל-iC3b לא פעיל.`]],
+ [[`Amplification loop`,`לולאת ההגברה`],[`Each C3b builds a new C3bBb that makes more C3b; most C3b on a target comes from it.`,`כל C3b בונה C3bBb חדש שמייצר עוד C3b; רוב ה-C3b על מטרה מגיע ממנה.`]],
+ [[`HSC`,`HSC`],[`Hematopoietic stem cell: makes every blood cell and renews itself.`,`תא גזע המטופויטי: מייצר כל תא דם ומחדש את עצמו.`]],
+ [[`LT-HSC · ST-HSC`,`LT-HSC · ST-HSC`],[`Long-term HSCs renew for life; short-term HSCs for weeks to months, then become MPPs.`,`תאי גזע לטווח ארוך מתחדשים לכל החיים; לטווח קצר לשבועות עד חודשים, ואז הופכים ל-MPP.`]],
+ [[`Quiescence`,`Quiescence (שקט)`],[`Resting without dividing; protects the stem cell's DNA.`,`מנוחה בלי חלוקה; מגינה על ה-DNA של תא הגזע.`]],
+ [[`MEP · GMP · CLP`,`MEP · GMP · CLP`],[`Progenitors for red cells and platelets; granulocytes, monocytes, DCs; lymphocytes.`,`תאי אב לכדוריות אדומות וטסיות; לגרנולוציטים, מונוציטים, DC; ללימפוציטים.`]],
+ [[`Asymmetric division`,`חלוקה א-סימטרית`],[`One daughter stays a stem cell, the other becomes a progenitor.`,`בת אחת נשארת תא גזע, והשנייה הופכת לתא אב.`]],
+ [[`PU.1 · GATA1`,`PU.1 · GATA1`],[`Transcription factors that compete: PU.1 for myeloid, GATA1 for red cells and platelets.`,`פקטורי שעתוק שמתחרים: PU.1 למיאלואידי, GATA1 לכדוריות אדומות וטסיות.`]],
+ [[`Pax5`,`Pax5`],[`Transcription factor that locks in B cell identity.`,`פקטור שעתוק שנועל את הזהות של תא B.`]],
+ [[`Notch`,`Notch`],[`Thymic receptor signal that starts the T cell programme (GATA3, TCF1).`,`אות דרך קולטן בתימוס שמתחיל את תוכנית תאי ה-T (GATA3,‏ TCF1).`]],
+ [[`Microglia`,`מיקרוגליה`],[`Brain macrophages from the yolk sac; self-renewing; prune synapses.`,`מקרופאג׳ים של המוח משק החלמון; מתחדשים בעצמם; גוזמים סינפסות.`]],
+ [[`Kupffer cells`,`תאי קופפר`],[`Liver macrophages that filter gut blood and recycle iron.`,`מקרופאג׳ים של הכבד שמסננים דם מהמעי וממחזרים ברזל.`]],
+ [[`Trained immunity`,`חסינות מאומנת`],[`Innate "memory" through epigenetic marks; faster, stronger response for months.`,`"זיכרון" מולד דרך סימנים אפיגנטיים; תגובה מהירה וחזקה יותר למשך חודשים.`]],
+ [[`H3K4me3`,`H3K4me3`],[`A methyl tag on histone H3 that keeps genes such as TNF and IL-6 open.`,`תג מתיל על היסטון H3 שמשאיר גנים כמו TNF ו-IL-6 פתוחים.`]],
+ [[`Niche`,`נישה`],[`The local environment around blood vessels in the marrow that keeps HSCs quiet and in place.`,`הסביבה המקומית סביב כלי הדם במח העצם שמשאירה את תאי הגזע שקטים ובמקום.`]],
+ [[`CXCL12 · CXCR4`,`CXCL12 · CXCR4`],[`Niche chemokine (SDF-1) and its receptor on HSCs.`,`כמוקין של הנישה (SDF-1) והקולטן שלו על תאי הגזע.`]],
+ [[`SCF · c-Kit`,`SCF · c-Kit`],[`Stem cell factor and its receptor (CD117) on HSCs.`,`Stem cell factor והקולטן שלו (CD117) על תאי הגזע.`]],
+ [[`CD34`,`CD34`],[`Marker of human stem and progenitor cells; counts transplant grafts.`,`סמן של תאי גזע ותאי אב אנושיים; משמש לספירת שתלים.`]],
+ [[`G-CSF`,`G-CSF`],[`Lowers CXCL12 and releases HSCs into the blood for collection.`,`מוריד את CXCL12 ומשחרר תאי גזע לדם לצורך איסוף.`]],
+ [[`Autologous · allogeneic`,`אוטולוגי · אלוגנאי`],[`Transplant of the patient's own cells, or of cells from a donor.`,`השתלה של תאי המטופל עצמו, או של תאים מתורם.`]],
+ [[`HLA`,`HLA`],[`The human MHC; the main criterion for matching a donor.`,`ה-MHC של האדם; הקריטריון העיקרי להתאמת תורם.`]],
+ [[`Conditioning`,`הכנה (Conditioning)`],[`Irradiation or chemotherapy before a transplant.`,`הקרנה או כימותרפיה לפני השתלה.`]],
+ [[`GVHD`,`GVHD`],[`Graft-versus-host disease: donor T cells attack the patient's skin, gut and liver.`,`מחלת שתל נגד מאכסן: תאי T של התורם תוקפים את העור, המעי והכבד של המטופל.`]]
+];
+const l3gloss=()=>L3GLOSS.map(g=>[L(g[0][0],g[0][1]),L(g[1][0],g[1][1])]);
+
+TIPS.push(
+ [['serine proteases','serine protease'],['פרוטאזות סרין','פרוטאזת סרין'],`Protein-cutting enzymes that use the amino acid serine in their active site.`,`אנזימים שחותכים חלבונים ומשתמשים בחומצת האמינו סרין באתר הפעיל.`],
+ [['convertase','convertases'],['convertase'],`An enzyme complex that cuts (converts) one complement protein into its active pieces.`,`קומפלקס אנזימטי שחותך (ממיר) חלבון משלים לחלקים הפעילים שלו.`],
+ [['anaphylatoxins'],['אנפילטוקסינים'],`Small complement fragments (C3a, C5a) that trigger histamine release and inflammation.`,`מקטעי משלים קטנים (C3a,‏ C5a) שמעוררים שחרור היסטמין ודלקת.`],
+ [['sialic acid'],['חומצה סיאלית'],`A sugar at the tips of the sugar chains on our cells; it helps factor H recognise "self".`,`סוכר בקצות שרשראות הסוכר שעל התאים שלנו; הוא עוזר לפקטור H לזהות "עצמי".`],
+ [['heparan sulfate'],['הפרן סולפט'],`A long sugar chain on our cell surfaces and in the matrix.`,`שרשרת סוכר ארוכה על פני התאים שלנו ובמטריקס.`],
+ [['acute-phase protein'],['חלבון של השלב החריף'],`A blood protein that the liver makes in larger amounts during infection or inflammation.`,`חלבון דם שהכבד מייצר בכמות גדולה יותר בזמן זיהום או דלקת.`],
+ [['C-reactive protein'],['C-reactive protein'],`An acute-phase protein that binds dying cells and microbes and can switch on complement.`,`חלבון של השלב החריף שנקשר לתאים גוססים ולמיקרואורגניזמים ויכול להפעיל את המשלים.`],
+ [['immune complexes'],['קומפלקסים חיסוניים'],`Clumps of antibodies bound to their antigens.`,`גושים של נוגדנים שקשורים לאנטיגנים שלהם.`],
+ [['epigenetic'],['אפיגנטיים','אפיגנטי'],`Chemical changes to DNA or its packaging proteins that switch genes on or off without changing the DNA sequence.`,`שינויים כימיים ב-DNA או בחלבונים שאורזים אותו, שמדליקים או מכבים גנים בלי לשנות את רצף ה-DNA.`],
+ [['histone','histones'],['היסטון','ההיסטון'],`Proteins that DNA wraps around inside the nucleus.`,`חלבונים שה-DNA כרוך סביבם בתוך הגרעין.`],
+ [['yolk sac'],['שק החלמון'],`A structure in the early embryo; the first place blood cells are made.`,`מבנה בעובר המוקדם; המקום הראשון שבו נוצרים תאי דם.`],
+ [['synapses','synapse'],['סינפסות'],`Contact points through which nerve cells pass signals.`,`נקודות מגע שדרכן תאי עצב מעבירים אותות.`],
+ [['surfactant'],['סורפקטנט'],`A soapy film that lines the air sacs of the lung and keeps them from collapsing.`,`שכבה דמוית סבון שמרפדת את נאדיות הריאה ומונעת מהן לקרוס.`],
+ [['haem'],[],`The iron-containing part of haemoglobin.`,`החלק שמכיל ברזל בהמוגלובין.`],
+ [['lamina propria'],['למינה פרופריה'],`The connective tissue layer just under the gut lining.`,`שכבת רקמת החיבור שמתחת לדופן המעי.`],
+ [['megakaryocyte','megakaryocytes'],['מגהקריוציט','מגהקריוציטים'],`A giant bone marrow cell that sheds platelets.`,`תא ענק במח העצם שממנו ננתקות טסיות.`],
+ [['platelets','platelet'],['טסיות','טסית'],`Small cell fragments in the blood that start clotting.`,`שברי תאים קטנים בדם שמתחילים את הקרישה.`],
+ [['osteoblasts','osteoblast'],['אוסטאובלסטים'],`Bone-building cells.`,`תאים שבונים עצם.`],
+ [['osteoclast','osteoclasts'],['אוסטאוקלסט'],`Bone-dissolving cells.`,`תאים שמפרקים עצם.`],
+ [['stromal'],['סטרומה'],`Support cells of a tissue (not blood cells) that build its framework and send signals.`,`תאי תמיכה של רקמה (לא תאי דם) שבונים את המסגרת שלה ושולחים אותות.`],
+ [['chemotherapy'],['כימותרפיה'],`Drugs that kill dividing cells, used against cancer.`,`תרופות שהורגות תאים מתחלקים, ומשמשות נגד סרטן.`],
+ [['irradiation'],['הקרנה'],`Treatment with radiation that kills dividing cells.`,`טיפול בקרינה שהורג תאים מתחלקים.`],
+ [['immunosuppressants'],['מדכאות חיסון'],`Drugs that weaken the immune response.`,`תרופות שמחלישות את התגובה החיסונית.`],
+ [['cyclosporine'],['ציקלוספורין'],`An immunosuppressant that blocks T cell activation.`,`תרופה מדכאת חיסון שחוסמת שפעול של תאי T.`],
+ [['methotrexate'],['מתוטרקסט'],`A drug that stops dividing cells, including activated T cells.`,`תרופה שעוצרת תאים מתחלקים, כולל תאי T משופעלים.`],
+ [['minor histocompatibility antigens'],['אנטיגנים מינוריים של התאמת רקמות'],`Small protein differences between people, outside HLA, that T cells can still see as foreign.`,`הבדלים קטנים בחלבונים בין אנשים, מחוץ ל-HLA, שתאי T עדיין יכולים לזהות כזרים.`],
+ [['beta-glucan','β-glucan'],['בטא-גלוקן','β-גלוקן'],`A sugar chain from the cell wall of fungi and yeast.`,`שרשרת סוכר מדופן התא של פטריות ושמרים.`],
+ [['erythroid','erythrocytes'],['אריתרואידי','אריתרוציטים'],`Related to red blood cells.`,`קשור לכדוריות דם אדומות.`],
+ [['G-CSF'],['G-CSF'],`Granulocyte colony-stimulating factor: a growth factor that boosts neutrophil production and moves stem cells into the blood.`,`פקטור מגרה מושבות של גרנולוציטים: פקטור גדילה שמגביר ייצור נויטרופילים ומעביר תאי גזע לדם.`],
+ [['GM-CSF'],['GM-CSF'],`A growth factor that drives granulocyte and monocyte production.`,`פקטור גדילה שמניע ייצור גרנולוציטים ומונוציטים.`]
+);
+
+/* ---------- dictionary ---------- */
+const DICTFIG=[
+ [/^(antigen|peptide|epitope)s?$/i,()=>FIG.epitope()],[/^(mhc i|mhc ii|mhc|iff|apc|cross-presentation|hla)\b/i,()=>FIG.mhc()],
+ [/^(cd45|leukocyte|granulocyte)/i,()=>FIG.lineage()],[/^(phagocytosis|respiratory burst|nets|chromatin|superoxide)/i,()=>FIG.arsenal()],
+ [/^cytokine|^interleukin/i,()=>FIG.pCyto()],[/^chemokine/i,()=>FIG.pChemo()],[/^crp|^c-reactive/i,()=>FIG.pComp()],
+ [/^(prr|pamp|damp|tlr$|rig-i|nod1|cgas)/i,()=>FIG2.prrmap()],[/^(missing self|nkg2d|kir)/i,()=>FIG2.mhcdown()],
+ [/^(primary|secondary) lymphoid/i,()=>FIG.body()],[/pulp/i,()=>FIG.spleen()],[/^lymph$/i,()=>FIG.recirc()],[/^cognate/i,()=>FIG.diversity()],
+ [/^(dermcidin|lysozyme)/i,()=>FIG.barriers()],[/^inflammation$|^endothel|^venule|^arteriole|^bradykinin|^histamine/i,()=>FIG2.inflam()],
+ [/^tlr4/i,()=>FIG2.tlrsig('tlr4')],[/^(tlr3|trif|type i interferon)/i,()=>FIG2.tlrsig('tlr3')],[/^(myd88|nf-κb|adaptor protein|transcription factor)/i,()=>FIG2.tlrsig('tlr2')],
+ [/^pleiotropy/i,()=>FIG2.combo('pleio')],[/^redundancy/i,()=>FIG2.combo('redund')],[/^synergy/i,()=>FIG2.combo('syn')],
+ [/^(apoptosis|necrosis)$/i,()=>FIG2.death()],[/^(pyroptosis|inflammasome|nlrp3)/i,()=>FIG2.inflammasome(4)],[/^(caspase|bcl-2|cytochrome c|mitochondria)/i,()=>FIG2.apop()],
+ [/^(efferocytosis|cd47|phosphatidylserine)/i,()=>FIG2.effero()],[/^(adcc|opsonization|fc receptor|igg)/i,()=>FIG2.adcc()],[/^(endosome|lysosome)/i,()=>FIG2.phago()],
+ [/^cdc$/i,()=>FIG3.adcccdc()],[/^complement$|^c3a/i,()=>FIG3.outcomes()],[/^c1$/i,()=>FIG3.classical(1)],[/^(c3 convertase|c3b)$/i,()=>FIG3.classical(4)],[/^c5 convertase|^convertase/i,()=>FIG3.summary('all')],
+ [/^mac$/i,()=>FIG3.mac(5)],[/^(mbl|masp)/i,()=>FIG3.lectin()],[/^(tickover|factor b|properdin)/i,()=>FIG3.alt('pathogen')],[/^factor h/i,()=>FIG3.alt('host')],[/^amplification loop/i,()=>FIG3.loop()],
+ [/^(hsc|lt-hsc)$/i,()=>FIG3.tree('lt')],[/^lt-hsc/i,()=>FIG3.tree('st')],[/^mep/i,()=>FIG3.tree('mep')],[/^asymmetric/i,()=>FIG3.division()],
+ [/^(microglia|kupffer|yolk sac)/i,()=>FIG3.macorigin()],[/^trained/i,()=>FIG3.trained()],[/^(h3k4me3|histone|epigenetic)/i,()=>FIG3.histone()],
+ [/^(niche|quiescence|cxcl12|scf|megakaryocyte|osteoblast|osteoclast|stromal)/i,()=>FIG3.niche('stromal')],[/^(autologous)/i,()=>FIG3.transplant()],[/^(conditioning|gvhd)/i,()=>FIG3.gvhd(3)],
+ [/^platelet/i,()=>FIG3.tree('mep')]
+];
+const DICTCELL={neutrophil:'neutrophil',monocyte:'monocyte',macrophage:'macrophage','dendritic cell':'dc',eosinophil:'eosinophil',basophil:'basophil','mast cell':'mast','nk cell':'nk',ilc:'ilc'};
+let DICT=[];
+function dictBuild(){const he=LANG==='he';const out=[];const seen=new Set();
+  const push=(key,term,def,cat,start)=>{const k=key.toLowerCase();if(seen.has(k))return;seen.add(k);const f=DICTFIG.find(([rx])=>rx.test(key));out.push({key,term,def,cat,start,fig:f?f[1]:null});};
+  EN.GLOSS.forEach((g,i)=>push(g[0].replace(/ \(.*\)$/,''),GLOSS[i][0],GLOSS[i][1],1,'start'));
+  L2GLOSS.forEach(g=>push(g[0][0],L(g[0][0],g[0][1]),L(g[1][0],g[1][1]),2,'l2-start'));
+  L3GLOSS.forEach(g=>push(g[0][0],L(g[0][0],g[0][1]),L(g[1][0],g[1][1]),3,'l3-start'));
+  EN.CELLS.forEach((c,i)=>push(c.name,CELLS[i].name,CELLS[i].one,1,'innate'));
+  TIPS.forEach(tp=>{const en=tp[0][0];const nm=(he&&tp[1].length?tp[1][0]:en);push(en,/[A-Z]/.test(nm)||he?nm:nm[0].toUpperCase()+nm.slice(1),L(tp[2],tp[3]),0,'');});
+  out.sort((a,b)=>a.term.localeCompare(b.term,he?'he':'en'));DICT=out;}
+const cellOf=e=>{const k=Object.keys(DICTCELL).find(n=>e.key.toLowerCase().startsWith(n));return k?DICTCELL[k]:null;};
+const RDICT=()=>{dictBuild();const n=c=>DICT.filter(d=>d.cat===c).length;
+ return `<section class="view">
+  <div class="stack"><span class="eyebrow">${L('Basic Immunology · all lessons','אימונולוגיה בסיסית · כל השיעורים')}</span><h1>${L('Dictionary','מילון')}</h1>
+  <p class="lead">${L(`Every term from the lessons in one place, ${DICT.length} so far. Click a term to open its page; terms with a picture are marked. New terms are added automatically with every lesson.`,`כל המונחים מהשיעורים במקום אחד, ${DICT.length} עד עכשיו. לחצו על מונח כדי לפתוח את הדף שלו; מונחים עם תמונה מסומנים. מונחים חדשים מתווספים אוטומטית עם כל שיעור.`)}</p></div>
+  <div class="stack"><label for="dictq" class="eyebrow">${L('Search','חיפוש')}</label><input id="dictq" type="search" placeholder="${L('e.g. complement, NK, caspase','למשל משלים, NK, קספאז')}">
+  <div class="filters" id="dictf" role="group">${[['all',L('All','הכול'),DICT.length],['1',L('Lesson 1','שיעור 1'),n(1)],['2',L('Lesson 2','שיעור 2'),n(2)],['3',L('Lesson 3','שיעור 3'),n(3)],['0',L('Basic science','מדע בסיסי'),n(0)],['pic',L('With a picture','עם תמונה'),DICT.filter(d=>d.fig||cellOf(d)).length]].map(([k,l,c],i)=>`<button aria-pressed="${i===0}" data-f="${k}">${l} · ${c}</button>`).join('')}</div></div>
+  <div class="dictgrid" id="dictgrid">${DICT.map((d,i)=>`<button class="dterm" data-i="${i}" data-c="${d.cat}" data-p="${d.fig||cellOf(d)?1:0}">${d.fig||cellOf(d)?`<span class="dpic" aria-label="${L('has a picture','יש תמונה')}">◐</span>`:''}<b>${esc(d.term)}</b><span>${esc(d.def)}</span><em>${d.cat?L('Lesson ','שיעור ')+d.cat:L('Basic science','מדע בסיסי')}</em></button>`).join('')}</div>
+  <p id="dictnone" hidden>${L('No matching terms.','לא נמצאו מונחים.')}</p>
+  <div class="dmodal" id="dmodal" hidden><div class="dcard" role="dialog" aria-modal="true" aria-labelledby="dtitle"><button class="dclose" id="dclose" aria-label="${L('Close','סגירה')}">✕</button><div id="dbody"></div></div></div>
+ </section>`;};
+function initDict(){let f='all';const apply=()=>{const q=$('#dictq').value.trim().toLowerCase();let shown=0;
+  document.querySelectorAll('.dterm').forEach(b=>{const d=DICT[+b.dataset.i];const ok=(f==='all'||(f==='pic'?b.dataset.p==='1':b.dataset.c===f))&&(!q||(d.term+' '+d.key+' '+d.def).toLowerCase().includes(q));b.hidden=!ok;if(ok)shown++;});$('#dictnone').hidden=shown>0;};
+ $('#dictq').oninput=apply;$('#dictf').onclick=e=>{const b=e.target.closest('button');if(!b)return;f=b.dataset.f;document.querySelectorAll('#dictf button').forEach(x=>x.setAttribute('aria-pressed',x===b));apply();};
+ const open=i=>{const d=DICT[i];const c=cellOf(d);$('#dbody').innerHTML=`<span class="pill ${d.cat?'ada':''}">${d.cat?L('Lesson ','שיעור ')+d.cat:L('Basic science','מדע בסיסי')}</span><h2 id="dtitle">${esc(d.term)}</h2>${d.term!==d.key&&LANG==='he'?`<p class="mono" style="color:var(--muted)">${esc(d.key)}</p>`:''}<p class="lead">${esc(d.def)}</p>${c?`<div class="dcell">${CELLSVG[c]}</div>`:''}${d.fig?`<figure class="fig">${d.fig()}</figure>`:''}${d.start?`<a class="btn primary" href="#${d.start}">${L('Open the lesson','לפתוח את השיעור')} ${d.cat} ${L('→','←')}</a>`:''}`;$('#dmodal').hidden=false;$('#dclose').focus();};
+ const close=()=>{$('#dmodal').hidden=true;};
+ $('#dictgrid').onclick=e=>{const b=e.target.closest('.dterm');if(b)open(+b.dataset.i);};
+ $('#dclose').onclick=close;$('#dmodal').onclick=e=>{if(e.target.id==='dmodal'||e.target.closest('a'))close();};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#dmodal'))close();});}
+
 function lessonOf(id){
   if(VIEWS.some(x=>x.id===id))return {n:1,views:VIEWS,R:LANG==='he'?RH:R,I:INIT,name:u('subname')};
   const v2=l2views();if(v2.some(x=>x.id===id))return {n:2,views:v2,R:R2,I:INIT2,name:L('Innate immunity: functional mechanisms','חסינות מולדת: מנגנוני פעולה')};
+  const v3=l3views();if(v3.some(x=>x.id===id))return {n:3,views:v3,R:R3,I:INIT3,name:L('Complement, and where immune cells come from','המשלים, ומאיפה באים תאי החיסון')};
   return null;}
 function route(){
   hideTip();
@@ -2296,11 +3018,12 @@ function route(){
   const ls=lessonOf(id);
   $('#sub').hidden=!ls; $('#prog').hidden=!ls; $('#lmenu').open=false;
   const RV=LANG==='he'?RH:R;
+  if(id==='dictionary'){$('#main').innerHTML=RDICT();initDict();window.scrollTo(0,0);return;}
   if(!ls){$('#main').innerHTML=RV.home();window.scrollTo(0,0);return;}
   const les=LESSONS[ls.n-1];
   $('#subnum').textContent=`${L('Lesson','שיעור')} ${les[0]} · ${les[1]}`;$('#subname').textContent=ls.name;
   $('#tabs').innerHTML=ls.views.map(v=>`<a href="#${v.id}" data-v="${v.id}">${v.label}</a>`).join('');
-  $('#main').innerHTML=ls.R[id]();ls.I[id]&&ls.I[id]();
+  $('#main').innerHTML=ls.R[id]();ls.I[id]&&ls.I[id]();setTimeout(()=>buildPrimer(id),0);
   document.querySelectorAll('#tabs a').forEach(a=>{const on=a.dataset.v===id;a.toggleAttribute('aria-current',on);if(on){a.setAttribute('aria-current','page');a.scrollIntoView({block:'nearest',inline:'center'})}});
   visited.add(id);try{localStorage.setItem('imm1-visited',JSON.stringify([...visited]))}catch(e){}
   $('#progbar').style.width=Math.round(ls.views.filter(v=>visited.has(v.id)).length/ls.views.length*100)+'%';
