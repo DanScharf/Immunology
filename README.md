@@ -4,7 +4,7 @@ An interactive, bilingual (English / עברית) study website for **Basic Immun
 
 Each lecture is turned into a short, ordered set of chapters with diagrams, interactive figures, a quiz and flashcards, so the material can be learned step by step instead of from the slides alone.
 
-**Live site:** `https://<your-username>.github.io/<repo-name>/`
+**Live site:** `[https://<your-username>.github.io/<repo-name>/](https://danscharf.github.io/Immunology/#home)`
 
 ---
 
