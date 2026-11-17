@@ -321,7 +321,21 @@ a.node:hover{border-color:var(--eosin)}
 .dz-m ul{margin:0;padding-inline-start:1.1em}
 .dz-u{align-self:flex-end;background:var(--hema);color:#fff;border-end-end-radius:4px}
 .dz-a{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-end-start-radius:4px}
-.dz-chips{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.dz-chips{display:flex;flex-wrap:wrap;gap:6px}
+.dz-sub{color:var(--muted);font-size:.84rem}
+.dz-m ul+.dz-links,.dz-m p+.dz-links{margin-top:6px}
+.dz-m mark{background:var(--eosin-soft);color:inherit;border-radius:3px;padding:0 2px}
+.dz-def{background:var(--good-soft);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:4px}
+.dz-hit{border-top:1px solid var(--line);padding-top:8px;margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.dz-where{font-size:.75rem;color:var(--hema);font-weight:700}
+.dz-links{display:flex;gap:12px;flex-wrap:wrap;font-size:.84rem}
+.dz-m a{color:var(--hema);font-weight:700}
+.dz-opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.dz-opt{text-align:start;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font-size:.88rem}
+.dz-opt:hover:not(:disabled){border-color:var(--hema)}
+.dz-opt.right{background:var(--good-soft);border-color:var(--good)}
+.dz-opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.dz-m.dz-a{max-width:94%}
 .dz-chip{border:1px solid var(--hema);color:var(--hema);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem;text-align:start}
 .dz-typing{display:flex;gap:4px}.dz-typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:dz 1s infinite}
 .dz-typing span:nth-child(2){animation-delay:.15s}.dz-typing span:nth-child(3){animation-delay:.3s}
@@ -3065,78 +3079,78 @@ function route(){
   $('#progbar').style.width=Math.round(ls.views.filter(v=>visited.has(v.id)).length/ls.views.length*100)+'%';
   window.scrollTo(0,0);
 }
-/* ---------- dAIsy: AI study helper (uses the visitor's own Anthropic API key) ---------- */
-const DAISY={msgs:[],busy:false,model:'claude-haiku-5-5'};
-const dget=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
-const dset=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+/* ---------- dAIsy-lite: a free study helper that searches the course content (no AI, no key) ---------- */
+const DAISY={msgs:[],idx:null,idxLang:null,quiz:null};
 const daisyFlower=s=>`<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true">${Array.from({length:8},(_,i)=>`<ellipse cx="20" cy="9" rx="5" ry="8.5" fill="#fff" stroke="#e9d9ef" transform="rotate(${i*45} 20 20)"/>`).join('')}<circle cx="20" cy="20" r="6.5" fill="#f2b632"/></svg>`;
-function daisyCourseText(){const box=document.createElement('div');const parts=[];
-  const add=(title,html)=>{box.innerHTML=html;box.querySelectorAll('svg,button,.next,.howto,.smear,.steps,.seg,.filters').forEach(n=>n.remove());parts.push('## '+title+'\n'+box.textContent.replace(/\s+\n/g,'\n').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim());};
-  try{
-   VIEWS.forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 1','שיעור 1')+' · '+v.label,(LANG==='he'?RH:R)[v.id]());});
-   l2views().forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 2','שיעור 2')+' · '+v.label,R2[v.id]());});
-   l3views().forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 3','שיעור 3')+' · '+v.label,R3[v.id]());});
-   parts.push('## Cell profiles\n'+CELLS.map(c=>c.name+': '+c.one+' '+Object.entries(c.facts).map(([k,v])=>k+': '+v).join('; ')).join('\n'));
-   parts.push('## Glossary\n'+[...GLOSS,...l2gloss(),...l3gloss()].map(g=>g[0]+': '+g[1]).join('\n'));
-   const qs=[...QUIZ,...l2quiz(),...l3quiz()];parts.push('## Practice questions\n'+qs.map(q=>'Q: '+q.q+' A: '+q.o[q.a]+'. '+q.e).join('\n'));
-  }catch(e){}
-  return parts.join('\n\n');}
-function daisySystem(){const page=(document.querySelector('#main h1,#main h2')||{}).textContent||'';const sub=$('#subname')&&!$('#sub').hidden?$('#subname').textContent:'';
-  return `You are dAIsy, a friendly study helper inside a student-made website for the Technion course Basic Immunology (027604130).
-Rules:
-- Answer ONLY from the course material below, which comes from the lecture slides. You may add short, basic scientific definitions (for example what an enzyme or a receptor is).
-- If something is not in the material, say clearly that it is not covered in the slides, and do not make up facts, numbers or details.
-- Reply in the language the student writes in (Hebrew or English). Keep answers short and clear, use simple words, and use short bullet lists when they help.
-- When asked to quiz, ask one multiple-choice question at a time and wait for the answer before explaining.
-- You are not an official source; the slides and lecturers are.
-The student is currently on: ${sub?sub+' · ':''}${page}.`;}
-function daisyMd(s){let h=esc(s);h=h.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^#{1,4} (.+)$/gm,'<b>$1</b>');
-  return h.split(/\n{2,}/).map(par=>{const ls=par.split('\n');if(ls.every(l=>/^\s*([-*•]|\d+\.)\s/.test(l)))return '<ul>'+ls.map(l=>'<li>'+l.replace(/^\s*([-*•]|\d+\.)\s/,'')+'</li>').join('')+'</ul>';return '<p>'+ls.join('<br>')+'</p>';}).join('');}
-function daisyUI(){
-  const fab=document.createElement('button');fab.id='daisyfab';fab.innerHTML=daisyFlower(34);document.body.appendChild(fab);
+const DZ_STOP=new Set(('a an the of to in on and or is are was be it this that what which who how why when where do does did can could i me my you your we for with from as at by about tell explain define definition mean means meaning please quiz question'+
+ ' מה מי איך למה מתי איפה זה זו זאת של על עם את אני אתה את הוא היא הם הן יש אין או גם כל לי לך תסבירי הסבירי הסבר תסביר תגידי ספרי בבקשה משמעות הגדרה פירוש').split(' '));
+const DZ_PRE=/^[ובכלמשה]{1,3}(?=[֐-׿]{3,})/;
+function dzTokens(s){return (s.toLowerCase().match(/[a-z0-9α-ωκγβλ\-\+]+|[֐-׿״׳"']+/g)||[]).map(w=>w.replace(/["'׳״]/g,'').replace(/^-+|-+$/g,'')).filter(w=>w.length>1&&!DZ_STOP.has(w)).map(w=>/[֐-׿]/.test(w)?w.replace(DZ_PRE,''):w.replace(/(ies)$/,'y').replace(/(?<=[a-z]{3})s$/,''));}
+function dzLessons(){return [{n:1,views:VIEWS,R:LANG==='he'?RH:R,quiz:()=>QUIZ},{n:2,views:l2views(),R:R2,quiz:l2quiz},{n:3,views:l3views(),R:R3,quiz:l3quiz}];}
+function dzIndex(){if(DAISY.idx&&DAISY.idxLang===LANG)return DAISY.idx;const chunks=[];const box=document.createElement('div');
+  dzLessons().forEach(ls=>ls.views.forEach(v=>{if(/quiz|cards/.test(v.id))return;let html='';try{html=ls.R[v.id]();}catch(e){return;}box.innerHTML=html;box.querySelectorAll('svg,.next,.howto,.smear,button').forEach(n=>n.remove());
+    const title=(box.querySelector('h1,h2')||{}).textContent||v.label;
+    box.querySelectorAll('p,li,tr,figcaption,.callout,.cmprow,.layer,dd').forEach(el=>{if(el.closest('li,tr,.callout,.cmprow,.layer')!==el&&el.closest('li,tr,.callout,.cmprow,.layer'))return;
+      const txt=el.textContent.replace(/\s+/g,' ').trim();if(txt.length<25)return;const holder=el.closest('.card,.stack,details')||box;const h=(holder.querySelector('h3,h4,summary')||{}).textContent||title;
+      chunks.push({txt,head:h.trim(),title,view:v.id,label:v.label,lesson:ls.n,tok:dzTokens(txt+' '+h)});});}));
+  try{dictBuild();}catch(e){}
+  const df={};chunks.forEach(c=>new Set(c.tok).forEach(t=>df[t]=(df[t]||0)+1));
+  DAISY.idx={chunks,df,N:chunks.length};DAISY.idxLang=LANG;return DAISY.idx;}
+function dzSearch(q,k=3){const ix=dzIndex();const qt=[...new Set(dzTokens(q))];if(!qt.length)return {hits:[],qt:[]};
+  const sc=ix.chunks.map(c=>{let s=0;qt.forEach(t=>{const n=c.tok.filter(x=>x===t||(t.length>4&&x.startsWith(t))||(x.length>4&&t.startsWith(x))).length;if(n)s+=(1+Math.log(n))*Math.log(1+ix.N/(ix.df[t]||1));});return {c,s};}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  const out=[],seen=new Set();for(const x of sc){const key=x.c.view+x.c.head;if(seen.has(key))continue;seen.add(key);out.push(x.c);if(out.length>=k)break;}return {hits:out,qt};}
+function dzDict(q){const qt=dzTokens(q);if(!qt.length||!DICT.length)return null;const ql=q.toLowerCase();
+  let best=null,bs=0;DICT.forEach(d=>{const names=[d.term.toLowerCase(),d.term.replace(/\s*\(.*\)\s*$/,'').toLowerCase(),d.key.toLowerCase()];let s=0;names.forEach(n=>{if(ql.includes(n)&&n.length>1)s=Math.max(s,10+n.length);const nt=dzTokens(n);if(nt.length&&nt.every(t=>qt.includes(t)))s=Math.max(s,8+n.length);});if(s>bs){bs=s;best=d;}});return best;}
+const dzMark=(txt,qt)=>{let h=esc(txt.length>320?txt.slice(0,320)+'…':txt);qt.filter(t=>t.length>2).forEach(t=>{h=h.replace(new RegExp('('+reEsc(t)+')','gi'),'<mark>$1</mark>');});return h;};
+const dzWhere=c=>`${L('Lesson','שיעור')} ${c.lesson} · ${esc(c.label)}`;
+function dzCurrentLesson(){const id=(location.hash||'#home').slice(1);const ls=lessonOf(id);return ls?ls.n:0;}
+function dzAnswer(q){dzIndex();const ql=q.toLowerCase();
+  if(/quiz|test me|question|בחני|תבחני|בחן|שאלה|מבחן אותי/.test(ql))return dzQuizStart();
+  if(/this page|העמוד|הדף/.test(ql))return dzPage();
+  if(/exam|remember|summary|summar|key point|למבחן|לזכור|סיכום|עיקר/.test(ql))return dzSummary();
+  const d=dzDict(q);const {hits,qt}=dzSearch(q);
+  if(!d&&!(hits&&hits.length))return `<p>${L('I couldn\'t find that in the course material. Try other words, or a term from the slides, for example "complement" or "NK cell".','לא מצאתי את זה בחומר הקורס. נסו מילים אחרות, או מונח מהשקפים, למשל "משלים" או "תא NK".')}</p>`;
+  let h='';
+  if(d)h+=`<div class="dz-def"><b>${esc(d.term)}</b><p>${esc(d.def)}</p><div class="dz-links"><a href="#dictionary" data-dict="${esc(d.key)}">${L('Open in dictionary','לפתוח במילון')}</a>${d.start?`<a href="#${d.start}">${L('Lesson','שיעור')} ${d.cat}</a>`:''}</div></div>`;
+  if(hits.length)h+=`<p class="dz-sub">${d?L('Where it comes up in the lessons:','איפה זה מופיע בשיעורים:'):L('Here is what the lessons say:','זה מה שכתוב בשיעורים:')}</p>`+hits.map(c=>`<div class="dz-hit"><span class="dz-where">${dzWhere(c)} · ${esc(c.head)}</span><p>${dzMark(c.txt,qt)}</p><a href="#${c.view}">${L('Go to this page','למעבר לעמוד')} ${L('→','←')}</a></div>`).join('');
+  return h;}
+function dzPage(){const id=(location.hash||'#home').slice(1);const sec=$('#main section.view');if(!sec||!lessonOf(id))return `<p>${L('Open a lesson page first, then ask me to explain it.','פתחו קודם עמוד של שיעור, ואז בקשו ממני להסביר אותו.')}</p>`;
+  const title=(sec.querySelector('h1,h2')||{}).textContent||'';const lead=(sec.querySelector('.lead')||{}).textContent||'';
+  const heads=[...sec.querySelectorAll('h3')].map(h=>h.textContent.trim()).filter(Boolean).slice(0,10);
+  const terms=[...sec.querySelectorAll('.primer dt')].map(d=>d.textContent).slice(0,12);
+  return `<p><b>${esc(title)}</b></p>${lead?`<p>${esc(lead)}</p>`:''}${heads.length?`<p class="dz-sub">${L('This page covers, in order:','העמוד הזה עובר, לפי הסדר, על:')}</p><ul>${heads.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>`:''}${terms.length?`<p class="dz-sub">${L('Basic terms used here (see the box at the top of the page):','מונחים בסיסיים בעמוד (ראו את התיבה בראש העמוד):')} ${terms.map(esc).join(', ')}</p>`:''}<p class="dz-sub">${L('Ask me about any of these, or say "quiz me".','שאלו אותי על כל אחד מהם, או כתבו "תבחני אותי".')}</p>`;}
+function dzSummary(){const n=dzCurrentLesson();const ls=dzLessons().filter(l=>!n||l.n===n);const box=document.createElement('div');let h='';
+  ls.forEach(l=>{try{box.innerHTML=l.R[l.views[0].id]();}catch(e){return;}const c=box.querySelector('.callout.pink');if(!c)return;h+=`<p class="dz-sub">${L('Lesson','שיעור')} ${l.n}: ${esc((c.querySelector('h3')||{}).textContent||'')}</p><ul>${[...c.querySelectorAll('p')].map(p=>`<li>${esc(p.textContent.replace(/^\d+\.\s*/,''))}</li>`).join('')}</ul><div class="dz-links"><a href="#${l.views[0].id}">${L('Open the lesson','לפתוח את השיעור')}</a><a href="#${l.views[l.views.length-2].id}">${L('Take the quiz','לעשות את הבוחן')}</a></div>`;});
+  return h||`<p>${L('Open a lesson first.','פתחו קודם שיעור.')}</p>`;}
+function dzQuizStart(){const n=dzCurrentLesson();const pool=[];dzLessons().forEach(l=>{if(!n||l.n===n)l.quiz().forEach(q=>pool.push({...q,n:l.n}));});
+  const q=pool[Math.floor(Math.random()*pool.length)];const order=q.o.map((_,i)=>i).sort(()=>Math.random()-.5);DAISY.quiz={q,order,done:false};
+  return `<p class="dz-sub">${L('Lesson','שיעור')} ${q.n} · ${L('question','שאלה')}</p><p><b>${esc(q.q)}</b></p><div class="dz-opts">${order.map(i=>`<button class="dz-opt" data-o="${i}">${esc(q.o[i])}</button>`).join('')}</div>`;}
+function dzQuizAnswer(i,btn){const z=DAISY.quiz;if(!z||z.done)return;z.done=true;const ok=i===z.q.a;
+  btn.closest('.dz-opts').querySelectorAll('.dz-opt').forEach(b=>{b.disabled=true;if(+b.dataset.o===z.q.a)b.classList.add('right');else if(b===btn)b.classList.add('wrong');});
+  const m=DAISY.msgs[DAISY.msgs.length-1];m.html=btn.closest('.dz-m').innerHTML;
+  DAISY.msgs.push({role:'a',html:`<p><b>${ok?L('Correct!','נכון!'):L('Not quite.','לא בדיוק.')}</b> ${esc(z.q.e)}</p><div class="dz-chips"><button class="dz-chip" data-q="quiz">${L('Another question','עוד שאלה')}</button></div>`});daisyRender();}
+function daisyUI(){const fab=document.createElement('button');fab.id='daisyfab';fab.innerHTML=daisyFlower(34);document.body.appendChild(fab);
   const pn=document.createElement('section');pn.id='daisy';pn.hidden=true;pn.setAttribute('role','dialog');document.body.appendChild(pn);
-  fab.onclick=()=>{pn.hidden=!pn.hidden;fab.classList.toggle('open',!pn.hidden);if(!pn.hidden){daisyRender();setTimeout(()=>{const i=$('#daisyin')||$('#daisykey');i&&i.focus();},50);}};
+  fab.onclick=()=>{pn.hidden=!pn.hidden;fab.classList.toggle('open',!pn.hidden);if(!pn.hidden){daisyRender();setTimeout(()=>{const i=$('#daisyin');i&&i.focus();},50);}};
+  pn.addEventListener('click',e=>{const o=e.target.closest('.dz-opt');if(o){dzQuizAnswer(+o.dataset.o,o);return;}
+    const c=e.target.closest('.dz-chip');if(c){if(c.dataset.fill){const i=$('#daisyin');i.value=c.dataset.fill;i.focus();return;}daisySend(c.dataset.q==='quiz'?L('Quiz me','תבחני אותי'):c.textContent);return;}
+    const a=e.target.closest('a[data-dict]');if(a){const k=a.dataset.dict;setTimeout(()=>{const i=DICT.findIndex(d=>d.key===k);const b=document.querySelector(`.dterm[data-i="${i}"]`);if(b)b.click();},120);}
+    if(e.target.closest('a[href^="#"]')&&innerWidth<600){pn.hidden=true;fab.classList.remove('open');}});
   daisyLabels();}
-function daisyLabels(){const f=$('#daisyfab');if(!f)return;f.setAttribute('aria-label',L('Ask dAIsy, the AI study helper','לשאול את dAIsy, עוזרת הלימוד'));f.title=L('Ask dAIsy','לשאול את dAIsy');$('#daisy').setAttribute('aria-label','dAIsy');if(!$('#daisy').hidden)daisyRender();}
-function daisyRender(){const pn=$('#daisy');const key=dget('daisy-key');
-  const head=`<header class="dz-head">${daisyFlower(30)}<div><b>dAIsy</b><span>${L('AI study helper · answers from the slides','עוזרת לימוד · עונה מתוך השקפים')}</span></div>${key?`<button class="dz-ic" id="daisyset" aria-label="${L('Settings','הגדרות')}" title="${L('Settings','הגדרות')}">⚙</button>`:''}<button class="dz-ic" id="daisyx" aria-label="${L('Close','סגירה')}">✕</button></header>`;
-  if(!key||DAISY.settings){pn.innerHTML=head+`<div class="dz-body dz-setup">
-    <p><b>${L('Hi, I\'m dAIsy!','היי, אני dAIsy!')}</b> ${L('I can explain anything from the lectures, simplify a page or quiz you.','אני יכולה להסביר כל דבר מההרצאות, לפשט עמוד או לבחון אתכם.')}</p>
-    <p>${L('To talk to me you need your own Anthropic API key. Create one at <a href="https://platform.claude.com/" target="_blank" rel="noopener">platform.claude.com</a> (API keys). Each message costs a fraction of a cent and is billed to your account.','כדי לדבר איתי צריך מפתח API אישי של Anthropic. אפשר ליצור אחד באתר <a href="https://platform.claude.com/" target="_blank" rel="noopener">platform.claude.com</a>, בעמוד <bdi>API keys</bdi>. כל הודעה עולה שבריר סנט ומחויבת בחשבון שלכם.')}</p>
-    <label for="daisykey" class="eyebrow">${L('Your API key','מפתח ה-API שלכם')}</label>
-    <input id="daisykey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-..." value="${key?esc(key):''}">
-    <p class="dz-note">${L('The key stays only in this browser and is sent only to Anthropic. Never share it, and set a monthly spending limit in your account.','המפתח נשמר רק בדפדפן הזה ונשלח רק ל-Anthropic. אל תשתפו אותו, והגדירו תקרת הוצאה חודשית בחשבון.')}</p>
-    <div class="dz-row"><button class="btn primary" id="daisysave">${L('Save and start','לשמור ולהתחיל')}</button>${key?`<button class="btn" id="daisyforget">${L('Forget key','למחוק את המפתח')}</button>`:''}</div>
-    <p class="dz-err" id="daisyerr" hidden></p></div>`;
-   $('#daisysave').onclick=()=>{const v=$('#daisykey').value.trim();if(!/^sk-ant-/.test(v)){const e=$('#daisyerr');e.hidden=false;e.textContent=L('That doesn\'t look like an Anthropic key. It should start with sk-ant-.','זה לא נראה כמו מפתח של Anthropic. הוא אמור להתחיל ב-sk-ant-.');return;}dset('daisy-key',v);DAISY.settings=false;daisyRender();};
-   const fg=$('#daisyforget');if(fg)fg.onclick=()=>{dset('daisy-key',null);DAISY.settings=false;DAISY.msgs=[];daisyRender();};
-  } else {
-   pn.innerHTML=head+`<div class="dz-body" id="daisylog" aria-live="polite">${DAISY.msgs.length?'':`<div class="dz-m dz-a"><p>${L('Hi! Ask me anything about the lectures. I only answer from the slides.','היי! שאלו אותי כל דבר על ההרצאות. אני עונה רק מתוך השקפים.')}</p></div><div class="dz-chips">${[L('Explain this page simply','הסבירי את העמוד הזה בפשטות'),L('Quiz me on this page','תבחני אותי על העמוד הזה'),L('What should I remember for the exam here?','מה חשוב לזכור כאן למבחן?')].map(c=>`<button class="dz-chip">${c}</button>`).join('')}</div>`}${DAISY.msgs.filter(m=>m.content).map(m=>`<div class="dz-m ${m.role==='user'?'dz-u':'dz-a'}">${m.role==='user'?'<p>'+esc(m.content)+'</p>':daisyMd(m.content)}</div>`).join('')}${DAISY.busy&&!(DAISY.msgs.at(-1)||{}).content?'<div class="dz-m dz-a dz-typing"><span></span><span></span><span></span></div>':''}</div>
-    <form class="dz-form" id="daisyform"><textarea id="daisyin" rows="1" placeholder="${L('Ask dAIsy…','שאלו את dAIsy…')}" aria-label="${L('Message','הודעה')}"></textarea><button class="dz-send" ${DAISY.busy?'disabled':''} aria-label="${L('Send','שליחה')}">${L('➤','➤')}</button></form>
-    ${DAISY.msgs.length?`<button class="dz-clear" id="daisyclear">${L('New conversation','שיחה חדשה')}</button>`:''}`;
-   const log=$('#daisylog');log.scrollTop=log.scrollHeight;
-   document.querySelectorAll('.dz-chip').forEach(c=>c.onclick=()=>daisySend(c.textContent));
-   $('#daisyform').onsubmit=e=>{e.preventDefault();daisySend($('#daisyin').value);};
-   $('#daisyin').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();daisySend($('#daisyin').value);}};
-   const cl=$('#daisyclear');if(cl)cl.onclick=()=>{DAISY.msgs=[];daisyRender();};
-   const st=$('#daisyset');if(st)st.onclick=()=>{DAISY.settings=true;daisyRender();};
-  }
+function daisyLabels(){const f=$('#daisyfab');if(!f)return;f.setAttribute('aria-label',L('Ask dAIsy, the study helper','לשאול את dAIsy, עוזרת הלימוד'));f.title=L('Ask dAIsy','לשאול את dAIsy');$('#daisy').setAttribute('aria-label','dAIsy');if(!$('#daisy').hidden)daisyRender();}
+function daisyRender(){const pn=$('#daisy');
+  pn.innerHTML=`<header class="dz-head">${daisyFlower(30)}<div><b>dAIsy</b><span>${L('Study helper · searches the lesson content','עוזרת לימוד · מחפשת בתוכן השיעורים')}</span></div><button class="dz-ic" id="daisyx" aria-label="${L('Close','סגירה')}">✕</button></header>
+  <div class="dz-body" id="daisylog" aria-live="polite">${DAISY.msgs.length?'':`<div class="dz-m dz-a"><p><b>${L('Hi, I\'m dAIsy!','היי, אני dAIsy!')}</b> ${L('Ask me about a term or a topic and I\'ll find the explanation in the lessons. I can also quiz you. I\'m not an AI: everything I show comes straight from the course pages, which come from the slides.','שאלו אותי על מונח או נושא ואמצא את ההסבר בשיעורים. אני יכולה גם לבחון אתכם. אני לא בינה מלאכותית: כל מה שאני מראה מגיע ישירות מעמודי הקורס, שמבוססים על השקפים.')}</p></div>`}
+  ${DAISY.msgs.map(m=>`<div class="dz-m ${m.role==='u'?'dz-u':'dz-a'}">${m.html}</div>`).join('')}
+  <div class="dz-chips">${[[L('Explain this page','הסבירי את העמוד הזה')],[L('Quiz me','תבחני אותי')],[L('Key points of this lesson','עיקרי השיעור הזה')],[L('What is…','מה זה…'),L('What is ','מה זה ')]].map(([l,f])=>`<button class="dz-chip"${f?` data-fill="${f}"`:''}>${l}</button>`).join('')}</div></div>
+  <form class="dz-form" id="daisyform"><textarea id="daisyin" rows="1" placeholder="${L('Ask about a term or topic…','שאלו על מונח או נושא…')}" aria-label="${L('Message','הודעה')}"></textarea><button class="dz-send" aria-label="${L('Send','שליחה')}">➤</button></form>
+  ${DAISY.msgs.length?`<button class="dz-clear" id="daisyclear">${L('Clear conversation','ניקוי השיחה')}</button>`:''}`;
+  const log=$('#daisylog');log.scrollTop=log.scrollHeight;
+  $('#daisyform').onsubmit=e=>{e.preventDefault();daisySend($('#daisyin').value);};
+  $('#daisyin').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();daisySend($('#daisyin').value);}};
+  const cl=$('#daisyclear');if(cl)cl.onclick=()=>{DAISY.msgs=[];DAISY.quiz=null;daisyRender();};
   $('#daisyx').onclick=()=>{pn.hidden=true;$('#daisyfab').classList.remove('open');};}
-async function daisySend(text){text=(text||'').trim();if(!text||DAISY.busy)return;const key=dget('daisy-key');if(!key)return;
-  DAISY.msgs.push({role:'user',content:text});const hist=DAISY.msgs.filter(m=>m.content).slice(-12).map(m=>({role:m.role,content:m.content}));if(hist[0]&&hist[0].role!=='user')hist.shift();const out={role:'assistant',content:''};DAISY.msgs.push(out);DAISY.busy=true;daisyRender();
-  const upd=()=>{const log=$('#daisylog');if(!log)return;if(log.querySelector('.dz-typing')){daisyRender();return;}const as=log.querySelectorAll('.dz-m.dz-a');const last=as[as.length-1];if(last)last.innerHTML=daisyMd(out.content);log.scrollTop=log.scrollHeight;};
-  try{
-   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-     body:JSON.stringify({model:DAISY.model,max_tokens:1500,stream:true,system:[{type:'text',text:daisySystem()},{type:'text',text:'COURSE MATERIAL (from the lecture slides):\n\n'+daisyCourseText(),cache_control:{type:'ephemeral'}}],messages:hist})});
-   if(!r.ok){let m='';try{m=(await r.json()).error.message}catch(e){}throw {status:r.status,m};}
-   const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
-   for(;;){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
-    while((i=buf.indexOf('\n\n'))>=0){const ev=buf.slice(0,i);buf=buf.slice(i+2);const dl=ev.split('\n').find(l=>l.startsWith('data:'));if(!dl)continue;let d;try{d=JSON.parse(dl.slice(5))}catch(e){continue}
-     if(d.type==='content_block_delta'&&d.delta&&d.delta.type==='text_delta'){out.content+=d.delta.text;upd();}
-     if(d.type==='error')throw {status:0,m:d.error&&d.error.message};}}
-   if(!out.content)out.content=L('Sorry, I got an empty answer. Please try again.','סליחה, קיבלתי תשובה ריקה. נסו שוב.');
-  }catch(e){const s=e&&e.status;out.content=s===401?L('Your API key was rejected. Open settings (⚙) and check it.','מפתח ה-API נדחה. פתחו את ההגדרות (⚙) ובדקו אותו.'):s===429?L('Too many requests or no credit left on your account. Wait a moment, or check your billing.','יותר מדי בקשות או שנגמר הקרדיט בחשבון. חכו רגע או בדקו את החיוב.'):s===529||s===503?L('Anthropic is busy right now. Try again in a minute.','Anthropic עמוסה כרגע. נסו שוב בעוד דקה.'):L('I couldn\'t reach Anthropic. Check your internet connection and try again.','לא הצלחתי להגיע ל-Anthropic. בדקו את החיבור לאינטרנט ונסו שוב.')+(e&&e.m?' ('+e.m+')':'');}
-  DAISY.busy=false;daisyRender();}
+function daisySend(text){text=(text||'').trim();if(!text)return;DAISY.msgs.push({role:'u',html:'<p>'+esc(text)+'</p>'});let a;try{a=dzAnswer(text);}catch(e){a=`<p>${L('Something went wrong. Please try again.','משהו השתבש. נסו שוב.')}</p>`;}DAISY.msgs.push({role:'a',html:a});daisyRender();}
 daisyUI();
 
 let initLang='en';try{initLang=localStorage.getItem('imm-lang')||((navigator.language||'').toLowerCase().startsWith('he')?'he':'en')}catch(e){}
