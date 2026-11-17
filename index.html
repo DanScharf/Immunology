@@ -299,6 +299,41 @@ a.node:hover{border-color:var(--eosin)}
 .dclose{position:absolute;top:12px;inset-inline-end:12px;border:1px solid var(--line);background:var(--surface);border-radius:50%;width:36px;height:36px}
 .dcell svg{width:120px;height:120px}
 .dcard .btn{align-self:flex-start}
+/* dAIsy */
+#daisyfab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:45;width:62px;height:62px;border-radius:50%;border:0;background:var(--hema);box-shadow:0 8px 24px rgba(40,20,90,.35);display:grid;place-items:center;transition:transform .2s}
+#daisyfab:hover{transform:scale(1.06) rotate(-8deg)}
+#daisyfab.open{transform:rotate(30deg)}
+#daisy{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 74px);z-index:46;width:min(380px,calc(100vw - 32px));height:min(580px,calc(100vh - 120px));background:var(--bg);border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 60px rgba(20,10,50,.3);display:flex;flex-direction:column;overflow:hidden}
+#daisy[hidden]{display:none!important}
+.dz-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--hema);color:#fff}
+.dz-head div{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.dz-head b{font-family:var(--f-display);font-size:1.1rem}
+.dz-head span{font-size:.78rem;opacity:.85}
+.dz-ic{border:0;background:rgba(255,255,255,.18);color:#fff;width:32px;height:32px;border-radius:50%;flex:none}
+.dz-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.dz-setup{gap:10px;font-size:.92rem}
+.dz-setup input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;direction:ltr}
+.dz-note{color:var(--muted);font-size:.82rem}
+.dz-err{color:var(--bad);font-size:.85rem}
+.dz-row{display:flex;gap:8px;flex-wrap:wrap}
+.dz-m{max-width:88%;padding:9px 12px;border-radius:14px;font-size:.92rem;line-height:1.5}
+.dz-m p{margin:0}.dz-m p+p,.dz-m ul+p,.dz-m p+ul{margin-top:6px}
+.dz-m ul{margin:0;padding-inline-start:1.1em}
+.dz-u{align-self:flex-end;background:var(--hema);color:#fff;border-end-end-radius:4px}
+.dz-a{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-end-start-radius:4px}
+.dz-chips{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.dz-chip{border:1px solid var(--hema);color:var(--hema);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:.85rem;text-align:start}
+.dz-typing{display:flex;gap:4px}.dz-typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:dz 1s infinite}
+.dz-typing span:nth-child(2){animation-delay:.15s}.dz-typing span:nth-child(3){animation-delay:.3s}
+@keyframes dz{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.dz-typing span{animation:none}#daisyfab{transition:none}}
+.dz-form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--surface)}
+.dz-form textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font:inherit;font-size:.92rem;background:var(--bg);color:var(--ink);max-height:120px}
+.dz-send{flex:none;width:40px;border:0;border-radius:12px;background:var(--hema);color:#fff;font-size:1rem}
+[dir="rtl"] .dz-send{transform:scaleX(-1)}
+.dz-send:disabled{opacity:.5}
+.dz-clear{border:0;background:none;color:var(--muted);font-size:.8rem;padding:0 0 8px;text-decoration:underline}
+@media (max-width:480px){#daisy{right:8px;left:8px;width:auto;bottom:calc(max(12px,env(safe-area-inset-bottom,0px)) + 72px);height:min(70vh,560px)}}
 /* lesson 3 */
 .tfchip{display:inline-block;align-self:flex-start;font-family:var(--f-mono);font-size:.8rem;padding:4px 10px;border-radius:8px;background:var(--hema-soft);color:var(--hema);direction:ltr}
 .tnode,.lrow,.nk3{cursor:pointer}
@@ -1567,6 +1602,7 @@ function setLang(l){
   FC=GLOSS.map((_,i)=>i);fi=0;
   document.title=u('title');
   buildChrome();
+  if(typeof daisyLabels==='function')daisyLabels();
 }
 $('#langbtn').addEventListener('click',()=>{setLang(LANG==='he'?'en':'he');route();});
 
@@ -3029,6 +3065,80 @@ function route(){
   $('#progbar').style.width=Math.round(ls.views.filter(v=>visited.has(v.id)).length/ls.views.length*100)+'%';
   window.scrollTo(0,0);
 }
+/* ---------- dAIsy: AI study helper (uses the visitor's own Anthropic API key) ---------- */
+const DAISY={msgs:[],busy:false,model:'claude-haiku-5-5'};
+const dget=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const dset=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+const daisyFlower=s=>`<svg viewBox="0 0 40 40" width="${s}" height="${s}" aria-hidden="true">${Array.from({length:8},(_,i)=>`<ellipse cx="20" cy="9" rx="5" ry="8.5" fill="#fff" stroke="#e9d9ef" transform="rotate(${i*45} 20 20)"/>`).join('')}<circle cx="20" cy="20" r="6.5" fill="#f2b632"/></svg>`;
+function daisyCourseText(){const box=document.createElement('div');const parts=[];
+  const add=(title,html)=>{box.innerHTML=html;box.querySelectorAll('svg,button,.next,.howto,.smear,.steps,.seg,.filters').forEach(n=>n.remove());parts.push('## '+title+'\n'+box.textContent.replace(/\s+\n/g,'\n').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim());};
+  try{
+   VIEWS.forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 1','שיעור 1')+' · '+v.label,(LANG==='he'?RH:R)[v.id]());});
+   l2views().forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 2','שיעור 2')+' · '+v.label,R2[v.id]());});
+   l3views().forEach(v=>{if(!/quiz|cards/.test(v.id))add(L('Lesson 3','שיעור 3')+' · '+v.label,R3[v.id]());});
+   parts.push('## Cell profiles\n'+CELLS.map(c=>c.name+': '+c.one+' '+Object.entries(c.facts).map(([k,v])=>k+': '+v).join('; ')).join('\n'));
+   parts.push('## Glossary\n'+[...GLOSS,...l2gloss(),...l3gloss()].map(g=>g[0]+': '+g[1]).join('\n'));
+   const qs=[...QUIZ,...l2quiz(),...l3quiz()];parts.push('## Practice questions\n'+qs.map(q=>'Q: '+q.q+' A: '+q.o[q.a]+'. '+q.e).join('\n'));
+  }catch(e){}
+  return parts.join('\n\n');}
+function daisySystem(){const page=(document.querySelector('#main h1,#main h2')||{}).textContent||'';const sub=$('#subname')&&!$('#sub').hidden?$('#subname').textContent:'';
+  return `You are dAIsy, a friendly study helper inside a student-made website for the Technion course Basic Immunology (027604130).
+Rules:
+- Answer ONLY from the course material below, which comes from the lecture slides. You may add short, basic scientific definitions (for example what an enzyme or a receptor is).
+- If something is not in the material, say clearly that it is not covered in the slides, and do not make up facts, numbers or details.
+- Reply in the language the student writes in (Hebrew or English). Keep answers short and clear, use simple words, and use short bullet lists when they help.
+- When asked to quiz, ask one multiple-choice question at a time and wait for the answer before explaining.
+- You are not an official source; the slides and lecturers are.
+The student is currently on: ${sub?sub+' · ':''}${page}.`;}
+function daisyMd(s){let h=esc(s);h=h.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^#{1,4} (.+)$/gm,'<b>$1</b>');
+  return h.split(/\n{2,}/).map(par=>{const ls=par.split('\n');if(ls.every(l=>/^\s*([-*•]|\d+\.)\s/.test(l)))return '<ul>'+ls.map(l=>'<li>'+l.replace(/^\s*([-*•]|\d+\.)\s/,'')+'</li>').join('')+'</ul>';return '<p>'+ls.join('<br>')+'</p>';}).join('');}
+function daisyUI(){
+  const fab=document.createElement('button');fab.id='daisyfab';fab.innerHTML=daisyFlower(34);document.body.appendChild(fab);
+  const pn=document.createElement('section');pn.id='daisy';pn.hidden=true;pn.setAttribute('role','dialog');document.body.appendChild(pn);
+  fab.onclick=()=>{pn.hidden=!pn.hidden;fab.classList.toggle('open',!pn.hidden);if(!pn.hidden){daisyRender();setTimeout(()=>{const i=$('#daisyin')||$('#daisykey');i&&i.focus();},50);}};
+  daisyLabels();}
+function daisyLabels(){const f=$('#daisyfab');if(!f)return;f.setAttribute('aria-label',L('Ask dAIsy, the AI study helper','לשאול את dAIsy, עוזרת הלימוד'));f.title=L('Ask dAIsy','לשאול את dAIsy');$('#daisy').setAttribute('aria-label','dAIsy');if(!$('#daisy').hidden)daisyRender();}
+function daisyRender(){const pn=$('#daisy');const key=dget('daisy-key');
+  const head=`<header class="dz-head">${daisyFlower(30)}<div><b>dAIsy</b><span>${L('AI study helper · answers from the slides','עוזרת לימוד · עונה מתוך השקפים')}</span></div>${key?`<button class="dz-ic" id="daisyset" aria-label="${L('Settings','הגדרות')}" title="${L('Settings','הגדרות')}">⚙</button>`:''}<button class="dz-ic" id="daisyx" aria-label="${L('Close','סגירה')}">✕</button></header>`;
+  if(!key||DAISY.settings){pn.innerHTML=head+`<div class="dz-body dz-setup">
+    <p><b>${L('Hi, I\'m dAIsy!','היי, אני dAIsy!')}</b> ${L('I can explain anything from the lectures, simplify a page or quiz you.','אני יכולה להסביר כל דבר מההרצאות, לפשט עמוד או לבחון אתכם.')}</p>
+    <p>${L('To talk to me you need your own Anthropic API key. Create one at <a href="https://platform.claude.com/" target="_blank" rel="noopener">platform.claude.com</a> (API keys). Each message costs a fraction of a cent and is billed to your account.','כדי לדבר איתי צריך מפתח API אישי של Anthropic. אפשר ליצור אחד באתר <a href="https://platform.claude.com/" target="_blank" rel="noopener">platform.claude.com</a>, בעמוד <bdi>API keys</bdi>. כל הודעה עולה שבריר סנט ומחויבת בחשבון שלכם.')}</p>
+    <label for="daisykey" class="eyebrow">${L('Your API key','מפתח ה-API שלכם')}</label>
+    <input id="daisykey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-..." value="${key?esc(key):''}">
+    <p class="dz-note">${L('The key stays only in this browser and is sent only to Anthropic. Never share it, and set a monthly spending limit in your account.','המפתח נשמר רק בדפדפן הזה ונשלח רק ל-Anthropic. אל תשתפו אותו, והגדירו תקרת הוצאה חודשית בחשבון.')}</p>
+    <div class="dz-row"><button class="btn primary" id="daisysave">${L('Save and start','לשמור ולהתחיל')}</button>${key?`<button class="btn" id="daisyforget">${L('Forget key','למחוק את המפתח')}</button>`:''}</div>
+    <p class="dz-err" id="daisyerr" hidden></p></div>`;
+   $('#daisysave').onclick=()=>{const v=$('#daisykey').value.trim();if(!/^sk-ant-/.test(v)){const e=$('#daisyerr');e.hidden=false;e.textContent=L('That doesn\'t look like an Anthropic key. It should start with sk-ant-.','זה לא נראה כמו מפתח של Anthropic. הוא אמור להתחיל ב-sk-ant-.');return;}dset('daisy-key',v);DAISY.settings=false;daisyRender();};
+   const fg=$('#daisyforget');if(fg)fg.onclick=()=>{dset('daisy-key',null);DAISY.settings=false;DAISY.msgs=[];daisyRender();};
+  } else {
+   pn.innerHTML=head+`<div class="dz-body" id="daisylog" aria-live="polite">${DAISY.msgs.length?'':`<div class="dz-m dz-a"><p>${L('Hi! Ask me anything about the lectures. I only answer from the slides.','היי! שאלו אותי כל דבר על ההרצאות. אני עונה רק מתוך השקפים.')}</p></div><div class="dz-chips">${[L('Explain this page simply','הסבירי את העמוד הזה בפשטות'),L('Quiz me on this page','תבחני אותי על העמוד הזה'),L('What should I remember for the exam here?','מה חשוב לזכור כאן למבחן?')].map(c=>`<button class="dz-chip">${c}</button>`).join('')}</div>`}${DAISY.msgs.filter(m=>m.content).map(m=>`<div class="dz-m ${m.role==='user'?'dz-u':'dz-a'}">${m.role==='user'?'<p>'+esc(m.content)+'</p>':daisyMd(m.content)}</div>`).join('')}${DAISY.busy&&!(DAISY.msgs.at(-1)||{}).content?'<div class="dz-m dz-a dz-typing"><span></span><span></span><span></span></div>':''}</div>
+    <form class="dz-form" id="daisyform"><textarea id="daisyin" rows="1" placeholder="${L('Ask dAIsy…','שאלו את dAIsy…')}" aria-label="${L('Message','הודעה')}"></textarea><button class="dz-send" ${DAISY.busy?'disabled':''} aria-label="${L('Send','שליחה')}">${L('➤','➤')}</button></form>
+    ${DAISY.msgs.length?`<button class="dz-clear" id="daisyclear">${L('New conversation','שיחה חדשה')}</button>`:''}`;
+   const log=$('#daisylog');log.scrollTop=log.scrollHeight;
+   document.querySelectorAll('.dz-chip').forEach(c=>c.onclick=()=>daisySend(c.textContent));
+   $('#daisyform').onsubmit=e=>{e.preventDefault();daisySend($('#daisyin').value);};
+   $('#daisyin').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();daisySend($('#daisyin').value);}};
+   const cl=$('#daisyclear');if(cl)cl.onclick=()=>{DAISY.msgs=[];daisyRender();};
+   const st=$('#daisyset');if(st)st.onclick=()=>{DAISY.settings=true;daisyRender();};
+  }
+  $('#daisyx').onclick=()=>{pn.hidden=true;$('#daisyfab').classList.remove('open');};}
+async function daisySend(text){text=(text||'').trim();if(!text||DAISY.busy)return;const key=dget('daisy-key');if(!key)return;
+  DAISY.msgs.push({role:'user',content:text});const hist=DAISY.msgs.filter(m=>m.content).slice(-12).map(m=>({role:m.role,content:m.content}));if(hist[0]&&hist[0].role!=='user')hist.shift();const out={role:'assistant',content:''};DAISY.msgs.push(out);DAISY.busy=true;daisyRender();
+  const upd=()=>{const log=$('#daisylog');if(!log)return;if(log.querySelector('.dz-typing')){daisyRender();return;}const as=log.querySelectorAll('.dz-m.dz-a');const last=as[as.length-1];if(last)last.innerHTML=daisyMd(out.content);log.scrollTop=log.scrollHeight;};
+  try{
+   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+     body:JSON.stringify({model:DAISY.model,max_tokens:1500,stream:true,system:[{type:'text',text:daisySystem()},{type:'text',text:'COURSE MATERIAL (from the lecture slides):\n\n'+daisyCourseText(),cache_control:{type:'ephemeral'}}],messages:hist})});
+   if(!r.ok){let m='';try{m=(await r.json()).error.message}catch(e){}throw {status:r.status,m};}
+   const rd=r.body.getReader(),dec=new TextDecoder();let buf='';
+   for(;;){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+    while((i=buf.indexOf('\n\n'))>=0){const ev=buf.slice(0,i);buf=buf.slice(i+2);const dl=ev.split('\n').find(l=>l.startsWith('data:'));if(!dl)continue;let d;try{d=JSON.parse(dl.slice(5))}catch(e){continue}
+     if(d.type==='content_block_delta'&&d.delta&&d.delta.type==='text_delta'){out.content+=d.delta.text;upd();}
+     if(d.type==='error')throw {status:0,m:d.error&&d.error.message};}}
+   if(!out.content)out.content=L('Sorry, I got an empty answer. Please try again.','סליחה, קיבלתי תשובה ריקה. נסו שוב.');
+  }catch(e){const s=e&&e.status;out.content=s===401?L('Your API key was rejected. Open settings (⚙) and check it.','מפתח ה-API נדחה. פתחו את ההגדרות (⚙) ובדקו אותו.'):s===429?L('Too many requests or no credit left on your account. Wait a moment, or check your billing.','יותר מדי בקשות או שנגמר הקרדיט בחשבון. חכו רגע או בדקו את החיוב.'):s===529||s===503?L('Anthropic is busy right now. Try again in a minute.','Anthropic עמוסה כרגע. נסו שוב בעוד דקה.'):L('I couldn\'t reach Anthropic. Check your internet connection and try again.','לא הצלחתי להגיע ל-Anthropic. בדקו את החיבור לאינטרנט ונסו שוב.')+(e&&e.m?' ('+e.m+')':'');}
+  DAISY.busy=false;daisyRender();}
+daisyUI();
+
 let initLang='en';try{initLang=localStorage.getItem('imm-lang')||((navigator.language||'').toLowerCase().startsWith('he')?'he':'en')}catch(e){}
 setLang(initLang);
 window.addEventListener('hashchange',route);route();
